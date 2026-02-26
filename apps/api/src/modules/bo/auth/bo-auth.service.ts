@@ -1,15 +1,27 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import { BoLoginDto } from './dto/bo-login.dto';
 import { BoRefreshTokenDto } from './dto/bo-refresh-token.dto';
 import { AuthTokenService } from '../../auth/auth-token.service';
+import { BO_AUTH_REPOSITORY } from './repositories/bo-auth.repository';
+import type { BoAuthRepository } from './repositories/bo-auth.repository';
 
 @Injectable()
 export class BoAuthService {
-  constructor(private readonly authTokenService: AuthTokenService) {}
+  constructor(
+    private readonly authTokenService: AuthTokenService,
+    @Inject(BO_AUTH_REPOSITORY)
+    private readonly boAuthRepository: BoAuthRepository,
+  ) {}
 
-  login(payload: BoLoginDto) {
-    // TODO: replace with BO admin lookup + password hash verification
+  async login(payload: BoLoginDto) {
     if (!payload.username || !payload.password) {
+      throw new UnauthorizedException('Invalid BO credentials');
+    }
+
+    const admin = await this.boAuthRepository.findByUsername(payload.username);
+
+    // NOTE: placeholder password check. replace with secure hash verification.
+    if (!admin || admin.passwordHash !== payload.password) {
       throw new UnauthorizedException('Invalid BO credentials');
     }
 
@@ -17,9 +29,9 @@ export class BoAuthService {
       scope: 'bo',
       loginType: 'username',
       user: {
-        username: payload.username,
+        username: admin.username,
       },
-      ...this.authTokenService.issueTokenPair('bo', payload.username),
+      ...this.authTokenService.issueTokenPair('bo', admin.username),
     };
   }
 

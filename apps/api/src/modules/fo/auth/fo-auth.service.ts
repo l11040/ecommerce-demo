@@ -1,16 +1,28 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import { FoLoginDto } from './dto/fo-login.dto';
 import { FoSocialLoginDto } from './dto/fo-social-login.dto';
 import { FoRefreshTokenDto } from './dto/fo-refresh-token.dto';
 import { AuthTokenService } from '../../auth/auth-token.service';
+import { FO_AUTH_REPOSITORY } from './repositories/fo-auth.repository';
+import type { FoAuthRepository } from './repositories/fo-auth.repository';
 
 @Injectable()
 export class FoAuthService {
-  constructor(private readonly authTokenService: AuthTokenService) {}
+  constructor(
+    private readonly authTokenService: AuthTokenService,
+    @Inject(FO_AUTH_REPOSITORY)
+    private readonly foAuthRepository: FoAuthRepository,
+  ) {}
 
-  login(payload: FoLoginDto) {
-    // TODO: replace with FO user lookup + password hash verification
+  async login(payload: FoLoginDto) {
     if (!payload.email || !payload.password) {
+      throw new UnauthorizedException('Invalid FO credentials');
+    }
+
+    const user = await this.foAuthRepository.findByEmail(payload.email);
+
+    // NOTE: placeholder password check. replace with secure hash verification.
+    if (!user || user.passwordHash !== payload.password) {
       throw new UnauthorizedException('Invalid FO credentials');
     }
 
@@ -18,9 +30,9 @@ export class FoAuthService {
       scope: 'fo',
       loginType: 'email',
       user: {
-        email: payload.email,
+        email: user.email,
       },
-      ...this.authTokenService.issueTokenPair('fo', payload.email),
+      ...this.authTokenService.issueTokenPair('fo', user.email),
     };
   }
 
