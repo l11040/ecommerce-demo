@@ -1,3 +1,5 @@
+import { useAuthStore } from '@/features/auth/auth-store';
+
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:40003';
 
 let refreshPromise: Promise<boolean> | null = null;
@@ -10,14 +12,12 @@ async function attemptRefresh(): Promise<boolean> {
     });
 
     if (!response.ok) {
-      const { useAuthStore } = await import('@/features/auth/auth-store');
       useAuthStore.getState().clearAuth();
       return false;
     }
 
     return true;
   } catch {
-    const { useAuthStore } = await import('@/features/auth/auth-store');
     useAuthStore.getState().clearAuth();
     return false;
   }

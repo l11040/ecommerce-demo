@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -19,21 +19,26 @@ const loginSchema = z.object({
 
 type LoginFormValues = z.infer<typeof loginSchema>;
 
-function getSavedEmail() {
-  if (typeof window === 'undefined') return null;
-  return localStorage.getItem(REMEMBER_EMAIL_KEY);
-}
-
 export function useLoginForm() {
   const router = useRouter();
   const fetchMe = useAuthStore((s) => s.fetchMe);
-  const savedEmail = getSavedEmail();
-  const [rememberEmail, setRememberEmail] = useState(() => !!savedEmail);
+  const [rememberEmail, setRememberEmail] = useState(false);
+  const initialized = useRef(false);
 
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
-    defaultValues: { email: savedEmail ?? '', password: '' },
+    defaultValues: { email: '', password: '' },
   });
+
+  useEffect(() => {
+    if (initialized.current) return;
+    initialized.current = true;
+    const saved = localStorage.getItem(REMEMBER_EMAIL_KEY);
+    if (saved) {
+      form.setValue('email', saved);
+      setRememberEmail(true); // eslint-disable-line react-hooks/set-state-in-effect -- localStorage 초기화
+    }
+  }, [form]);
 
   const onSubmit = form.handleSubmit(async (values) => {
     try {
