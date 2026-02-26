@@ -77,6 +77,8 @@ pnpm --filter @ecommerce/admin generate # admin BO API 클라이언트 생성
   - Service: 비즈니스 로직
   - Repository: DB 쿼리/영속성
   - 컨트롤러는 Service만 호출한다.
+- 테스트/개발 계정 seed는 `src/database/migrations`에 두지 않는다.
+  - 운영 마이그레이션과 분리된 `src/database/seeds`에서만 관리한다.
 
 ## 커밋 규칙
 
