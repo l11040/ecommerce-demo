@@ -63,6 +63,21 @@ pnpm --filter @ecommerce/admin generate # admin BO API 클라이언트 생성
   - admin → BO spec (`http://localhost:40003/openapi/bo-json`)
   - API 서버가 실행 중인 상태에서 `pnpm generate` 실행.
 
+## API 문서/아키텍처 규칙 (필수)
+
+- Swagger 문서화는 필수다. 새로운 API 엔드포인트는 문서 없이 머지하지 않는다.
+- Swagger에는 성공 응답뿐 아니라 상태코드별 에러 응답(`400/401/403/404/409/500`)을 반드시 기술한다.
+- Swagger 데코레이터를 컨트롤러에 직접 길게 작성하지 않는다.
+  - 엔드포인트 문서는 `*.swagger.ts`로 분리한다.
+  - 컨트롤러에는 `@FoAuthLoginDocs()` 같은 문서 데코레이터만 붙인다.
+- FO/BO OpenAPI 스펙은 분리 관리한다.
+  - FO: `/openapi/fo-json`
+  - BO: `/openapi/bo-json`
+- API는 Repository 패턴을 사용한다.
+  - Service: 비즈니스 로직
+  - Repository: DB 쿼리/영속성
+  - 컨트롤러는 Service만 호출한다.
+
 ## 커밋 규칙
 
 Conventional Commits를 따른다.
