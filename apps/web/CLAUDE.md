@@ -53,6 +53,7 @@ function ProductCard({ id }) {
 - shadcn `components/ui/` 파일은 직접 수정하지 않는다.
 - 커스텀이 필요하면 `components/common/`에 래퍼 컴포넌트를 만든다.
 - UI 기본 컴포넌트(Button, Input, Dialog 등)는 직접 만들지 않고 shadcn으로 추가한다.
+- 아이콘은 lucide-react를 사용한다. 별도의 아이콘 라이브러리를 추가하지 않는다.
 
 ## API 클라이언트 규칙
 
