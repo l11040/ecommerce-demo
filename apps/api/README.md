@@ -32,6 +32,14 @@ pnpm --filter @ecommerce/api migration:run
 
 초기 마이그레이션은 `fo_users`, `bo_admins` 테이블을 생성합니다.
 
+## 4-1) 개발용 seed 데이터 적용 (선택)
+
+```bash
+pnpm --filter @ecommerce/api seed:run
+```
+
+주의: seed는 운영 마이그레이션 체인과 분리되어 있으며 `migration:run`에는 포함되지 않습니다.
+
 ## 5) API 실행
 
 ```bash

@@ -1,9 +1,11 @@
+import { join } from 'node:path';
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { DataSourceOptions } from 'typeorm';
 import { env } from './env';
 import { FoUserEntity } from '../database/entities/fo-user.entity';
 import { BoAdminEntity } from '../database/entities/bo-admin.entity';
-import { InitSchema1700000000000 } from '../database/migrations/1700000000000-init-schema';
+
+const migrationPaths = [join(__dirname, '../database/migrations/*{.ts,.js}')];
 
 export const typeOrmModuleOptions: TypeOrmModuleOptions = {
   type: 'mysql',
@@ -13,7 +15,7 @@ export const typeOrmModuleOptions: TypeOrmModuleOptions = {
   password: env.database.password,
   database: env.database.name,
   entities: [FoUserEntity, BoAdminEntity],
-  migrations: [InitSchema1700000000000],
+  migrations: migrationPaths,
   migrationsRun: true,
   synchronize: false,
 };
@@ -26,6 +28,6 @@ export const dataSourceOptions: DataSourceOptions = {
   password: env.database.password,
   database: env.database.name,
   entities: [FoUserEntity, BoAdminEntity],
-  migrations: [InitSchema1700000000000],
+  migrations: migrationPaths,
   synchronize: false,
 };
