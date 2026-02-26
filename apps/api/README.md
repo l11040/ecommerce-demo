@@ -30,7 +30,7 @@ pnpm install
 pnpm --filter @ecommerce/api migration:run
 ```
 
-초기 마이그레이션은 `users` 테이블을 생성합니다.
+초기 마이그레이션은 `fo_users`, `bo_admins` 테이블을 생성합니다.
 
 ## 5) API 실행
 
@@ -48,6 +48,19 @@ BO OpenAPI JSON: `http://localhost:40003/openapi/bo-json`
 
 웹에서 OpenAPI Generator를 사용할 때는 JSON URL(`openapi-json`)을 입력하면 됩니다.
 FO/BO 분리 생성 시에는 각 JSON URL을 사용하면 됩니다.
+
+로그인 정책:
+- FO: `POST /fo/auth/login` (email 기반)
+- FO(확장 예정): `POST /fo/auth/social-login` (소셜 로그인 placeholder)
+- FO refresh: `POST /fo/auth/refresh`
+- BO: `POST /bo/auth/login` (username 기반)
+- BO refresh: `POST /bo/auth/refresh`
+
+응답 포맷(전역):
+- 성공:
+  - `{"success": true, "code": "COMMON_OK", "message": "OK", "data": ...}`
+- 실패:
+  - `{"success": false, "code": "COMMON_UNAUTHORIZED", "message": "...", "errors": [], "meta": {"requestId": "..."}}`
 
 ## 주요 파일 구조
 

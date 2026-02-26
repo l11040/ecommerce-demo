@@ -5,19 +5,34 @@ export class InitSchema1700000000000 implements MigrationInterface {
 
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(`
-      CREATE TABLE IF NOT EXISTS users (
+      CREATE TABLE IF NOT EXISTS fo_users (
         id INT NOT NULL AUTO_INCREMENT,
         email VARCHAR(120) NOT NULL,
-        name VARCHAR(80) NOT NULL,
+        password_hash VARCHAR(255) NOT NULL,
+        display_name VARCHAR(80) NOT NULL,
         created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-        UNIQUE INDEX UQ_users_email (email),
+        UNIQUE INDEX UQ_fo_users_email (email),
+        PRIMARY KEY (id)
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+    `);
+
+    await queryRunner.query(`
+      CREATE TABLE IF NOT EXISTS bo_admins (
+        id INT NOT NULL AUTO_INCREMENT,
+        username VARCHAR(60) NOT NULL,
+        password_hash VARCHAR(255) NOT NULL,
+        display_name VARCHAR(80) NOT NULL,
+        created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+        UNIQUE INDEX UQ_bo_admins_username (username),
         PRIMARY KEY (id)
       ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
     `);
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.query('DROP TABLE IF EXISTS users;');
+    await queryRunner.query('DROP TABLE IF EXISTS bo_admins;');
+    await queryRunner.query('DROP TABLE IF EXISTS fo_users;');
   }
 }

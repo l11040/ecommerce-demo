@@ -22,16 +22,6 @@ function getString(name: string, defaultValue: string): string {
   return process.env[name] ?? defaultValue;
 }
 
-function getBoolean(name: string, defaultValue: boolean): boolean {
-  const raw = process.env[name];
-
-  if (!raw) {
-    return defaultValue;
-  }
-
-  return raw.toLowerCase() === 'true';
-}
-
 function getStringArray(name: string, defaultValue: string[]): string[] {
   const raw = process.env[name];
 
@@ -48,12 +38,12 @@ function getStringArray(name: string, defaultValue: string[]): string[] {
 export const env = {
   app: {
     port: getNumber('PORT', 40003),
-    name: getString('APP_NAME', 'ecommerce-api'),
-    description: getString('APP_DESCRIPTION', 'Ecommerce API'),
-    version: getString('APP_VERSION', '1.0.0'),
+    name: 'ecommerce-api',
+    description: 'Ecommerce API',
+    version: '1.0.0',
   },
   cors: {
-    enabled: getBoolean('CORS_ENABLED', true),
+    enabled: true,
     origins: getStringArray('CORS_ORIGINS', ['*']),
   },
   database: {
@@ -64,13 +54,13 @@ export const env = {
     name: getString('DB_NAME', 'ecommerce_demo'),
   },
   swagger: {
-    enabled: getBoolean('SWAGGER_ENABLED', true),
-    path: getString('SWAGGER_PATH', 'docs'),
-    jsonPath: getString('SWAGGER_JSON_PATH', 'openapi-json'),
-    yamlPath: getString('SWAGGER_YAML_PATH', 'openapi-yaml'),
-    foPath: getString('SWAGGER_FO_PATH', 'docs/fo'),
-    boPath: getString('SWAGGER_BO_PATH', 'docs/bo'),
-    foJsonPath: getString('SWAGGER_FO_JSON_PATH', 'openapi/fo-json'),
-    boJsonPath: getString('SWAGGER_BO_JSON_PATH', 'openapi/bo-json'),
+    enabled: true,
+    path: 'docs',
+    jsonPath: 'openapi-json',
+    yamlPath: 'openapi-yaml',
+    foPath: 'docs/fo',
+    boPath: 'docs/bo',
+    foJsonPath: 'openapi/fo-json',
+    boJsonPath: 'openapi/bo-json',
   },
 };
