@@ -1,0 +1,70 @@
+{
+  "$schema": "https://cdn.statically.io/gh/nguyenngoclongdev/cdn/main/schema/v11/terminal-keeper.json",
+  "theme": "tribe",
+  "active": "default",
+  "activateOnStartup": true,
+  "keepExistingTerminals": false,
+  "sessions": {
+    "default": [
+      [
+        {
+          "name": "web:dev",
+          "autoExecuteCommands": true,
+          "icon": "globe",
+          "color": "terminal.ansiGreen",
+          "cwd": "apps/web",
+          "commands": ["pnpm dev"]
+        },
+        {
+          "name": "web:cmd",
+          "icon": "terminal",
+          "color": "terminal.ansiGreen",
+          "cwd": "apps/web",
+          "commands": []
+        }
+      ],
+      [
+        {
+          "name": "admin:dev",
+          "autoExecuteCommands": true,
+          "icon": "shield",
+          "color": "terminal.ansiBlue",
+          "cwd": "apps/admin",
+          "commands": ["pnpm dev"]
+        },
+        {
+          "name": "admin:cmd",
+          "icon": "terminal",
+          "color": "terminal.ansiBlue",
+          "cwd": "apps/admin",
+          "commands": []
+        }
+      ],
+      [
+        {
+          "name": "api:dev",
+          "autoExecuteCommands": true,
+          "icon": "server",
+          "color": "terminal.ansiMagenta",
+          "cwd": "apps/api",
+          "commands": ["pnpm dev"]
+        },
+        {
+          "name": "api:cmd",
+          "icon": "terminal",
+          "color": "terminal.ansiMagenta",
+          "cwd": "apps/api",
+          "commands": []
+        }
+      ],
+      [
+        {
+          "name": "root",
+          "icon": "tools",
+          "color": "terminal.ansiYellow",
+          "commands": []
+        }
+      ]
+    ]
+  }
+}

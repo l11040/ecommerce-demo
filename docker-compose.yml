@@ -1,0 +1,22 @@
+services:
+  mysql:
+    image: mysql:8.4
+    container_name: ecommerce-mysql
+    restart: unless-stopped
+    ports:
+      - '${DB_PORT:-3309}:3306'
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-root}
+      MYSQL_DATABASE: ${DB_NAME:-ecommerce_demo}
+      MYSQL_USER: ${DB_USER:-ecommerce}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-ecommerce}
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ['CMD', 'mysqladmin', 'ping', '-h', '127.0.0.1', '-uroot', '-p${DB_ROOT_PASSWORD:-root}']
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  mysql_data:
