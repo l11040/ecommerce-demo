@@ -1,0 +1,8 @@
+#!/bin/sh
+set -e
+
+echo "[pre-commit] lint 시작"
+pnpm lint
+
+echo "[pre-commit] build 시작"
+pnpm build

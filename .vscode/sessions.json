@@ -13,7 +13,7 @@
           "icon": "globe",
           "color": "terminal.ansiGreen",
           "cwd": "apps/web",
-          "commands": ["pnpm dev"]
+          "commands": ["until curl -sf http://localhost:40003/health >/dev/null 2>&1; do echo 'Waiting for API...'; sleep 1; done && pnpm dev"]
         },
         {
           "name": "web:cmd",
@@ -30,7 +30,7 @@
           "icon": "shield",
           "color": "terminal.ansiBlue",
           "cwd": "apps/admin",
-          "commands": ["pnpm dev"]
+          "commands": ["until curl -sf http://localhost:40003/health >/dev/null 2>&1; do echo 'Waiting for API...'; sleep 1; done && pnpm dev"]
         },
         {
           "name": "admin:cmd",
