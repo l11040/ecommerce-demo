@@ -1,9 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
 
 export class FoLoginDto {
-  @ApiProperty({ example: 'user@example.com' })
+  @ApiProperty({ example: 'test@test.test' })
   email!: string;
 
-  @ApiProperty({ example: 'P@ssw0rd!' })
+  @ApiProperty({ example: 'test' })
   password!: string;
 }

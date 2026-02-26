@@ -1,7 +1,11 @@
-import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  Inject,
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { FoLoginDto } from './dto/fo-login.dto';
 import { FoSocialLoginDto } from './dto/fo-social-login.dto';
-import { FoRefreshTokenDto } from './dto/fo-refresh-token.dto';
 import { AuthTokenService } from '../../auth/auth-token.service';
 import { FO_AUTH_REPOSITORY } from './repositories/fo-auth.repository';
 import type { FoAuthRepository } from './repositories/fo-auth.repository';
@@ -26,30 +30,57 @@ export class FoAuthService {
       throw new UnauthorizedException('Invalid FO credentials');
     }
 
+    const tokenPair = this.authTokenService.issueTokenPair('fo', user.email);
+
     return {
-      scope: 'fo',
-      loginType: 'email',
-      user: {
-        email: user.email,
+      tokenPair,
+      data: {
+        scope: 'fo',
+        loginType: 'email',
+        user: {
+          email: user.email,
+        },
       },
-      ...this.authTokenService.issueTokenPair('fo', user.email),
     };
   }
 
   socialLogin(payload: FoSocialLoginDto) {
     // TODO: implement social provider validation and account linking
+    const tokenPair = this.authTokenService.issueTokenPair(
+      'fo',
+      `${payload.provider}:${payload.accessToken}`,
+    );
+
     return {
-      scope: 'fo',
-      loginType: 'social',
-      provider: payload.provider,
-      ...this.authTokenService.issueTokenPair(
-        'fo',
-        `${payload.provider}:${payload.accessToken}`,
-      ),
+      tokenPair,
+      data: {
+        scope: 'fo',
+        loginType: 'social',
+        provider: payload.provider,
+      },
     };
   }
 
-  refresh(payload: FoRefreshTokenDto) {
-    return this.authTokenService.rotateRefreshToken('fo', payload.refreshToken);
+  refresh(refreshToken: string) {
+    return this.authTokenService.rotateRefreshToken('fo', refreshToken);
+  }
+
+  async me(accessToken?: string) {
+    if (!accessToken) {
+      throw new UnauthorizedException('Missing access token');
+    }
+
+    const payload = this.authTokenService.verifyAccessToken('fo', accessToken);
+    const user = await this.foAuthRepository.findByEmail(payload.sub);
+
+    if (!user) {
+      throw new NotFoundException('FO user not found');
+    }
+
+    return {
+      id: user.id,
+      email: user.email,
+      displayName: user.displayName,
+    };
   }
 }

@@ -13,6 +13,27 @@ export function setupSwagger(app: INestApplication): void {
     .setTitle(env.app.name)
     .setDescription(env.app.description)
     .setVersion(env.app.version)
+    .addBearerAuth()
+    .addCookieAuth(
+      'fo_access_token',
+      { type: 'apiKey', in: 'cookie' },
+      'fo_access_token',
+    )
+    .addCookieAuth(
+      'fo_refresh_token',
+      { type: 'apiKey', in: 'cookie' },
+      'fo_refresh_token',
+    )
+    .addCookieAuth(
+      'bo_access_token',
+      { type: 'apiKey', in: 'cookie' },
+      'bo_access_token',
+    )
+    .addCookieAuth(
+      'bo_refresh_token',
+      { type: 'apiKey', in: 'cookie' },
+      'bo_refresh_token',
+    )
     .build();
 
   const document = SwaggerModule.createDocument(app, config, {

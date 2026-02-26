@@ -17,9 +17,467 @@ export interface FoSocialLoginDto {
   accessToken: string;
 }
 
-export interface FoRefreshTokenDto {
-  refreshToken: string;
-}
+export type Login200DataUser = {
+  email: string;
+};
+
+export type Login200Data = {
+  scope: string;
+  loginType: string;
+  user: Login200DataUser;
+};
+
+export type Login200 = {
+  success: boolean;
+  code: string;
+  message: string;
+  data: Login200Data;
+};
+
+export type Login400ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type Login400Meta = {
+  requestId?: string;
+};
+
+export type Login400 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: Login400ErrorsItem[];
+  meta: Login400Meta;
+};
+
+export type Login401ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type Login401Meta = {
+  requestId?: string;
+};
+
+export type Login401 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: Login401ErrorsItem[];
+  meta: Login401Meta;
+};
+
+export type Login403ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type Login403Meta = {
+  requestId?: string;
+};
+
+export type Login403 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: Login403ErrorsItem[];
+  meta: Login403Meta;
+};
+
+export type Login404ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type Login404Meta = {
+  requestId?: string;
+};
+
+export type Login404 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: Login404ErrorsItem[];
+  meta: Login404Meta;
+};
+
+export type Login409ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type Login409Meta = {
+  requestId?: string;
+};
+
+export type Login409 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: Login409ErrorsItem[];
+  meta: Login409Meta;
+};
+
+export type Login500ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type Login500Meta = {
+  requestId?: string;
+};
+
+export type Login500 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: Login500ErrorsItem[];
+  meta: Login500Meta;
+};
+
+export type SocialLogin200Data = {
+  scope: string;
+  loginType: string;
+  provider: string;
+};
+
+export type SocialLogin200 = {
+  success: boolean;
+  code: string;
+  message: string;
+  data: SocialLogin200Data;
+};
+
+export type SocialLogin400ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type SocialLogin400Meta = {
+  requestId?: string;
+};
+
+export type SocialLogin400 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: SocialLogin400ErrorsItem[];
+  meta: SocialLogin400Meta;
+};
+
+export type SocialLogin401ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type SocialLogin401Meta = {
+  requestId?: string;
+};
+
+export type SocialLogin401 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: SocialLogin401ErrorsItem[];
+  meta: SocialLogin401Meta;
+};
+
+export type SocialLogin403ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type SocialLogin403Meta = {
+  requestId?: string;
+};
+
+export type SocialLogin403 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: SocialLogin403ErrorsItem[];
+  meta: SocialLogin403Meta;
+};
+
+export type SocialLogin404ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type SocialLogin404Meta = {
+  requestId?: string;
+};
+
+export type SocialLogin404 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: SocialLogin404ErrorsItem[];
+  meta: SocialLogin404Meta;
+};
+
+export type SocialLogin409ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type SocialLogin409Meta = {
+  requestId?: string;
+};
+
+export type SocialLogin409 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: SocialLogin409ErrorsItem[];
+  meta: SocialLogin409Meta;
+};
+
+export type SocialLogin500ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type SocialLogin500Meta = {
+  requestId?: string;
+};
+
+export type SocialLogin500 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: SocialLogin500ErrorsItem[];
+  meta: SocialLogin500Meta;
+};
+
+export type Refresh200Data = {
+  refreshed: boolean;
+};
+
+export type Refresh200 = {
+  success: boolean;
+  code: string;
+  message: string;
+  data: Refresh200Data;
+};
+
+export type Refresh400ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type Refresh400Meta = {
+  requestId?: string;
+};
+
+export type Refresh400 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: Refresh400ErrorsItem[];
+  meta: Refresh400Meta;
+};
+
+export type Refresh401ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type Refresh401Meta = {
+  requestId?: string;
+};
+
+export type Refresh401 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: Refresh401ErrorsItem[];
+  meta: Refresh401Meta;
+};
+
+export type Refresh403ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type Refresh403Meta = {
+  requestId?: string;
+};
+
+export type Refresh403 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: Refresh403ErrorsItem[];
+  meta: Refresh403Meta;
+};
+
+export type Refresh404ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type Refresh404Meta = {
+  requestId?: string;
+};
+
+export type Refresh404 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: Refresh404ErrorsItem[];
+  meta: Refresh404Meta;
+};
+
+export type Refresh409ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type Refresh409Meta = {
+  requestId?: string;
+};
+
+export type Refresh409 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: Refresh409ErrorsItem[];
+  meta: Refresh409Meta;
+};
+
+export type Refresh500ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type Refresh500Meta = {
+  requestId?: string;
+};
+
+export type Refresh500 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: Refresh500ErrorsItem[];
+  meta: Refresh500Meta;
+};
+
+export type Me200Data = {
+  id: number;
+  email: string;
+  displayName: string;
+};
+
+export type Me200 = {
+  success: boolean;
+  code: string;
+  message: string;
+  data: Me200Data;
+};
+
+export type Me400ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type Me400Meta = {
+  requestId?: string;
+};
+
+export type Me400 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: Me400ErrorsItem[];
+  meta: Me400Meta;
+};
+
+export type Me401ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type Me401Meta = {
+  requestId?: string;
+};
+
+export type Me401 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: Me401ErrorsItem[];
+  meta: Me401Meta;
+};
+
+export type Me403ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type Me403Meta = {
+  requestId?: string;
+};
+
+export type Me403 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: Me403ErrorsItem[];
+  meta: Me403Meta;
+};
+
+export type Me404ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type Me404Meta = {
+  requestId?: string;
+};
+
+export type Me404 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: Me404ErrorsItem[];
+  meta: Me404Meta;
+};
+
+export type Me409ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type Me409Meta = {
+  requestId?: string;
+};
+
+export type Me409 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: Me409ErrorsItem[];
+  meta: Me409Meta;
+};
+
+export type Me500ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type Me500Meta = {
+  requestId?: string;
+};
+
+export type Me500 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: Me500ErrorsItem[];
+  meta: Me500Meta;
+};
 
 /**
  * @summary Front Office health check
@@ -58,19 +516,51 @@ export const healthCheck = async ( options?: RequestInit): Promise<healthCheckRe
 
 
 /**
- * @summary FO email login
+ * @summary FO email login (httpOnly cookie)
  */
-export type loginResponse201 = {
-  data: void
-  status: 201
+export type loginResponse200 = {
+  data: Login200
+  status: 200
 }
 
-export type loginResponseSuccess = (loginResponse201) & {
+export type loginResponse400 = {
+  data: Login400
+  status: 400
+}
+
+export type loginResponse401 = {
+  data: Login401
+  status: 401
+}
+
+export type loginResponse403 = {
+  data: Login403
+  status: 403
+}
+
+export type loginResponse404 = {
+  data: Login404
+  status: 404
+}
+
+export type loginResponse409 = {
+  data: Login409
+  status: 409
+}
+
+export type loginResponse500 = {
+  data: Login500
+  status: 500
+}
+
+export type loginResponseSuccess = (loginResponse200) & {
   headers: Headers;
 };
-;
+export type loginResponseError = (loginResponse400 | loginResponse401 | loginResponse403 | loginResponse404 | loginResponse409 | loginResponse500) & {
+  headers: Headers;
+};
 
-export type loginResponse = (loginResponseSuccess)
+export type loginResponse = (loginResponseSuccess | loginResponseError)
 
 export const getLoginUrl = () => {
 
@@ -97,17 +587,49 @@ export const login = async (foLoginDto: FoLoginDto, options?: RequestInit): Prom
 /**
  * @summary FO social login (future-ready placeholder)
  */
-export type socialLoginResponse201 = {
-  data: void
-  status: 201
+export type socialLoginResponse200 = {
+  data: SocialLogin200
+  status: 200
 }
 
-export type socialLoginResponseSuccess = (socialLoginResponse201) & {
+export type socialLoginResponse400 = {
+  data: SocialLogin400
+  status: 400
+}
+
+export type socialLoginResponse401 = {
+  data: SocialLogin401
+  status: 401
+}
+
+export type socialLoginResponse403 = {
+  data: SocialLogin403
+  status: 403
+}
+
+export type socialLoginResponse404 = {
+  data: SocialLogin404
+  status: 404
+}
+
+export type socialLoginResponse409 = {
+  data: SocialLogin409
+  status: 409
+}
+
+export type socialLoginResponse500 = {
+  data: SocialLogin500
+  status: 500
+}
+
+export type socialLoginResponseSuccess = (socialLoginResponse200) & {
   headers: Headers;
 };
-;
+export type socialLoginResponseError = (socialLoginResponse400 | socialLoginResponse401 | socialLoginResponse403 | socialLoginResponse404 | socialLoginResponse409 | socialLoginResponse500) & {
+  headers: Headers;
+};
 
-export type socialLoginResponse = (socialLoginResponseSuccess)
+export type socialLoginResponse = (socialLoginResponseSuccess | socialLoginResponseError)
 
 export const getSocialLoginUrl = () => {
 
@@ -132,19 +654,51 @@ export const socialLogin = async (foSocialLoginDto: FoSocialLoginDto, options?: 
 
 
 /**
- * @summary FO refresh token rotation
+ * @summary FO refresh token rotation (httpOnly cookie)
  */
-export type refreshResponse201 = {
-  data: void
-  status: 201
+export type refreshResponse200 = {
+  data: Refresh200
+  status: 200
 }
 
-export type refreshResponseSuccess = (refreshResponse201) & {
+export type refreshResponse400 = {
+  data: Refresh400
+  status: 400
+}
+
+export type refreshResponse401 = {
+  data: Refresh401
+  status: 401
+}
+
+export type refreshResponse403 = {
+  data: Refresh403
+  status: 403
+}
+
+export type refreshResponse404 = {
+  data: Refresh404
+  status: 404
+}
+
+export type refreshResponse409 = {
+  data: Refresh409
+  status: 409
+}
+
+export type refreshResponse500 = {
+  data: Refresh500
+  status: 500
+}
+
+export type refreshResponseSuccess = (refreshResponse200) & {
   headers: Headers;
 };
-;
+export type refreshResponseError = (refreshResponse400 | refreshResponse401 | refreshResponse403 | refreshResponse404 | refreshResponse409 | refreshResponse500) & {
+  headers: Headers;
+};
 
-export type refreshResponse = (refreshResponseSuccess)
+export type refreshResponse = (refreshResponseSuccess | refreshResponseError)
 
 export const getRefreshUrl = () => {
 
@@ -154,14 +708,81 @@ export const getRefreshUrl = () => {
   return `/fo/auth/refresh`
 }
 
-export const refresh = async (foRefreshTokenDto: FoRefreshTokenDto, options?: RequestInit): Promise<refreshResponse> => {
+export const refresh = async ( options?: RequestInit): Promise<refreshResponse> => {
   
   return fetcher<refreshResponse>(getRefreshUrl(),
   {      
     ...options,
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(
-      foRefreshTokenDto,)
+    method: 'POST'
+    
+    
+  }
+);}
+  
+
+
+/**
+ * @summary FO 본인 정보 조회
+ */
+export type meResponse200 = {
+  data: Me200
+  status: 200
+}
+
+export type meResponse400 = {
+  data: Me400
+  status: 400
+}
+
+export type meResponse401 = {
+  data: Me401
+  status: 401
+}
+
+export type meResponse403 = {
+  data: Me403
+  status: 403
+}
+
+export type meResponse404 = {
+  data: Me404
+  status: 404
+}
+
+export type meResponse409 = {
+  data: Me409
+  status: 409
+}
+
+export type meResponse500 = {
+  data: Me500
+  status: 500
+}
+
+export type meResponseSuccess = (meResponse200) & {
+  headers: Headers;
+};
+export type meResponseError = (meResponse400 | meResponse401 | meResponse403 | meResponse404 | meResponse409 | meResponse500) & {
+  headers: Headers;
+};
+
+export type meResponse = (meResponseSuccess | meResponseError)
+
+export const getMeUrl = () => {
+
+
+  
+
+  return `/fo/auth/me`
+}
+
+export const me = async ( options?: RequestInit): Promise<meResponse> => {
+  
+  return fetcher<meResponse>(getMeUrl(),
+  {      
+    ...options,
+    method: 'GET'
+    
+    
   }
 );}

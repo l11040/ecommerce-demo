@@ -1,6 +1,10 @@
-import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  Inject,
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { BoLoginDto } from './dto/bo-login.dto';
-import { BoRefreshTokenDto } from './dto/bo-refresh-token.dto';
 import { AuthTokenService } from '../../auth/auth-token.service';
 import { BO_AUTH_REPOSITORY } from './repositories/bo-auth.repository';
 import type { BoAuthRepository } from './repositories/bo-auth.repository';
@@ -25,17 +29,43 @@ export class BoAuthService {
       throw new UnauthorizedException('Invalid BO credentials');
     }
 
+    const tokenPair = this.authTokenService.issueTokenPair(
+      'bo',
+      admin.username,
+    );
+
     return {
-      scope: 'bo',
-      loginType: 'username',
-      user: {
-        username: admin.username,
+      tokenPair,
+      data: {
+        scope: 'bo',
+        loginType: 'username',
+        user: {
+          username: admin.username,
+        },
       },
-      ...this.authTokenService.issueTokenPair('bo', admin.username),
     };
   }
 
-  refresh(payload: BoRefreshTokenDto) {
-    return this.authTokenService.rotateRefreshToken('bo', payload.refreshToken);
+  refresh(refreshToken: string) {
+    return this.authTokenService.rotateRefreshToken('bo', refreshToken);
+  }
+
+  async me(accessToken?: string) {
+    if (!accessToken) {
+      throw new UnauthorizedException('Missing access token');
+    }
+
+    const payload = this.authTokenService.verifyAccessToken('bo', accessToken);
+    const admin = await this.boAuthRepository.findByUsername(payload.sub);
+
+    if (!admin) {
+      throw new NotFoundException('BO admin not found');
+    }
+
+    return {
+      id: admin.id,
+      username: admin.username,
+      displayName: admin.displayName,
+    };
   }
 }

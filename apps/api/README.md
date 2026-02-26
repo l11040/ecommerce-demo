@@ -58,11 +58,13 @@ BO OpenAPI JSON: `http://localhost:40003/openapi/bo-json`
 FO/BO 분리 생성 시에는 각 JSON URL을 사용하면 됩니다.
 
 로그인 정책:
-- FO: `POST /fo/auth/login` (email 기반)
+- FO: `POST /fo/auth/login` (email 기반, httpOnly 쿠키 발급)
 - FO(확장 예정): `POST /fo/auth/social-login` (소셜 로그인 placeholder)
-- FO refresh: `POST /fo/auth/refresh`
-- BO: `POST /bo/auth/login` (username 기반)
-- BO refresh: `POST /bo/auth/refresh`
+- FO refresh: `POST /fo/auth/refresh` (refresh 쿠키 기반)
+- FO me: `GET /fo/auth/me` (access 쿠키 기반)
+- BO: `POST /bo/auth/login` (username 기반, httpOnly 쿠키 발급)
+- BO refresh: `POST /bo/auth/refresh` (refresh 쿠키 기반)
+- BO me: `GET /bo/auth/me` (access 쿠키 기반)
 
 응답 포맷(전역):
 - 성공:

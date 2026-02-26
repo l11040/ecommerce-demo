@@ -4,7 +4,7 @@ import { createHmac, randomUUID } from 'node:crypto';
 type TokenType = 'access' | 'refresh';
 type AuthScope = 'fo' | 'bo';
 
-interface TokenPayload {
+export interface AuthTokenPayload {
   type: TokenType;
   scope: AuthScope;
   sub: string;
@@ -55,6 +55,16 @@ export class AuthTokenService {
     return this.issueTokenPair(scope, payload.sub);
   }
 
+  verifyAccessToken(scope: AuthScope, accessToken: string): AuthTokenPayload {
+    const payload = this.verifyToken(accessToken, 'access');
+
+    if (payload.scope !== scope) {
+      throw new UnauthorizedException('Invalid token scope');
+    }
+
+    return payload;
+  }
+
   private signToken(
     type: TokenType,
     scope: AuthScope,
@@ -62,7 +72,7 @@ export class AuthTokenService {
     ttlSeconds: number,
   ): string {
     const now = Math.floor(Date.now() / 1000);
-    const payload: TokenPayload = {
+    const payload: AuthTokenPayload = {
       type,
       scope,
       sub: subject,
@@ -77,7 +87,10 @@ export class AuthTokenService {
     return `${payloadPart}.${signature}`;
   }
 
-  private verifyToken(token: string, expectedType: TokenType): TokenPayload {
+  private verifyToken(
+    token: string,
+    expectedType: TokenType,
+  ): AuthTokenPayload {
     const [payloadPart, signature] = token.split('.');
 
     if (!payloadPart || !signature) {
@@ -90,7 +103,9 @@ export class AuthTokenService {
       throw new UnauthorizedException('Invalid token signature');
     }
 
-    const payload = JSON.parse(this.fromBase64Url(payloadPart)) as TokenPayload;
+    const payload = JSON.parse(
+      this.fromBase64Url(payloadPart),
+    ) as AuthTokenPayload;
     const now = Math.floor(Date.now() / 1000);
 
     if (payload.exp < now) {

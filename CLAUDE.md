@@ -54,6 +54,7 @@ pnpm --filter @ecommerce/admin generate # admin BO API 클라이언트 생성
 
 ## 규칙
 
+- 파일명은 케밥 케이스(kebab-case)를 사용한다. (예: `login-form.tsx`, `use-login-form.ts`, `auth-store.ts`)
 - 앱 간 패키지 공유 없음. 각 앱은 독립적으로 의존성을 관리한다.
 - web/admin에 shadcn 컴포넌트 추가 시 해당 앱 디렉토리에서 `pnpm dlx shadcn@latest add <component>` 실행.
 - `components/ui/` 파일은 직접 수정하지 않는다. 커스텀이 필요하면 `components/common/`에 래퍼 컴포넌트를 만들어 사용한다.
