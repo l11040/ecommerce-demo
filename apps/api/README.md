@@ -67,7 +67,11 @@ FO/BO 분리 생성 시에는 각 JSON URL을 사용하면 됩니다.
 - `src/config/env.loader.ts`: `.env` 로드
 - `src/config/env.ts`: 환경변수 파싱/기본값
 - `src/config/swagger.config.ts`: Swagger 설정
+- `src/common/swagger/*`: 공통 Swagger 스키마/응답 템플릿
 - `src/config/typeorm.config.ts`: TypeORM/Nest DB 설정
 - `src/database/data-source.ts`: TypeORM CLI DataSource
 - `src/database/migrations/*`: 마이그레이션
 - `src/database/entities/*`: 엔티티
+- `src/modules/**/auth/*.swagger.ts`: 컨트롤러 외부 Swagger 문서 정의
+- `src/modules/**/auth/repositories/*`: Repository 패턴 (쿼리 계층)
+- `docs/api-documentation-strategy.md`: Swagger/응답 문서화 운영 전략
