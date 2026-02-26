@@ -6,7 +6,7 @@ export class SeedAuthUsers1700000001000 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(`
       INSERT INTO fo_users (email, password_hash, display_name)
-      VALUES ('test@test.test', 'test', 'FO Test User')
+      VALUES ('test@test.test', 'qwer1234@', 'FO Test User')
       ON DUPLICATE KEY UPDATE
         password_hash = VALUES(password_hash),
         display_name = VALUES(display_name);
@@ -14,7 +14,7 @@ export class SeedAuthUsers1700000001000 implements MigrationInterface {
 
     await queryRunner.query(`
       INSERT INTO bo_admins (username, password_hash, display_name)
-      VALUES ('test', 'test', 'BO Test Admin')
+      VALUES ('test', 'qwer1234@', 'BO Test Admin')
       ON DUPLICATE KEY UPDATE
         password_hash = VALUES(password_hash),
         display_name = VALUES(display_name);

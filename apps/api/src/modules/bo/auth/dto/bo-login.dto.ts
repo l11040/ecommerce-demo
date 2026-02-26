@@ -4,6 +4,6 @@ export class BoLoginDto {
   @ApiProperty({ example: 'test' })
   username!: string;
 
-  @ApiProperty({ example: 'test' })
+  @ApiProperty({ example: 'qwer1234@' })
   password!: string;
 }

@@ -4,6 +4,6 @@ export class FoLoginDto {
   @ApiProperty({ example: 'test@test.test' })
   email!: string;
 
-  @ApiProperty({ example: 'test' })
+  @ApiProperty({ example: 'qwer1234@' })
   password!: string;
 }
