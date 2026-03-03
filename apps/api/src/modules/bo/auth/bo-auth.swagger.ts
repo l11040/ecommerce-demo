@@ -149,3 +149,45 @@ export function BoAuthMeDocs() {
     }),
   );
 }
+
+export function BoAuthLogoutDocs() {
+  return applyDecorators(
+    ApiOperation({ summary: 'BO 로그아웃 (httpOnly cookie 제거)' }),
+    ApiCookieAuth('bo_access_token'),
+    ApiCookieAuth('bo_refresh_token'),
+    ApiOkResponse({
+      description: '로그아웃 성공',
+      schema: buildSuccessSchema({
+        type: 'object',
+        properties: {
+          loggedOut: { type: 'boolean', example: true },
+        },
+        required: ['loggedOut'],
+      }),
+    }),
+    ApiBadRequestResponse({
+      description: '요청 오류',
+      schema: commonErrorSchema,
+    }),
+    ApiUnauthorizedResponse({
+      description: '인증 오류',
+      schema: commonErrorSchema,
+    }),
+    ApiForbiddenResponse({
+      description: '접근 권한 없음',
+      schema: commonErrorSchema,
+    }),
+    ApiNotFoundResponse({
+      description: '리소스 없음',
+      schema: commonErrorSchema,
+    }),
+    ApiConflictResponse({
+      description: '리소스 충돌',
+      schema: commonErrorSchema,
+    }),
+    ApiInternalServerErrorResponse({
+      description: '서버 에러',
+      schema: commonErrorSchema,
+    }),
+  );
+}

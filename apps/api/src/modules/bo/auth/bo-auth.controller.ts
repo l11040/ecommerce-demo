@@ -4,12 +4,14 @@ import { ApiTags } from '@nestjs/swagger';
 import { BoAuthService } from './bo-auth.service';
 import { BoLoginDto } from './dto/bo-login.dto';
 import {
+  BoAuthLogoutDocs,
   BoAuthLoginDocs,
   BoAuthMeDocs,
   BoAuthRefreshDocs,
 } from './bo-auth.swagger';
 import {
   boCookieNames,
+  clearBoTokenCookies,
   getBearerTokenFromRequest,
   getCookieFromRequest,
   setBoTokenCookies,
@@ -50,5 +52,12 @@ export class BoAuthController {
       getCookieFromRequest(request, boCookieNames.access) ??
       getBearerTokenFromRequest(request);
     return this.boAuthService.me(accessToken);
+  }
+
+  @Post('logout')
+  @BoAuthLogoutDocs()
+  logout(@Res({ passthrough: true }) response: Response) {
+    clearBoTokenCookies(response);
+    return { loggedOut: true };
   }
 }

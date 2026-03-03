@@ -7,10 +7,12 @@ import { AuthTokenService } from '../auth/auth-token.service';
 import { BoAdminEntity } from '../../database/entities/bo-admin.entity';
 import { BO_AUTH_REPOSITORY } from './auth/repositories/bo-auth.repository';
 import { TypeOrmBoAuthRepository } from './auth/repositories/typeorm-bo-auth.repository';
+import { CategoryModule } from '../category/category.module';
+import { BoCategoriesController } from './categories/bo-categories.controller';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([BoAdminEntity])],
-  controllers: [BoController, BoAuthController],
+  imports: [TypeOrmModule.forFeature([BoAdminEntity]), CategoryModule],
+  controllers: [BoController, BoAuthController, BoCategoriesController],
   providers: [
     BoAuthService,
     AuthTokenService,

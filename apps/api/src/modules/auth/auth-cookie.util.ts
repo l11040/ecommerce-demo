@@ -44,6 +44,14 @@ export function setBoTokenCookies(
   );
 }
 
+export function clearFoTokenCookies(response: Response): void {
+  clearTokenCookies(response, foCookieNames.access, foCookieNames.refresh);
+}
+
+export function clearBoTokenCookies(response: Response): void {
+  clearTokenCookies(response, boCookieNames.access, boCookieNames.refresh);
+}
+
 export function getCookieFromRequest(
   request: Request,
   name: string,
@@ -95,4 +103,13 @@ function setTokenCookies(
     ...baseCookieOptions,
     maxAge: tokenPair.refreshTokenExpiresIn * 1000,
   });
+}
+
+function clearTokenCookies(
+  response: Response,
+  accessCookieName: string,
+  refreshCookieName: string,
+): void {
+  response.clearCookie(accessCookieName, baseCookieOptions);
+  response.clearCookie(refreshCookieName, baseCookieOptions);
 }

@@ -7,10 +7,12 @@ import { AuthTokenService } from '../auth/auth-token.service';
 import { FoUserEntity } from '../../database/entities/fo-user.entity';
 import { FO_AUTH_REPOSITORY } from './auth/repositories/fo-auth.repository';
 import { TypeOrmFoAuthRepository } from './auth/repositories/typeorm-fo-auth.repository';
+import { CategoryModule } from '../category/category.module';
+import { FoCategoriesController } from './categories/fo-categories.controller';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([FoUserEntity])],
-  controllers: [FoController, FoAuthController],
+  imports: [TypeOrmModule.forFeature([FoUserEntity]), CategoryModule],
+  controllers: [FoController, FoAuthController, FoCategoriesController],
   providers: [
     FoAuthService,
     AuthTokenService,

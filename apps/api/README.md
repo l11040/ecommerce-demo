@@ -66,6 +66,20 @@ FO/BO 분리 생성 시에는 각 JSON URL을 사용하면 됩니다.
 - BO refresh: `POST /bo/auth/refresh` (refresh 쿠키 기반)
 - BO me: `GET /bo/auth/me` (access 쿠키 기반)
 
+카테고리 정책:
+- 최대 depth는 4까지 허용
+- 메인 노출 플래그: `isMainExposed`
+
+카테고리 API:
+- FO
+  - `GET /fo/categories/tree` (활성+노출 트리)
+  - `GET /fo/categories/main` (메인 노출 카테고리)
+- BO
+  - `GET /bo/categories` (필터 조회)
+  - `POST /bo/categories` (생성)
+  - `PATCH /bo/categories/:id` (수정)
+  - `PATCH /bo/categories/:id/main-exposure` (메인 노출 토글)
+
 응답 포맷(전역):
 - 성공:
   - `{"success": true, "code": "COMMON_OK", "message": "OK", "data": ...}`

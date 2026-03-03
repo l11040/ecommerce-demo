@@ -4,6 +4,7 @@ import { DataSourceOptions } from 'typeorm';
 import { env } from './env';
 import { FoUserEntity } from '../database/entities/fo-user.entity';
 import { BoAdminEntity } from '../database/entities/bo-admin.entity';
+import { CategoryEntity } from '../database/entities/category.entity';
 
 const migrationPaths = [join(__dirname, '../database/migrations/*{.ts,.js}')];
 
@@ -14,7 +15,7 @@ export const typeOrmModuleOptions: TypeOrmModuleOptions = {
   username: env.database.username,
   password: env.database.password,
   database: env.database.name,
-  entities: [FoUserEntity, BoAdminEntity],
+  entities: [FoUserEntity, BoAdminEntity, CategoryEntity],
   migrations: migrationPaths,
   migrationsRun: true,
   synchronize: false,
@@ -27,7 +28,7 @@ export const dataSourceOptions: DataSourceOptions = {
   username: env.database.username,
   password: env.database.password,
   database: env.database.name,
-  entities: [FoUserEntity, BoAdminEntity],
+  entities: [FoUserEntity, BoAdminEntity, CategoryEntity],
   migrations: migrationPaths,
   synchronize: false,
 };
