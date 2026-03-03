@@ -1,4 +1,8 @@
 import type { Metadata } from 'next';
+import NextTopLoader from 'nextjs-toploader';
+import { TooltipProvider } from '@/components/ui/tooltip';
+import { Header } from '@/components/common/header';
+import { Footer } from '@/components/common/footer';
 import './globals.css';
 
 export const metadata: Metadata = {
@@ -12,8 +16,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className="antialiased">{children}</body>
+    <html lang="ko">
+      <body className="flex flex-col antialiased">
+        <NextTopLoader color="#002ee7" showSpinner={false} shadow="0 0 10px #002ee7,0 0 5px #002ee7" />
+        <TooltipProvider>
+          <Header />
+          <main className="flex min-h-[calc(100svh-var(--header-h))] flex-col">{children}</main>
+          <Footer />
+        </TooltipProvider>
+      </body>
     </html>
   );
 }

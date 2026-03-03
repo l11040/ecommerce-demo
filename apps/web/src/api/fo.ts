@@ -479,6 +479,85 @@ export type Me500 = {
   meta: Me500Meta;
 };
 
+export type Tree200DataItemChildrenItem = { [key: string]: unknown };
+
+export type Tree200DataItem = {
+  id: number;
+  /** @nullable */
+  parentId: number | null;
+  depth: number;
+  path: string;
+  name: string;
+  slug: string;
+  sortOrder: number;
+  isActive: boolean;
+  isVisible: boolean;
+  isMainExposed: boolean;
+  children: Tree200DataItemChildrenItem[];
+};
+
+export type Tree200 = {
+  success: boolean;
+  code: string;
+  message: string;
+  data: Tree200DataItem[];
+};
+
+export type Tree500ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type Tree500Meta = {
+  requestId?: string;
+};
+
+export type Tree500 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: Tree500ErrorsItem[];
+  meta: Tree500Meta;
+};
+
+export type Main200DataItem = {
+  id: number;
+  /** @nullable */
+  parentId: number | null;
+  depth: number;
+  path: string;
+  name: string;
+  slug: string;
+  sortOrder: number;
+  isActive: boolean;
+  isVisible: boolean;
+  isMainExposed: boolean;
+};
+
+export type Main200 = {
+  success: boolean;
+  code: string;
+  message: string;
+  data: Main200DataItem[];
+};
+
+export type Main500ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type Main500Meta = {
+  requestId?: string;
+};
+
+export type Main500 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: Main500ErrorsItem[];
+  meta: Main500Meta;
+};
+
 /**
  * @summary Front Office health check
  */
@@ -779,6 +858,92 @@ export const getMeUrl = () => {
 export const me = async ( options?: RequestInit): Promise<meResponse> => {
   
   return fetcher<meResponse>(getMeUrl(),
+  {      
+    ...options,
+    method: 'GET'
+    
+    
+  }
+);}
+  
+
+
+/**
+ * @summary FO 카테고리 트리 조회
+ */
+export type treeResponse200 = {
+  data: Tree200
+  status: 200
+}
+
+export type treeResponse500 = {
+  data: Tree500
+  status: 500
+}
+
+export type treeResponseSuccess = (treeResponse200) & {
+  headers: Headers;
+};
+export type treeResponseError = (treeResponse500) & {
+  headers: Headers;
+};
+
+export type treeResponse = (treeResponseSuccess | treeResponseError)
+
+export const getTreeUrl = () => {
+
+
+  
+
+  return `/fo/categories/tree`
+}
+
+export const tree = async ( options?: RequestInit): Promise<treeResponse> => {
+  
+  return fetcher<treeResponse>(getTreeUrl(),
+  {      
+    ...options,
+    method: 'GET'
+    
+    
+  }
+);}
+  
+
+
+/**
+ * @summary FO 메인 노출 카테고리 조회
+ */
+export type mainResponse200 = {
+  data: Main200
+  status: 200
+}
+
+export type mainResponse500 = {
+  data: Main500
+  status: 500
+}
+
+export type mainResponseSuccess = (mainResponse200) & {
+  headers: Headers;
+};
+export type mainResponseError = (mainResponse500) & {
+  headers: Headers;
+};
+
+export type mainResponse = (mainResponseSuccess | mainResponseError)
+
+export const getMainUrl = () => {
+
+
+  
+
+  return `/fo/categories/main`
+}
+
+export const main = async ( options?: RequestInit): Promise<mainResponse> => {
+  
+  return fetcher<mainResponse>(getMainUrl(),
   {      
     ...options,
     method: 'GET'
