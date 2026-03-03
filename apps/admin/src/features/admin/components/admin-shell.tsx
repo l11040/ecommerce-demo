@@ -16,10 +16,11 @@ import {
   PlusCircle,
   Settings,
 } from 'lucide-react';
+import { logout } from '@/api/bo';
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { getApiErrorMessage, isApiSuccess } from '@/lib/api-response';
 import { toast } from 'sonner';
-import fetcher from '@/lib/fetcher';
 
 type AdminShellProps = {
   children: ReactNode;
@@ -60,16 +61,14 @@ export function AdminShell({ children, username }: AdminShellProps) {
   async function handleLogout() {
     setLogoutPending(true);
 
-    const response = await fetcher<{ data: { success?: boolean; message?: string }; status: number }>(
-      '/bo/auth/logout',
-      {
-        method: 'POST',
-      },
-    );
+    const response = await logout();
 
-    if (response.status !== 200) {
+    if (!isApiSuccess(response)) {
       toast.error('로그아웃 실패', {
-        description: response.data?.message ?? '로그아웃 중 오류가 발생했습니다.',
+        description: getApiErrorMessage(
+          response,
+          '로그아웃 중 오류가 발생했습니다.',
+        ),
       });
       setLogoutPending(false);
       return;

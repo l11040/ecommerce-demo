@@ -4,6 +4,10 @@ import { FormEvent, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { login, me, refresh, type BoLoginDto } from '@/api/bo';
 import { Button } from '@/components/ui/button';
+import {
+  getApiErrorMessage,
+  isApiSuccess,
+} from '@/lib/api-response';
 import { toast } from 'sonner';
 
 export function AdminLoginPage() {
@@ -18,16 +22,16 @@ export function AdminLoginPage() {
     const timeoutId = window.setTimeout(() => {
       void (async () => {
         const meResponse = await me();
-        if (meResponse.status === 200 && meResponse.data.success) {
+        if (isApiSuccess(meResponse)) {
           router.replace('/dashboard');
           return;
         }
 
         if (meResponse.status === 401) {
           const refreshResponse = await refresh();
-          if (refreshResponse.status === 200 && refreshResponse.data.success) {
+          if (isApiSuccess(refreshResponse)) {
             const retryMeResponse = await me();
-            if (retryMeResponse.status === 200 && retryMeResponse.data.success) {
+            if (isApiSuccess(retryMeResponse)) {
               router.replace('/dashboard');
               return;
             }
@@ -55,9 +59,9 @@ export function AdminLoginPage() {
 
     const response = await login(payload);
 
-    if (response.status !== 200 || !response.data.success) {
+    if (!isApiSuccess(response)) {
       toast.error('로그인 실패', {
-        description: response.data.message ?? '로그인에 실패했습니다.',
+        description: getApiErrorMessage(response, '로그인에 실패했습니다.'),
       });
       setPending(false);
       return;

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { me, refresh } from '@/api/bo';
+import { isApiSuccess } from '@/lib/api-response';
 
 type SessionState = {
   loading: boolean;
@@ -18,9 +19,11 @@ export function useAdminSession(): SessionState {
     const timeoutId = window.setTimeout(() => {
       void (async () => {
         const meResponse = await me();
+        const meUsername = (meResponse.data as { data?: { username?: string } })
+          ?.data?.username;
 
-        if (meResponse.status === 200 && meResponse.data.success) {
-          setUsername(meResponse.data.data.username);
+        if (isApiSuccess(meResponse) && meUsername) {
+          setUsername(meUsername);
           setAuthenticated(true);
           setLoading(false);
           return;
@@ -28,10 +31,14 @@ export function useAdminSession(): SessionState {
 
         if (meResponse.status === 401) {
           const refreshResponse = await refresh();
-          if (refreshResponse.status === 200 && refreshResponse.data.success) {
+          if (isApiSuccess(refreshResponse)) {
             const retryMeResponse = await me();
-            if (retryMeResponse.status === 200 && retryMeResponse.data.success) {
-              setUsername(retryMeResponse.data.data.username);
+            const retryUsername = (
+              retryMeResponse.data as { data?: { username?: string } }
+            )?.data?.username;
+
+            if (isApiSuccess(retryMeResponse) && retryUsername) {
+              setUsername(retryUsername);
               setAuthenticated(true);
               setLoading(false);
               return;
