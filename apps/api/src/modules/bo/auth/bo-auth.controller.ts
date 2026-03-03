@@ -1,4 +1,13 @@
-import { Body, Controller, Get, Post, Req, Res } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Post,
+  Req,
+  Res,
+} from '@nestjs/common';
 import type { Request, Response } from 'express';
 import { ApiTags } from '@nestjs/swagger';
 import { BoAuthService } from './bo-auth.service';
@@ -23,6 +32,7 @@ export class BoAuthController {
   constructor(private readonly boAuthService: BoAuthService) {}
 
   @Post('login')
+  @HttpCode(HttpStatus.OK)
   @BoAuthLoginDocs()
   async login(
     @Body() payload: BoLoginDto,
@@ -34,6 +44,7 @@ export class BoAuthController {
   }
 
   @Post('refresh')
+  @HttpCode(HttpStatus.OK)
   @BoAuthRefreshDocs()
   refresh(
     @Req() request: Request,
@@ -55,6 +66,7 @@ export class BoAuthController {
   }
 
   @Post('logout')
+  @HttpCode(HttpStatus.OK)
   @BoAuthLogoutDocs()
   logout(@Res({ passthrough: true }) response: Response) {
     clearBoTokenCookies(response);

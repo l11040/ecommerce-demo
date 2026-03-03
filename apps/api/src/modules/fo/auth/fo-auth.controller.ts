@@ -1,4 +1,13 @@
-import { Body, Controller, Get, Post, Req, Res } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Post,
+  Req,
+  Res,
+} from '@nestjs/common';
 import type { Request, Response } from 'express';
 import { ApiTags } from '@nestjs/swagger';
 import { FoAuthService } from './fo-auth.service';
@@ -23,6 +32,7 @@ export class FoAuthController {
   constructor(private readonly foAuthService: FoAuthService) {}
 
   @Post('login')
+  @HttpCode(HttpStatus.OK)
   @FoAuthLoginDocs()
   async login(
     @Body() payload: FoLoginDto,
@@ -34,6 +44,7 @@ export class FoAuthController {
   }
 
   @Post('social-login')
+  @HttpCode(HttpStatus.OK)
   @FoAuthSocialLoginDocs()
   socialLogin(
     @Body() payload: FoSocialLoginDto,
@@ -45,6 +56,7 @@ export class FoAuthController {
   }
 
   @Post('refresh')
+  @HttpCode(HttpStatus.OK)
   @FoAuthRefreshDocs()
   refresh(
     @Req() request: Request,
