@@ -11,9 +11,1108 @@ export interface BoLoginDto {
   password: string;
 }
 
-export interface BoRefreshTokenDto {
-  refreshToken: string;
+export interface CreateCategoryDto {
+  /** 상위 카테고리 ID (없으면 depth=1) */
+  parentId?: number;
+  name: string;
+  slug: string;
+  sortOrder?: number;
+  isActive?: boolean;
+  isVisible?: boolean;
+  isMainExposed?: boolean;
 }
+
+export interface UpdateCategoryDto {
+  parentId?: number | null;
+  name?: string;
+  slug?: string;
+  sortOrder?: number;
+  isActive?: boolean;
+  isVisible?: boolean;
+  isMainExposed?: boolean;
+}
+
+export interface UpdateMainExposureDto {
+  isMainExposed: boolean;
+}
+
+export type Login200DataUser = {
+  username: string;
+};
+
+export type Login200Data = {
+  scope: string;
+  loginType: string;
+  user: Login200DataUser;
+};
+
+export type Login200 = {
+  success: boolean;
+  code: string;
+  message: string;
+  data: Login200Data;
+};
+
+export type Login400ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type Login400Meta = {
+  requestId?: string;
+};
+
+export type Login400 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: Login400ErrorsItem[];
+  meta: Login400Meta;
+};
+
+export type Login401ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type Login401Meta = {
+  requestId?: string;
+};
+
+export type Login401 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: Login401ErrorsItem[];
+  meta: Login401Meta;
+};
+
+export type Login403ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type Login403Meta = {
+  requestId?: string;
+};
+
+export type Login403 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: Login403ErrorsItem[];
+  meta: Login403Meta;
+};
+
+export type Login404ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type Login404Meta = {
+  requestId?: string;
+};
+
+export type Login404 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: Login404ErrorsItem[];
+  meta: Login404Meta;
+};
+
+export type Login409ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type Login409Meta = {
+  requestId?: string;
+};
+
+export type Login409 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: Login409ErrorsItem[];
+  meta: Login409Meta;
+};
+
+export type Login500ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type Login500Meta = {
+  requestId?: string;
+};
+
+export type Login500 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: Login500ErrorsItem[];
+  meta: Login500Meta;
+};
+
+export type Refresh200Data = {
+  refreshed: boolean;
+};
+
+export type Refresh200 = {
+  success: boolean;
+  code: string;
+  message: string;
+  data: Refresh200Data;
+};
+
+export type Refresh400ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type Refresh400Meta = {
+  requestId?: string;
+};
+
+export type Refresh400 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: Refresh400ErrorsItem[];
+  meta: Refresh400Meta;
+};
+
+export type Refresh401ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type Refresh401Meta = {
+  requestId?: string;
+};
+
+export type Refresh401 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: Refresh401ErrorsItem[];
+  meta: Refresh401Meta;
+};
+
+export type Refresh403ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type Refresh403Meta = {
+  requestId?: string;
+};
+
+export type Refresh403 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: Refresh403ErrorsItem[];
+  meta: Refresh403Meta;
+};
+
+export type Refresh404ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type Refresh404Meta = {
+  requestId?: string;
+};
+
+export type Refresh404 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: Refresh404ErrorsItem[];
+  meta: Refresh404Meta;
+};
+
+export type Refresh409ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type Refresh409Meta = {
+  requestId?: string;
+};
+
+export type Refresh409 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: Refresh409ErrorsItem[];
+  meta: Refresh409Meta;
+};
+
+export type Refresh500ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type Refresh500Meta = {
+  requestId?: string;
+};
+
+export type Refresh500 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: Refresh500ErrorsItem[];
+  meta: Refresh500Meta;
+};
+
+export type Me200Data = {
+  id: number;
+  username: string;
+  displayName: string;
+};
+
+export type Me200 = {
+  success: boolean;
+  code: string;
+  message: string;
+  data: Me200Data;
+};
+
+export type Me400ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type Me400Meta = {
+  requestId?: string;
+};
+
+export type Me400 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: Me400ErrorsItem[];
+  meta: Me400Meta;
+};
+
+export type Me401ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type Me401Meta = {
+  requestId?: string;
+};
+
+export type Me401 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: Me401ErrorsItem[];
+  meta: Me401Meta;
+};
+
+export type Me403ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type Me403Meta = {
+  requestId?: string;
+};
+
+export type Me403 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: Me403ErrorsItem[];
+  meta: Me403Meta;
+};
+
+export type Me404ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type Me404Meta = {
+  requestId?: string;
+};
+
+export type Me404 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: Me404ErrorsItem[];
+  meta: Me404Meta;
+};
+
+export type Me409ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type Me409Meta = {
+  requestId?: string;
+};
+
+export type Me409 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: Me409ErrorsItem[];
+  meta: Me409Meta;
+};
+
+export type Me500ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type Me500Meta = {
+  requestId?: string;
+};
+
+export type Me500 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: Me500ErrorsItem[];
+  meta: Me500Meta;
+};
+
+export type Logout200Data = {
+  loggedOut: boolean;
+};
+
+export type Logout200 = {
+  success: boolean;
+  code: string;
+  message: string;
+  data: Logout200Data;
+};
+
+export type Logout400ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type Logout400Meta = {
+  requestId?: string;
+};
+
+export type Logout400 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: Logout400ErrorsItem[];
+  meta: Logout400Meta;
+};
+
+export type Logout401ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type Logout401Meta = {
+  requestId?: string;
+};
+
+export type Logout401 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: Logout401ErrorsItem[];
+  meta: Logout401Meta;
+};
+
+export type Logout403ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type Logout403Meta = {
+  requestId?: string;
+};
+
+export type Logout403 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: Logout403ErrorsItem[];
+  meta: Logout403Meta;
+};
+
+export type Logout404ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type Logout404Meta = {
+  requestId?: string;
+};
+
+export type Logout404 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: Logout404ErrorsItem[];
+  meta: Logout404Meta;
+};
+
+export type Logout409ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type Logout409Meta = {
+  requestId?: string;
+};
+
+export type Logout409 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: Logout409ErrorsItem[];
+  meta: Logout409Meta;
+};
+
+export type Logout500ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type Logout500Meta = {
+  requestId?: string;
+};
+
+export type Logout500 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: Logout500ErrorsItem[];
+  meta: Logout500Meta;
+};
+
+export type ListParams = {
+parentId?: number;
+/**
+ * @minimum 1
+ * @maximum 4
+ */
+depth?: number;
+isActive?: string;
+isVisible?: string;
+isMainExposed?: string;
+};
+
+export type List200DataItem = {
+  id: number;
+  /** @nullable */
+  parentId: number | null;
+  depth: number;
+  path: string;
+  name: string;
+  slug: string;
+  sortOrder: number;
+  isActive: boolean;
+  isVisible: boolean;
+  isMainExposed: boolean;
+};
+
+export type List200 = {
+  success: boolean;
+  code: string;
+  message: string;
+  data: List200DataItem[];
+};
+
+export type List400ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type List400Meta = {
+  requestId?: string;
+};
+
+export type List400 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: List400ErrorsItem[];
+  meta: List400Meta;
+};
+
+export type List401ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type List401Meta = {
+  requestId?: string;
+};
+
+export type List401 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: List401ErrorsItem[];
+  meta: List401Meta;
+};
+
+export type List403ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type List403Meta = {
+  requestId?: string;
+};
+
+export type List403 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: List403ErrorsItem[];
+  meta: List403Meta;
+};
+
+export type List404ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type List404Meta = {
+  requestId?: string;
+};
+
+export type List404 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: List404ErrorsItem[];
+  meta: List404Meta;
+};
+
+export type List409ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type List409Meta = {
+  requestId?: string;
+};
+
+export type List409 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: List409ErrorsItem[];
+  meta: List409Meta;
+};
+
+export type List500ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type List500Meta = {
+  requestId?: string;
+};
+
+export type List500 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: List500ErrorsItem[];
+  meta: List500Meta;
+};
+
+export type Create200Data = {
+  id: number;
+  /** @nullable */
+  parentId: number | null;
+  depth: number;
+  path: string;
+  name: string;
+  slug: string;
+  sortOrder: number;
+  isActive: boolean;
+  isVisible: boolean;
+  isMainExposed: boolean;
+};
+
+export type Create200 = {
+  success: boolean;
+  code: string;
+  message: string;
+  data: Create200Data;
+};
+
+export type Create400ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type Create400Meta = {
+  requestId?: string;
+};
+
+export type Create400 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: Create400ErrorsItem[];
+  meta: Create400Meta;
+};
+
+export type Create401ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type Create401Meta = {
+  requestId?: string;
+};
+
+export type Create401 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: Create401ErrorsItem[];
+  meta: Create401Meta;
+};
+
+export type Create403ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type Create403Meta = {
+  requestId?: string;
+};
+
+export type Create403 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: Create403ErrorsItem[];
+  meta: Create403Meta;
+};
+
+export type Create404ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type Create404Meta = {
+  requestId?: string;
+};
+
+export type Create404 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: Create404ErrorsItem[];
+  meta: Create404Meta;
+};
+
+export type Create409ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type Create409Meta = {
+  requestId?: string;
+};
+
+export type Create409 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: Create409ErrorsItem[];
+  meta: Create409Meta;
+};
+
+export type Create500ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type Create500Meta = {
+  requestId?: string;
+};
+
+export type Create500 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: Create500ErrorsItem[];
+  meta: Create500Meta;
+};
+
+export type Update200Data = {
+  id: number;
+  /** @nullable */
+  parentId: number | null;
+  depth: number;
+  path: string;
+  name: string;
+  slug: string;
+  sortOrder: number;
+  isActive: boolean;
+  isVisible: boolean;
+  isMainExposed: boolean;
+};
+
+export type Update200 = {
+  success: boolean;
+  code: string;
+  message: string;
+  data: Update200Data;
+};
+
+export type Update400ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type Update400Meta = {
+  requestId?: string;
+};
+
+export type Update400 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: Update400ErrorsItem[];
+  meta: Update400Meta;
+};
+
+export type Update401ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type Update401Meta = {
+  requestId?: string;
+};
+
+export type Update401 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: Update401ErrorsItem[];
+  meta: Update401Meta;
+};
+
+export type Update403ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type Update403Meta = {
+  requestId?: string;
+};
+
+export type Update403 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: Update403ErrorsItem[];
+  meta: Update403Meta;
+};
+
+export type Update404ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type Update404Meta = {
+  requestId?: string;
+};
+
+export type Update404 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: Update404ErrorsItem[];
+  meta: Update404Meta;
+};
+
+export type Update409ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type Update409Meta = {
+  requestId?: string;
+};
+
+export type Update409 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: Update409ErrorsItem[];
+  meta: Update409Meta;
+};
+
+export type Update500ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type Update500Meta = {
+  requestId?: string;
+};
+
+export type Update500 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: Update500ErrorsItem[];
+  meta: Update500Meta;
+};
+
+export type _Delete200Data = {
+  id: number;
+  deleted: boolean;
+};
+
+export type _Delete200 = {
+  success: boolean;
+  code: string;
+  message: string;
+  data: _Delete200Data;
+};
+
+export type _Delete400ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type _Delete400Meta = {
+  requestId?: string;
+};
+
+export type _Delete400 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: _Delete400ErrorsItem[];
+  meta: _Delete400Meta;
+};
+
+export type _Delete401ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type _Delete401Meta = {
+  requestId?: string;
+};
+
+export type _Delete401 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: _Delete401ErrorsItem[];
+  meta: _Delete401Meta;
+};
+
+export type _Delete403ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type _Delete403Meta = {
+  requestId?: string;
+};
+
+export type _Delete403 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: _Delete403ErrorsItem[];
+  meta: _Delete403Meta;
+};
+
+export type _Delete404ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type _Delete404Meta = {
+  requestId?: string;
+};
+
+export type _Delete404 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: _Delete404ErrorsItem[];
+  meta: _Delete404Meta;
+};
+
+export type _Delete409ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type _Delete409Meta = {
+  requestId?: string;
+};
+
+export type _Delete409 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: _Delete409ErrorsItem[];
+  meta: _Delete409Meta;
+};
+
+export type _Delete500ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type _Delete500Meta = {
+  requestId?: string;
+};
+
+export type _Delete500 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: _Delete500ErrorsItem[];
+  meta: _Delete500Meta;
+};
+
+export type SetMainExposure200Data = {
+  id: number;
+  /** @nullable */
+  parentId: number | null;
+  depth: number;
+  path: string;
+  name: string;
+  slug: string;
+  sortOrder: number;
+  isActive: boolean;
+  isVisible: boolean;
+  isMainExposed: boolean;
+};
+
+export type SetMainExposure200 = {
+  success: boolean;
+  code: string;
+  message: string;
+  data: SetMainExposure200Data;
+};
+
+export type SetMainExposure400ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type SetMainExposure400Meta = {
+  requestId?: string;
+};
+
+export type SetMainExposure400 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: SetMainExposure400ErrorsItem[];
+  meta: SetMainExposure400Meta;
+};
+
+export type SetMainExposure401ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type SetMainExposure401Meta = {
+  requestId?: string;
+};
+
+export type SetMainExposure401 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: SetMainExposure401ErrorsItem[];
+  meta: SetMainExposure401Meta;
+};
+
+export type SetMainExposure403ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type SetMainExposure403Meta = {
+  requestId?: string;
+};
+
+export type SetMainExposure403 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: SetMainExposure403ErrorsItem[];
+  meta: SetMainExposure403Meta;
+};
+
+export type SetMainExposure404ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type SetMainExposure404Meta = {
+  requestId?: string;
+};
+
+export type SetMainExposure404 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: SetMainExposure404ErrorsItem[];
+  meta: SetMainExposure404Meta;
+};
+
+export type SetMainExposure409ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type SetMainExposure409Meta = {
+  requestId?: string;
+};
+
+export type SetMainExposure409 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: SetMainExposure409ErrorsItem[];
+  meta: SetMainExposure409Meta;
+};
+
+export type SetMainExposure500ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type SetMainExposure500Meta = {
+  requestId?: string;
+};
+
+export type SetMainExposure500 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: SetMainExposure500ErrorsItem[];
+  meta: SetMainExposure500Meta;
+};
 
 /**
  * @summary Back Office health check
@@ -52,19 +1151,51 @@ export const healthCheck = async ( options?: RequestInit): Promise<healthCheckRe
 
 
 /**
- * @summary BO username login
+ * @summary BO username login (httpOnly cookie)
  */
-export type loginResponse201 = {
-  data: void
-  status: 201
+export type loginResponse200 = {
+  data: Login200
+  status: 200
 }
 
-export type loginResponseSuccess = (loginResponse201) & {
+export type loginResponse400 = {
+  data: Login400
+  status: 400
+}
+
+export type loginResponse401 = {
+  data: Login401
+  status: 401
+}
+
+export type loginResponse403 = {
+  data: Login403
+  status: 403
+}
+
+export type loginResponse404 = {
+  data: Login404
+  status: 404
+}
+
+export type loginResponse409 = {
+  data: Login409
+  status: 409
+}
+
+export type loginResponse500 = {
+  data: Login500
+  status: 500
+}
+
+export type loginResponseSuccess = (loginResponse200) & {
   headers: Headers;
 };
-;
+export type loginResponseError = (loginResponse400 | loginResponse401 | loginResponse403 | loginResponse404 | loginResponse409 | loginResponse500) & {
+  headers: Headers;
+};
 
-export type loginResponse = (loginResponseSuccess)
+export type loginResponse = (loginResponseSuccess | loginResponseError)
 
 export const getLoginUrl = () => {
 
@@ -89,19 +1220,51 @@ export const login = async (boLoginDto: BoLoginDto, options?: RequestInit): Prom
 
 
 /**
- * @summary BO refresh token rotation
+ * @summary BO refresh token rotation (httpOnly cookie)
  */
-export type refreshResponse201 = {
-  data: void
-  status: 201
+export type refreshResponse200 = {
+  data: Refresh200
+  status: 200
 }
 
-export type refreshResponseSuccess = (refreshResponse201) & {
+export type refreshResponse400 = {
+  data: Refresh400
+  status: 400
+}
+
+export type refreshResponse401 = {
+  data: Refresh401
+  status: 401
+}
+
+export type refreshResponse403 = {
+  data: Refresh403
+  status: 403
+}
+
+export type refreshResponse404 = {
+  data: Refresh404
+  status: 404
+}
+
+export type refreshResponse409 = {
+  data: Refresh409
+  status: 409
+}
+
+export type refreshResponse500 = {
+  data: Refresh500
+  status: 500
+}
+
+export type refreshResponseSuccess = (refreshResponse200) & {
   headers: Headers;
 };
-;
+export type refreshResponseError = (refreshResponse400 | refreshResponse401 | refreshResponse403 | refreshResponse404 | refreshResponse409 | refreshResponse500) & {
+  headers: Headers;
+};
 
-export type refreshResponse = (refreshResponseSuccess)
+export type refreshResponse = (refreshResponseSuccess | refreshResponseError)
 
 export const getRefreshUrl = () => {
 
@@ -111,14 +1274,501 @@ export const getRefreshUrl = () => {
   return `/bo/auth/refresh`
 }
 
-export const refresh = async (boRefreshTokenDto: BoRefreshTokenDto, options?: RequestInit): Promise<refreshResponse> => {
+export const refresh = async ( options?: RequestInit): Promise<refreshResponse> => {
   
   return fetcher<refreshResponse>(getRefreshUrl(),
+  {      
+    ...options,
+    method: 'POST'
+    
+    
+  }
+);}
+  
+
+
+/**
+ * @summary BO 본인 정보 조회
+ */
+export type meResponse200 = {
+  data: Me200
+  status: 200
+}
+
+export type meResponse400 = {
+  data: Me400
+  status: 400
+}
+
+export type meResponse401 = {
+  data: Me401
+  status: 401
+}
+
+export type meResponse403 = {
+  data: Me403
+  status: 403
+}
+
+export type meResponse404 = {
+  data: Me404
+  status: 404
+}
+
+export type meResponse409 = {
+  data: Me409
+  status: 409
+}
+
+export type meResponse500 = {
+  data: Me500
+  status: 500
+}
+
+export type meResponseSuccess = (meResponse200) & {
+  headers: Headers;
+};
+export type meResponseError = (meResponse400 | meResponse401 | meResponse403 | meResponse404 | meResponse409 | meResponse500) & {
+  headers: Headers;
+};
+
+export type meResponse = (meResponseSuccess | meResponseError)
+
+export const getMeUrl = () => {
+
+
+  
+
+  return `/bo/auth/me`
+}
+
+export const me = async ( options?: RequestInit): Promise<meResponse> => {
+  
+  return fetcher<meResponse>(getMeUrl(),
+  {      
+    ...options,
+    method: 'GET'
+    
+    
+  }
+);}
+  
+
+
+/**
+ * @summary BO 로그아웃 (httpOnly cookie 제거)
+ */
+export type logoutResponse200 = {
+  data: Logout200
+  status: 200
+}
+
+export type logoutResponse400 = {
+  data: Logout400
+  status: 400
+}
+
+export type logoutResponse401 = {
+  data: Logout401
+  status: 401
+}
+
+export type logoutResponse403 = {
+  data: Logout403
+  status: 403
+}
+
+export type logoutResponse404 = {
+  data: Logout404
+  status: 404
+}
+
+export type logoutResponse409 = {
+  data: Logout409
+  status: 409
+}
+
+export type logoutResponse500 = {
+  data: Logout500
+  status: 500
+}
+
+export type logoutResponseSuccess = (logoutResponse200) & {
+  headers: Headers;
+};
+export type logoutResponseError = (logoutResponse400 | logoutResponse401 | logoutResponse403 | logoutResponse404 | logoutResponse409 | logoutResponse500) & {
+  headers: Headers;
+};
+
+export type logoutResponse = (logoutResponseSuccess | logoutResponseError)
+
+export const getLogoutUrl = () => {
+
+
+  
+
+  return `/bo/auth/logout`
+}
+
+export const logout = async ( options?: RequestInit): Promise<logoutResponse> => {
+  
+  return fetcher<logoutResponse>(getLogoutUrl(),
+  {      
+    ...options,
+    method: 'POST'
+    
+    
+  }
+);}
+  
+
+
+/**
+ * @summary BO 카테고리 목록 조회
+ */
+export type listResponse200 = {
+  data: List200
+  status: 200
+}
+
+export type listResponse400 = {
+  data: List400
+  status: 400
+}
+
+export type listResponse401 = {
+  data: List401
+  status: 401
+}
+
+export type listResponse403 = {
+  data: List403
+  status: 403
+}
+
+export type listResponse404 = {
+  data: List404
+  status: 404
+}
+
+export type listResponse409 = {
+  data: List409
+  status: 409
+}
+
+export type listResponse500 = {
+  data: List500
+  status: 500
+}
+
+export type listResponseSuccess = (listResponse200) & {
+  headers: Headers;
+};
+export type listResponseError = (listResponse400 | listResponse401 | listResponse403 | listResponse404 | listResponse409 | listResponse500) & {
+  headers: Headers;
+};
+
+export type listResponse = (listResponseSuccess | listResponseError)
+
+export const getListUrl = (params?: ListParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : value.toString())
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/bo/categories?${stringifiedParams}` : `/bo/categories`
+}
+
+export const list = async (params?: ListParams, options?: RequestInit): Promise<listResponse> => {
+  
+  return fetcher<listResponse>(getListUrl(params),
+  {      
+    ...options,
+    method: 'GET'
+    
+    
+  }
+);}
+  
+
+
+/**
+ * @summary BO 카테고리 생성 (최대 depth=4)
+ */
+export type createResponse200 = {
+  data: Create200
+  status: 200
+}
+
+export type createResponse400 = {
+  data: Create400
+  status: 400
+}
+
+export type createResponse401 = {
+  data: Create401
+  status: 401
+}
+
+export type createResponse403 = {
+  data: Create403
+  status: 403
+}
+
+export type createResponse404 = {
+  data: Create404
+  status: 404
+}
+
+export type createResponse409 = {
+  data: Create409
+  status: 409
+}
+
+export type createResponse500 = {
+  data: Create500
+  status: 500
+}
+
+export type createResponseSuccess = (createResponse200) & {
+  headers: Headers;
+};
+export type createResponseError = (createResponse400 | createResponse401 | createResponse403 | createResponse404 | createResponse409 | createResponse500) & {
+  headers: Headers;
+};
+
+export type createResponse = (createResponseSuccess | createResponseError)
+
+export const getCreateUrl = () => {
+
+
+  
+
+  return `/bo/categories`
+}
+
+export const create = async (createCategoryDto: CreateCategoryDto, options?: RequestInit): Promise<createResponse> => {
+  
+  return fetcher<createResponse>(getCreateUrl(),
   {      
     ...options,
     method: 'POST',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
     body: JSON.stringify(
-      boRefreshTokenDto,)
+      createCategoryDto,)
+  }
+);}
+  
+
+
+/**
+ * @summary BO 카테고리 수정
+ */
+export type updateResponse200 = {
+  data: Update200
+  status: 200
+}
+
+export type updateResponse400 = {
+  data: Update400
+  status: 400
+}
+
+export type updateResponse401 = {
+  data: Update401
+  status: 401
+}
+
+export type updateResponse403 = {
+  data: Update403
+  status: 403
+}
+
+export type updateResponse404 = {
+  data: Update404
+  status: 404
+}
+
+export type updateResponse409 = {
+  data: Update409
+  status: 409
+}
+
+export type updateResponse500 = {
+  data: Update500
+  status: 500
+}
+
+export type updateResponseSuccess = (updateResponse200) & {
+  headers: Headers;
+};
+export type updateResponseError = (updateResponse400 | updateResponse401 | updateResponse403 | updateResponse404 | updateResponse409 | updateResponse500) & {
+  headers: Headers;
+};
+
+export type updateResponse = (updateResponseSuccess | updateResponseError)
+
+export const getUpdateUrl = (id: number,) => {
+
+
+  
+
+  return `/bo/categories/${id}`
+}
+
+export const update = async (id: number,
+    updateCategoryDto: UpdateCategoryDto, options?: RequestInit): Promise<updateResponse> => {
+  
+  return fetcher<updateResponse>(getUpdateUrl(id),
+  {      
+    ...options,
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      updateCategoryDto,)
+  }
+);}
+  
+
+
+/**
+ * @summary BO 카테고리 삭제
+ */
+export type _deleteResponse200 = {
+  data: _Delete200
+  status: 200
+}
+
+export type _deleteResponse400 = {
+  data: _Delete400
+  status: 400
+}
+
+export type _deleteResponse401 = {
+  data: _Delete401
+  status: 401
+}
+
+export type _deleteResponse403 = {
+  data: _Delete403
+  status: 403
+}
+
+export type _deleteResponse404 = {
+  data: _Delete404
+  status: 404
+}
+
+export type _deleteResponse409 = {
+  data: _Delete409
+  status: 409
+}
+
+export type _deleteResponse500 = {
+  data: _Delete500
+  status: 500
+}
+
+export type _deleteResponseSuccess = (_deleteResponse200) & {
+  headers: Headers;
+};
+export type _deleteResponseError = (_deleteResponse400 | _deleteResponse401 | _deleteResponse403 | _deleteResponse404 | _deleteResponse409 | _deleteResponse500) & {
+  headers: Headers;
+};
+
+export type _deleteResponse = (_deleteResponseSuccess | _deleteResponseError)
+
+export const getDeleteUrl = (id: number,) => {
+
+
+  
+
+  return `/bo/categories/${id}`
+}
+
+export const _delete = async (id: number, options?: RequestInit): Promise<_deleteResponse> => {
+  
+  return fetcher<_deleteResponse>(getDeleteUrl(id),
+  {      
+    ...options,
+    method: 'DELETE'
+    
+    
+  }
+);}
+  
+
+
+/**
+ * @summary BO 메인 노출 여부 변경
+ */
+export type setMainExposureResponse200 = {
+  data: SetMainExposure200
+  status: 200
+}
+
+export type setMainExposureResponse400 = {
+  data: SetMainExposure400
+  status: 400
+}
+
+export type setMainExposureResponse401 = {
+  data: SetMainExposure401
+  status: 401
+}
+
+export type setMainExposureResponse403 = {
+  data: SetMainExposure403
+  status: 403
+}
+
+export type setMainExposureResponse404 = {
+  data: SetMainExposure404
+  status: 404
+}
+
+export type setMainExposureResponse409 = {
+  data: SetMainExposure409
+  status: 409
+}
+
+export type setMainExposureResponse500 = {
+  data: SetMainExposure500
+  status: 500
+}
+
+export type setMainExposureResponseSuccess = (setMainExposureResponse200) & {
+  headers: Headers;
+};
+export type setMainExposureResponseError = (setMainExposureResponse400 | setMainExposureResponse401 | setMainExposureResponse403 | setMainExposureResponse404 | setMainExposureResponse409 | setMainExposureResponse500) & {
+  headers: Headers;
+};
+
+export type setMainExposureResponse = (setMainExposureResponseSuccess | setMainExposureResponseError)
+
+export const getSetMainExposureUrl = (id: number,) => {
+
+
+  
+
+  return `/bo/categories/${id}/main-exposure`
+}
+
+export const setMainExposure = async (id: number,
+    updateMainExposureDto: UpdateMainExposureDto, options?: RequestInit): Promise<setMainExposureResponse> => {
+  
+  return fetcher<setMainExposureResponse>(getSetMainExposureUrl(id),
+  {      
+    ...options,
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      updateMainExposureDto,)
   }
 );}
