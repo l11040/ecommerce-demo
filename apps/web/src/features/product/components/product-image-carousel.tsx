@@ -2,15 +2,13 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import Image from 'next/image';
-import { ImageOff } from 'lucide-react';
+import { ChevronLeft, ChevronRight, ImageOff } from 'lucide-react';
 import { getImageUrl } from '@/lib/utils';
 import { cn } from '@/lib/utils';
 import {
   Carousel,
   CarouselContent,
   CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
   type CarouselApi,
 } from '@/components/ui/carousel';
 import type { ProductMedia } from '../types';
@@ -113,6 +111,9 @@ export function ProductImageCarousel({
     [api],
   );
 
+  const scrollPrev = useCallback(() => api?.scrollPrev(), [api]);
+  const scrollNext = useCallback(() => api?.scrollNext(), [api]);
+
   if (images.length === 0) {
     return (
       <div className="flex aspect-square items-center justify-center rounded-lg bg-muted">
@@ -123,45 +124,69 @@ export function ProductImageCarousel({
 
   return (
     <div className="flex flex-col gap-3">
-      <Carousel className="w-full" setApi={setApi}>
-        <CarouselContent>
-          {images.map((img, index) => (
-            <CarouselItem key={index}>
-              <div className="relative aspect-square overflow-hidden rounded-lg bg-muted">
-                <ProductImage
-                  src={img.url}
-                  alt={img.alt}
-                  priority={index === 0}
-                />
+      <Carousel className="w-full" opts={{ loop: true }} setApi={setApi}>
+        <div className="relative">
+          <CarouselContent>
+            {images.map((img, index) => (
+              <CarouselItem key={index}>
+                <div className="relative aspect-square overflow-hidden bg-muted md:rounded-lg">
+                  <ProductImage
+                    src={img.url}
+                    alt={img.alt}
+                    priority={index === 0}
+                  />
+                </div>
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+
+          {images.length > 1 && (
+            <>
+              {/* 모바일: 페이지 인디케이터 */}
+              <div className="absolute bottom-3 left-1/2 -translate-x-1/2 rounded-full bg-black/50 px-2.5 py-1 text-xs font-medium text-white md:hidden">
+                {selectedIndex + 1} / {images.length}
               </div>
-            </CarouselItem>
-          ))}
-        </CarouselContent>
-        {images.length > 1 && (
-          <>
-            <CarouselPrevious className="left-2" />
-            <CarouselNext className="right-2" />
-          </>
-        )}
+
+              {/* 데스크톱: 화살표 버튼 */}
+              <button
+                type="button"
+                onClick={scrollPrev}
+                className="absolute left-2 top-1/2 hidden -translate-y-1/2 items-center justify-center rounded-full bg-white/80 p-2 shadow-md backdrop-blur-sm transition-opacity hover:bg-white md:flex"
+              >
+                <ChevronLeft className="size-5 text-foreground" />
+              </button>
+              <button
+                type="button"
+                onClick={scrollNext}
+                className="absolute right-2 top-1/2 hidden -translate-y-1/2 items-center justify-center rounded-full bg-white/80 p-2 shadow-md backdrop-blur-sm transition-opacity hover:bg-white md:flex"
+              >
+                <ChevronRight className="size-5 text-foreground" />
+              </button>
+            </>
+          )}
+        </div>
       </Carousel>
 
-      <div className="grid grid-cols-5 gap-2">
-        {images.map((img, index) => (
-          <button
-            key={index}
-            type="button"
-            onClick={() => scrollTo(index)}
-            className={cn(
-              'relative aspect-square w-full overflow-hidden rounded-md border-2 transition-colors',
-              selectedIndex === index
-                ? 'border-primary'
-                : 'border-transparent hover:border-muted-foreground/30',
-            )}
-          >
-            <ThumbnailImage src={img.url} alt={img.alt} />
-          </button>
-        ))}
-      </div>
+      {/* 썸네일 갤러리 (데스크톱만) */}
+      {images.length > 1 && (
+        <div className="hidden grid-cols-5 gap-2 px-4 md:grid md:px-0">
+          {images.map((img, index) => (
+            <button
+              key={index}
+              type="button"
+              onClick={() => scrollTo(index)}
+              className={cn(
+                'relative aspect-square w-full overflow-hidden rounded-md border-2 transition-colors',
+                selectedIndex === index
+                  ? 'border-primary'
+                  : 'border-transparent hover:border-muted-foreground/30',
+              )}
+            >
+              <ThumbnailImage src={img.url} alt={img.alt} />
+            </button>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

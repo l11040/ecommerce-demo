@@ -28,7 +28,7 @@ export function ProductDetailTop({ product }: ProductDetailTopProps) {
 
   return (
     <>
-      <section className="mx-auto grid w-full max-w-7xl grid-cols-1 gap-8 px-6 py-8 md:grid-cols-2">
+      <section className="mx-auto grid w-full max-w-7xl grid-cols-1 gap-6 pb-8 md:grid-cols-2 md:gap-8 md:px-6 md:py-8">
         {/* 좌측: 이미지 캐러셀 */}
         <ProductImageCarousel
           media={product.media}

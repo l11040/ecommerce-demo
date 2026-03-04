@@ -35,7 +35,7 @@ function QuoteSummary({
 }) {
   if (isLoading || !quote) {
     return (
-      <div className="space-y-2 rounded-lg bg-muted/50 p-4">
+      <div className="space-y-2 rounded-lg border bg-muted p-4">
         <div className="flex items-center justify-between text-sm">
           <span className="text-muted-foreground">단가</span>
           <Skeleton className="h-3.5 w-20" />
@@ -58,7 +58,7 @@ function QuoteSummary({
   }
 
   return (
-    <div className="space-y-2 rounded-lg bg-muted/50 p-4">
+    <div className="space-y-2 rounded-lg border bg-muted p-4">
       <div className="flex items-center justify-between text-sm">
         <span className="text-muted-foreground">단가</span>
         <span>{formatPrice(quote.unitPrice)}원</span>
@@ -86,7 +86,7 @@ function QuoteSummary({
       <Separator />
       <div className="flex items-center justify-between font-semibold">
         <span>총 금액</span>
-        <span className="text-lg text-primary">
+        <span className="text-lg font-bold text-primary">
           {formatPrice(quote.totalAmount)}원
         </span>
       </div>
@@ -105,7 +105,7 @@ export function ProductInfoPanel({
   onOptionChange,
 }: ProductInfoPanelProps) {
   return (
-    <div className="flex flex-col gap-5">
+    <div className="flex flex-col gap-5 px-4 md:px-0">
       {/* 상품명 */}
       <div>
         <h1 className="text-2xl font-bold">{product.name}</h1>
