@@ -17,6 +17,21 @@ export interface FoSocialLoginDto {
   accessToken: string;
 }
 
+export type FoQuoteDtoCustomerSegment = typeof FoQuoteDtoCustomerSegment[keyof typeof FoQuoteDtoCustomerSegment];
+
+
+export const FoQuoteDtoCustomerSegment = {
+  guest: 'guest',
+  member: 'member',
+} as const;
+
+export interface FoQuoteDto {
+  /** @minimum 1 */
+  quantity: number;
+  customerSegment?: FoQuoteDtoCustomerSegment;
+  selectedOptionItemIds?: number[];
+}
+
 export type Login200DataUser = {
   email: string;
 };
@@ -558,6 +573,602 @@ export type Main500 = {
   meta: Main500Meta;
 };
 
+export type ListProductsParams = {
+storeId?: string;
+categoryId?: string;
+keyword?: string;
+minMoq?: string;
+maxMoq?: string;
+};
+
+export type ListProducts200DataItem = {
+  id?: number;
+  storeId?: number;
+  /** @nullable */
+  categoryId?: number | null;
+  name?: string;
+  slug?: string;
+  moq?: number;
+  moqInquiryOnly?: boolean;
+  vatType?: string;
+  vatRate?: number;
+  isPrintable?: boolean;
+  /** @nullable */
+  printMethod?: string | null;
+  /** @nullable */
+  printArea?: string | null;
+  /** @nullable */
+  proofLeadTimeDays?: number | null;
+  /** @nullable */
+  thumbnailUrl?: string | null;
+  createdAt?: string;
+  updatedAt?: string;
+};
+
+export type ListProducts200 = {
+  success: boolean;
+  code: string;
+  message: string;
+  data: ListProducts200DataItem[];
+};
+
+export type ListProducts400ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type ListProducts400Meta = {
+  requestId?: string;
+};
+
+export type ListProducts400 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: ListProducts400ErrorsItem[];
+  meta: ListProducts400Meta;
+};
+
+export type ListProducts401ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type ListProducts401Meta = {
+  requestId?: string;
+};
+
+export type ListProducts401 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: ListProducts401ErrorsItem[];
+  meta: ListProducts401Meta;
+};
+
+export type ListProducts403ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type ListProducts403Meta = {
+  requestId?: string;
+};
+
+export type ListProducts403 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: ListProducts403ErrorsItem[];
+  meta: ListProducts403Meta;
+};
+
+export type ListProducts404ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type ListProducts404Meta = {
+  requestId?: string;
+};
+
+export type ListProducts404 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: ListProducts404ErrorsItem[];
+  meta: ListProducts404Meta;
+};
+
+export type ListProducts409ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type ListProducts409Meta = {
+  requestId?: string;
+};
+
+export type ListProducts409 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: ListProducts409ErrorsItem[];
+  meta: ListProducts409Meta;
+};
+
+export type ListProducts500ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type ListProducts500Meta = {
+  requestId?: string;
+};
+
+export type ListProducts500 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: ListProducts500ErrorsItem[];
+  meta: ListProducts500Meta;
+};
+
+export type DetailProduct200DataMediaItem = {
+  id?: number;
+  type?: string;
+  sourceType?: string;
+  url?: string;
+  /** @nullable */
+  altText?: string | null;
+  sortOrder?: number;
+};
+
+/**
+ * @nullable
+ */
+export type DetailProduct200DataSeo = { [key: string]: unknown } | null;
+
+export type DetailProduct200DataOptionGroupsItem = { [key: string]: unknown };
+
+export type DetailProduct200DataSpecGroupsItem = { [key: string]: unknown };
+
+export type DetailProduct200DataPriceTiersGuestItem = { [key: string]: unknown };
+
+export type DetailProduct200DataPriceTiersMemberItem = { [key: string]: unknown };
+
+export type DetailProduct200DataPriceTiers = {
+  guest?: DetailProduct200DataPriceTiersGuestItem[];
+  member?: DetailProduct200DataPriceTiersMemberItem[];
+};
+
+export type DetailProduct200DataShippingTiersItem = { [key: string]: unknown };
+
+export type DetailProduct200Data = {
+  id?: number;
+  storeId?: number;
+  /** @nullable */
+  categoryId?: number | null;
+  name?: string;
+  slug?: string;
+  status?: string;
+  isVisible?: boolean;
+  moq?: number;
+  moqInquiryOnly?: boolean;
+  baseSupplyCost?: number;
+  vatType?: string;
+  vatRate?: number;
+  isPrintable?: boolean;
+  /** @nullable */
+  printMethod?: string | null;
+  /** @nullable */
+  printArea?: string | null;
+  /** @nullable */
+  proofLeadTimeDays?: number | null;
+  /** @nullable */
+  thumbnailUrl?: string | null;
+  media?: DetailProduct200DataMediaItem[];
+  descriptionHtml?: string;
+  /** @nullable */
+  seo?: DetailProduct200DataSeo;
+  tags?: string[];
+  searchAliases?: string[];
+  optionGroups?: DetailProduct200DataOptionGroupsItem[];
+  specGroups?: DetailProduct200DataSpecGroupsItem[];
+  priceTiers?: DetailProduct200DataPriceTiers;
+  shippingTiers?: DetailProduct200DataShippingTiersItem[];
+  createdAt?: string;
+  updatedAt?: string;
+};
+
+export type DetailProduct200 = {
+  success: boolean;
+  code: string;
+  message: string;
+  data: DetailProduct200Data;
+};
+
+export type DetailProduct400ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type DetailProduct400Meta = {
+  requestId?: string;
+};
+
+export type DetailProduct400 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: DetailProduct400ErrorsItem[];
+  meta: DetailProduct400Meta;
+};
+
+export type DetailProduct401ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type DetailProduct401Meta = {
+  requestId?: string;
+};
+
+export type DetailProduct401 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: DetailProduct401ErrorsItem[];
+  meta: DetailProduct401Meta;
+};
+
+export type DetailProduct403ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type DetailProduct403Meta = {
+  requestId?: string;
+};
+
+export type DetailProduct403 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: DetailProduct403ErrorsItem[];
+  meta: DetailProduct403Meta;
+};
+
+export type DetailProduct404ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type DetailProduct404Meta = {
+  requestId?: string;
+};
+
+export type DetailProduct404 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: DetailProduct404ErrorsItem[];
+  meta: DetailProduct404Meta;
+};
+
+export type DetailProduct409ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type DetailProduct409Meta = {
+  requestId?: string;
+};
+
+export type DetailProduct409 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: DetailProduct409ErrorsItem[];
+  meta: DetailProduct409Meta;
+};
+
+export type DetailProduct500ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type DetailProduct500Meta = {
+  requestId?: string;
+};
+
+export type DetailProduct500 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: DetailProduct500ErrorsItem[];
+  meta: DetailProduct500Meta;
+};
+
+export type QuoteProduct200DataAppliedTier = {
+  id?: number;
+  minQty?: number;
+  marginRate?: number;
+  unitPrice?: number;
+};
+
+export type QuoteProduct200Data = {
+  target?: string;
+  productId?: number;
+  productName?: string;
+  customerSegment?: string;
+  quantity?: number;
+  moq?: number;
+  vatType?: string;
+  vatRate?: number;
+  appliedTier?: QuoteProduct200DataAppliedTier;
+  selectedOptionItemIds?: number[];
+  optionAdjustmentUnitPrice?: number;
+  optionAdjustmentSupplyCost?: number;
+  unitPrice?: number;
+  supplyUnitCost?: number;
+  supplyTotal?: number;
+  subtotalExVat?: number;
+  vatAmount?: number;
+  shippingFee?: number;
+  totalAmount?: number;
+  estimatedMargin?: number;
+};
+
+export type QuoteProduct200 = {
+  success: boolean;
+  code: string;
+  message: string;
+  data: QuoteProduct200Data;
+};
+
+export type QuoteProduct400ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type QuoteProduct400Meta = {
+  requestId?: string;
+};
+
+export type QuoteProduct400 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: QuoteProduct400ErrorsItem[];
+  meta: QuoteProduct400Meta;
+};
+
+export type QuoteProduct401ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type QuoteProduct401Meta = {
+  requestId?: string;
+};
+
+export type QuoteProduct401 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: QuoteProduct401ErrorsItem[];
+  meta: QuoteProduct401Meta;
+};
+
+export type QuoteProduct403ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type QuoteProduct403Meta = {
+  requestId?: string;
+};
+
+export type QuoteProduct403 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: QuoteProduct403ErrorsItem[];
+  meta: QuoteProduct403Meta;
+};
+
+export type QuoteProduct404ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type QuoteProduct404Meta = {
+  requestId?: string;
+};
+
+export type QuoteProduct404 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: QuoteProduct404ErrorsItem[];
+  meta: QuoteProduct404Meta;
+};
+
+export type QuoteProduct409ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type QuoteProduct409Meta = {
+  requestId?: string;
+};
+
+export type QuoteProduct409 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: QuoteProduct409ErrorsItem[];
+  meta: QuoteProduct409Meta;
+};
+
+export type QuoteProduct500ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type QuoteProduct500Meta = {
+  requestId?: string;
+};
+
+export type QuoteProduct500 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: QuoteProduct500ErrorsItem[];
+  meta: QuoteProduct500Meta;
+};
+
+export type ListStoreProductsParams = {
+categoryId?: string;
+keyword?: string;
+minMoq?: string;
+maxMoq?: string;
+};
+
+export type ListStoreProducts200DataItem = {
+  id?: number;
+  storeId?: number;
+  /** @nullable */
+  categoryId?: number | null;
+  name?: string;
+  slug?: string;
+  moq?: number;
+  moqInquiryOnly?: boolean;
+  vatType?: string;
+  vatRate?: number;
+  isPrintable?: boolean;
+  /** @nullable */
+  printMethod?: string | null;
+  /** @nullable */
+  printArea?: string | null;
+  /** @nullable */
+  proofLeadTimeDays?: number | null;
+  /** @nullable */
+  thumbnailUrl?: string | null;
+  createdAt?: string;
+  updatedAt?: string;
+};
+
+export type ListStoreProducts200 = {
+  success: boolean;
+  code: string;
+  message: string;
+  data: ListStoreProducts200DataItem[];
+};
+
+export type ListStoreProducts400ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type ListStoreProducts400Meta = {
+  requestId?: string;
+};
+
+export type ListStoreProducts400 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: ListStoreProducts400ErrorsItem[];
+  meta: ListStoreProducts400Meta;
+};
+
+export type ListStoreProducts401ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type ListStoreProducts401Meta = {
+  requestId?: string;
+};
+
+export type ListStoreProducts401 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: ListStoreProducts401ErrorsItem[];
+  meta: ListStoreProducts401Meta;
+};
+
+export type ListStoreProducts403ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type ListStoreProducts403Meta = {
+  requestId?: string;
+};
+
+export type ListStoreProducts403 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: ListStoreProducts403ErrorsItem[];
+  meta: ListStoreProducts403Meta;
+};
+
+export type ListStoreProducts404ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type ListStoreProducts404Meta = {
+  requestId?: string;
+};
+
+export type ListStoreProducts404 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: ListStoreProducts404ErrorsItem[];
+  meta: ListStoreProducts404Meta;
+};
+
+export type ListStoreProducts409ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type ListStoreProducts409Meta = {
+  requestId?: string;
+};
+
+export type ListStoreProducts409 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: ListStoreProducts409ErrorsItem[];
+  meta: ListStoreProducts409Meta;
+};
+
+export type ListStoreProducts500ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type ListStoreProducts500Meta = {
+  requestId?: string;
+};
+
+export type ListStoreProducts500 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: ListStoreProducts500ErrorsItem[];
+  meta: ListStoreProducts500Meta;
+};
+
 /**
  * @summary Front Office health check
  */
@@ -944,6 +1555,296 @@ export const getMainUrl = () => {
 export const main = async ( options?: RequestInit): Promise<mainResponse> => {
   
   return fetcher<mainResponse>(getMainUrl(),
+  {      
+    ...options,
+    method: 'GET'
+    
+    
+  }
+);}
+  
+
+
+/**
+ * @summary FO 상품 목록 조회
+ */
+export type listProductsResponse200 = {
+  data: ListProducts200
+  status: 200
+}
+
+export type listProductsResponse400 = {
+  data: ListProducts400
+  status: 400
+}
+
+export type listProductsResponse401 = {
+  data: ListProducts401
+  status: 401
+}
+
+export type listProductsResponse403 = {
+  data: ListProducts403
+  status: 403
+}
+
+export type listProductsResponse404 = {
+  data: ListProducts404
+  status: 404
+}
+
+export type listProductsResponse409 = {
+  data: ListProducts409
+  status: 409
+}
+
+export type listProductsResponse500 = {
+  data: ListProducts500
+  status: 500
+}
+
+export type listProductsResponseSuccess = (listProductsResponse200) & {
+  headers: Headers;
+};
+export type listProductsResponseError = (listProductsResponse400 | listProductsResponse401 | listProductsResponse403 | listProductsResponse404 | listProductsResponse409 | listProductsResponse500) & {
+  headers: Headers;
+};
+
+export type listProductsResponse = (listProductsResponseSuccess | listProductsResponseError)
+
+export const getListProductsUrl = (params?: ListProductsParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : value.toString())
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/fo/products?${stringifiedParams}` : `/fo/products`
+}
+
+export const listProducts = async (params?: ListProductsParams, options?: RequestInit): Promise<listProductsResponse> => {
+  
+  return fetcher<listProductsResponse>(getListProductsUrl(params),
+  {      
+    ...options,
+    method: 'GET'
+    
+    
+  }
+);}
+  
+
+
+/**
+ * @summary FO 상품 상세 조회
+ */
+export type detailProductResponse200 = {
+  data: DetailProduct200
+  status: 200
+}
+
+export type detailProductResponse400 = {
+  data: DetailProduct400
+  status: 400
+}
+
+export type detailProductResponse401 = {
+  data: DetailProduct401
+  status: 401
+}
+
+export type detailProductResponse403 = {
+  data: DetailProduct403
+  status: 403
+}
+
+export type detailProductResponse404 = {
+  data: DetailProduct404
+  status: 404
+}
+
+export type detailProductResponse409 = {
+  data: DetailProduct409
+  status: 409
+}
+
+export type detailProductResponse500 = {
+  data: DetailProduct500
+  status: 500
+}
+
+export type detailProductResponseSuccess = (detailProductResponse200) & {
+  headers: Headers;
+};
+export type detailProductResponseError = (detailProductResponse400 | detailProductResponse401 | detailProductResponse403 | detailProductResponse404 | detailProductResponse409 | detailProductResponse500) & {
+  headers: Headers;
+};
+
+export type detailProductResponse = (detailProductResponseSuccess | detailProductResponseError)
+
+export const getDetailProductUrl = (slug: string,) => {
+
+
+  
+
+  return `/fo/products/${slug}`
+}
+
+export const detailProduct = async (slug: string, options?: RequestInit): Promise<detailProductResponse> => {
+  
+  return fetcher<detailProductResponse>(getDetailProductUrl(slug),
+  {      
+    ...options,
+    method: 'GET'
+    
+    
+  }
+);}
+  
+
+
+/**
+ * @summary FO 상품 견적 계산
+ */
+export type quoteProductResponse200 = {
+  data: QuoteProduct200
+  status: 200
+}
+
+export type quoteProductResponse400 = {
+  data: QuoteProduct400
+  status: 400
+}
+
+export type quoteProductResponse401 = {
+  data: QuoteProduct401
+  status: 401
+}
+
+export type quoteProductResponse403 = {
+  data: QuoteProduct403
+  status: 403
+}
+
+export type quoteProductResponse404 = {
+  data: QuoteProduct404
+  status: 404
+}
+
+export type quoteProductResponse409 = {
+  data: QuoteProduct409
+  status: 409
+}
+
+export type quoteProductResponse500 = {
+  data: QuoteProduct500
+  status: 500
+}
+
+export type quoteProductResponseSuccess = (quoteProductResponse200) & {
+  headers: Headers;
+};
+export type quoteProductResponseError = (quoteProductResponse400 | quoteProductResponse401 | quoteProductResponse403 | quoteProductResponse404 | quoteProductResponse409 | quoteProductResponse500) & {
+  headers: Headers;
+};
+
+export type quoteProductResponse = (quoteProductResponseSuccess | quoteProductResponseError)
+
+export const getQuoteProductUrl = (id: number,) => {
+
+
+  
+
+  return `/fo/products/${id}/quote`
+}
+
+export const quoteProduct = async (id: number,
+    foQuoteDto: FoQuoteDto, options?: RequestInit): Promise<quoteProductResponse> => {
+  
+  return fetcher<quoteProductResponse>(getQuoteProductUrl(id),
+  {      
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      foQuoteDto,)
+  }
+);}
+  
+
+
+/**
+ * @summary FO 스토어별 상품 목록 조회
+ */
+export type listStoreProductsResponse200 = {
+  data: ListStoreProducts200
+  status: 200
+}
+
+export type listStoreProductsResponse400 = {
+  data: ListStoreProducts400
+  status: 400
+}
+
+export type listStoreProductsResponse401 = {
+  data: ListStoreProducts401
+  status: 401
+}
+
+export type listStoreProductsResponse403 = {
+  data: ListStoreProducts403
+  status: 403
+}
+
+export type listStoreProductsResponse404 = {
+  data: ListStoreProducts404
+  status: 404
+}
+
+export type listStoreProductsResponse409 = {
+  data: ListStoreProducts409
+  status: 409
+}
+
+export type listStoreProductsResponse500 = {
+  data: ListStoreProducts500
+  status: 500
+}
+
+export type listStoreProductsResponseSuccess = (listStoreProductsResponse200) & {
+  headers: Headers;
+};
+export type listStoreProductsResponseError = (listStoreProductsResponse400 | listStoreProductsResponse401 | listStoreProductsResponse403 | listStoreProductsResponse404 | listStoreProductsResponse409 | listStoreProductsResponse500) & {
+  headers: Headers;
+};
+
+export type listStoreProductsResponse = (listStoreProductsResponseSuccess | listStoreProductsResponseError)
+
+export const getListStoreProductsUrl = (storeId: number,
+    params?: ListStoreProductsParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : value.toString())
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/fo/stores/${storeId}/products?${stringifiedParams}` : `/fo/stores/${storeId}/products`
+}
+
+export const listStoreProducts = async (storeId: number,
+    params?: ListStoreProductsParams, options?: RequestInit): Promise<listStoreProductsResponse> => {
+  
+  return fetcher<listStoreProductsResponse>(getListStoreProductsUrl(storeId,params),
   {      
     ...options,
     method: 'GET'

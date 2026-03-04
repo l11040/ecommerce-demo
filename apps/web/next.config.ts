@@ -1,6 +1,11 @@
 import type { NextConfig } from "next";
 
+const imageHostname = process.env.NEXT_PUBLIC_IMAGE_HOST;
+
 const nextConfig: NextConfig = {
+  images: imageHostname
+    ? { remotePatterns: [{ protocol: 'https', hostname: imageHostname }] }
+    : { unoptimized: true },
   turbopack: {
     rules: {
       "*.svg": {
