@@ -23,6 +23,10 @@ export interface CreateCategoryDto {
 }
 
 export interface UpdateCategoryDto {
+  /**
+   * 상위 카테고리 ID (null이면 depth=1 루트)
+   * @nullable
+   */
   parentId?: number | null;
   name?: string;
   slug?: string;
@@ -34,6 +38,266 @@ export interface UpdateCategoryDto {
 
 export interface UpdateMainExposureDto {
   isMainExposed: boolean;
+}
+
+export type CreateProductDtoStatus = typeof CreateProductDtoStatus[keyof typeof CreateProductDtoStatus];
+
+
+export const CreateProductDtoStatus = {
+  draft: 'draft',
+  published: 'published',
+  soldout: 'soldout',
+  stopped: 'stopped',
+} as const;
+
+export type CreateProductDtoVatType = typeof CreateProductDtoVatType[keyof typeof CreateProductDtoVatType];
+
+
+export const CreateProductDtoVatType = {
+  exclusive: 'exclusive',
+  inclusive: 'inclusive',
+} as const;
+
+export interface CreateProductDto {
+  storeId: number;
+  /** @nullable */
+  categoryId?: number | null;
+  name: string;
+  slug: string;
+  status?: CreateProductDtoStatus;
+  isVisible?: boolean;
+  /** @minimum 1 */
+  moq?: number;
+  moqInquiryOnly?: boolean;
+  baseSupplyCost?: number;
+  vatType?: CreateProductDtoVatType;
+  vatRate?: number;
+  isPrintable?: boolean;
+  /** @nullable */
+  printMethod?: string | null;
+  /** @nullable */
+  printArea?: string | null;
+  /** @nullable */
+  proofLeadTimeDays?: number | null;
+  /** @nullable */
+  thumbnailUrl?: string | null;
+}
+
+export type UpdateProductDtoStatus = typeof UpdateProductDtoStatus[keyof typeof UpdateProductDtoStatus];
+
+
+export const UpdateProductDtoStatus = {
+  draft: 'draft',
+  published: 'published',
+  soldout: 'soldout',
+  stopped: 'stopped',
+} as const;
+
+export type UpdateProductDtoVatType = typeof UpdateProductDtoVatType[keyof typeof UpdateProductDtoVatType];
+
+
+export const UpdateProductDtoVatType = {
+  exclusive: 'exclusive',
+  inclusive: 'inclusive',
+} as const;
+
+export interface UpdateProductDto {
+  /** @nullable */
+  categoryId?: number | null;
+  name?: string;
+  slug?: string;
+  status?: UpdateProductDtoStatus;
+  isVisible?: boolean;
+  /** @minimum 1 */
+  moq?: number;
+  moqInquiryOnly?: boolean;
+  baseSupplyCost?: number;
+  vatType?: UpdateProductDtoVatType;
+  vatRate?: number;
+  isPrintable?: boolean;
+  /** @nullable */
+  printMethod?: string | null;
+  /** @nullable */
+  printArea?: string | null;
+  /** @nullable */
+  proofLeadTimeDays?: number | null;
+  /** @nullable */
+  thumbnailUrl?: string | null;
+}
+
+export type UpdateProductStatusDtoStatus = typeof UpdateProductStatusDtoStatus[keyof typeof UpdateProductStatusDtoStatus];
+
+
+export const UpdateProductStatusDtoStatus = {
+  draft: 'draft',
+  published: 'published',
+  soldout: 'soldout',
+  stopped: 'stopped',
+} as const;
+
+export interface UpdateProductStatusDto {
+  status: UpdateProductStatusDtoStatus;
+}
+
+export type BoQuotePreviewDtoCustomerSegment = typeof BoQuotePreviewDtoCustomerSegment[keyof typeof BoQuotePreviewDtoCustomerSegment];
+
+
+export const BoQuotePreviewDtoCustomerSegment = {
+  guest: 'guest',
+  member: 'member',
+} as const;
+
+export interface BoQuotePreviewDto {
+  /** @minimum 1 */
+  quantity: number;
+  customerSegment?: BoQuotePreviewDtoCustomerSegment;
+  selectedOptionItemIds?: number[];
+}
+
+export interface ReplaceProductOptionItemDto {
+  label: string;
+  extraSupplyCost?: number;
+  extraUnitPrice?: number;
+  sortOrder?: number;
+  isActive?: boolean;
+}
+
+export type ReplaceProductOptionGroupDtoSelectionType = typeof ReplaceProductOptionGroupDtoSelectionType[keyof typeof ReplaceProductOptionGroupDtoSelectionType];
+
+
+export const ReplaceProductOptionGroupDtoSelectionType = {
+  single: 'single',
+  multi: 'multi',
+} as const;
+
+export interface ReplaceProductOptionGroupDto {
+  name: string;
+  isRequired?: boolean;
+  selectionType?: ReplaceProductOptionGroupDtoSelectionType;
+  sortOrder?: number;
+  items: ReplaceProductOptionItemDto[];
+}
+
+export interface ReplaceProductOptionsDto {
+  optionGroups: ReplaceProductOptionGroupDto[];
+}
+
+export interface ReplaceProductPriceTierDto {
+  /** @minimum 1 */
+  minQty: number;
+  /**
+   * @minimum 0
+   * @maximum 100
+   */
+  marginRate: number;
+  /** @nullable */
+  unitPriceOverride?: number | null;
+  isActive?: boolean;
+}
+
+export interface ReplaceProductPriceTiersDto {
+  guest: ReplaceProductPriceTierDto[];
+  member: ReplaceProductPriceTierDto[];
+}
+
+export interface ReplaceProductSpecDto {
+  label: string;
+  value: string;
+  sortOrder?: number;
+}
+
+export interface ReplaceProductSpecGroupDto {
+  name: string;
+  sortOrder?: number;
+  specs: ReplaceProductSpecDto[];
+}
+
+export interface ReplaceProductSpecsDto {
+  specGroups: ReplaceProductSpecGroupDto[];
+}
+
+export interface ReplaceProductShippingTierDto {
+  /** @minimum 1 */
+  minQty: number;
+  /** @minimum 0 */
+  shippingFee: number;
+  isActive?: boolean;
+}
+
+export interface ReplaceProductShippingTiersDto {
+  shippingTiers: ReplaceProductShippingTierDto[];
+}
+
+export type ReplaceProductMediaItemDtoType = typeof ReplaceProductMediaItemDtoType[keyof typeof ReplaceProductMediaItemDtoType];
+
+
+export const ReplaceProductMediaItemDtoType = {
+  image: 'image',
+  video: 'video',
+  file: 'file',
+} as const;
+
+export type ReplaceProductMediaItemDtoSourceType = typeof ReplaceProductMediaItemDtoSourceType[keyof typeof ReplaceProductMediaItemDtoSourceType];
+
+
+export const ReplaceProductMediaItemDtoSourceType = {
+  internal: 'internal',
+  external: 'external',
+} as const;
+
+export interface ReplaceProductMediaItemDto {
+  type?: ReplaceProductMediaItemDtoType;
+  sourceType?: ReplaceProductMediaItemDtoSourceType;
+  url: string;
+  /** @nullable */
+  altText?: string | null;
+  sortOrder?: number;
+}
+
+export interface ReplaceProductMediaDto {
+  media: ReplaceProductMediaItemDto[];
+}
+
+export interface ReplaceProductTagItemDto {
+  tag: string;
+  sortOrder?: number;
+}
+
+export interface ReplaceProductTagsDto {
+  tags: ReplaceProductTagItemDto[];
+}
+
+export interface ReplaceProductSearchAliasItemDto {
+  aliasText: string;
+  sortOrder?: number;
+}
+
+export interface ReplaceProductSearchAliasesDto {
+  aliases: ReplaceProductSearchAliasItemDto[];
+}
+
+export interface UpsertProductDescriptionDto {
+  descriptionHtmlRaw: string;
+  descriptionHtmlSanitized?: string;
+}
+
+export interface UpsertProductSeoDto {
+  /** @nullable */
+  metaTitle?: string | null;
+  /** @nullable */
+  metaDescription?: string | null;
+  /** @nullable */
+  metaKeywords?: string | null;
+  /** @nullable */
+  canonicalUrl?: string | null;
+  /** @nullable */
+  robots?: string | null;
+  /** @nullable */
+  ogTitle?: string | null;
+  /** @nullable */
+  ogDescription?: string | null;
+  /** @nullable */
+  ogImage?: string | null;
 }
 
 export type Login200DataUser = {
@@ -1114,6 +1378,2105 @@ export type SetMainExposure500 = {
   meta: SetMainExposure500Meta;
 };
 
+export type ListProductsParams = {
+storeId?: string;
+categoryId?: string;
+status?: ListProductsStatus;
+isVisible?: ListProductsIsVisible;
+keyword?: string;
+minMoq?: string;
+maxMoq?: string;
+};
+
+export type ListProductsStatus = typeof ListProductsStatus[keyof typeof ListProductsStatus];
+
+
+export const ListProductsStatus = {
+  draft: 'draft',
+  published: 'published',
+  soldout: 'soldout',
+  stopped: 'stopped',
+} as const;
+
+export type ListProductsIsVisible = typeof ListProductsIsVisible[keyof typeof ListProductsIsVisible];
+
+
+export const ListProductsIsVisible = {
+  true: 'true',
+  false: 'false',
+} as const;
+
+export type ListProducts200DataItem = {
+  id: number;
+  storeId: number;
+  /** @nullable */
+  categoryId: number | null;
+  name: string;
+  slug: string;
+  status: string;
+  isVisible: boolean;
+  moq: number;
+  moqInquiryOnly: boolean;
+  baseSupplyCost: number;
+  vatType: string;
+  vatRate: number;
+  isPrintable: boolean;
+  /** @nullable */
+  printMethod: string | null;
+  /** @nullable */
+  printArea: string | null;
+  /** @nullable */
+  proofLeadTimeDays: number | null;
+  /** @nullable */
+  thumbnailUrl: string | null;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type ListProducts200 = {
+  success: boolean;
+  code: string;
+  message: string;
+  data: ListProducts200DataItem[];
+};
+
+export type ListProducts400ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type ListProducts400Meta = {
+  requestId?: string;
+};
+
+export type ListProducts400 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: ListProducts400ErrorsItem[];
+  meta: ListProducts400Meta;
+};
+
+export type ListProducts401ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type ListProducts401Meta = {
+  requestId?: string;
+};
+
+export type ListProducts401 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: ListProducts401ErrorsItem[];
+  meta: ListProducts401Meta;
+};
+
+export type ListProducts403ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type ListProducts403Meta = {
+  requestId?: string;
+};
+
+export type ListProducts403 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: ListProducts403ErrorsItem[];
+  meta: ListProducts403Meta;
+};
+
+export type ListProducts404ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type ListProducts404Meta = {
+  requestId?: string;
+};
+
+export type ListProducts404 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: ListProducts404ErrorsItem[];
+  meta: ListProducts404Meta;
+};
+
+export type ListProducts409ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type ListProducts409Meta = {
+  requestId?: string;
+};
+
+export type ListProducts409 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: ListProducts409ErrorsItem[];
+  meta: ListProducts409Meta;
+};
+
+export type ListProducts500ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type ListProducts500Meta = {
+  requestId?: string;
+};
+
+export type ListProducts500 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: ListProducts500ErrorsItem[];
+  meta: ListProducts500Meta;
+};
+
+export type CreateProduct200Data = {
+  id: number;
+  storeId: number;
+  /** @nullable */
+  categoryId: number | null;
+  name: string;
+  slug: string;
+  status: string;
+  isVisible: boolean;
+  moq: number;
+  moqInquiryOnly: boolean;
+  baseSupplyCost: number;
+  vatType: string;
+  vatRate: number;
+  isPrintable: boolean;
+  /** @nullable */
+  printMethod: string | null;
+  /** @nullable */
+  printArea: string | null;
+  /** @nullable */
+  proofLeadTimeDays: number | null;
+  /** @nullable */
+  thumbnailUrl: string | null;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type CreateProduct200 = {
+  success: boolean;
+  code: string;
+  message: string;
+  data: CreateProduct200Data;
+};
+
+export type CreateProduct400ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type CreateProduct400Meta = {
+  requestId?: string;
+};
+
+export type CreateProduct400 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: CreateProduct400ErrorsItem[];
+  meta: CreateProduct400Meta;
+};
+
+export type CreateProduct401ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type CreateProduct401Meta = {
+  requestId?: string;
+};
+
+export type CreateProduct401 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: CreateProduct401ErrorsItem[];
+  meta: CreateProduct401Meta;
+};
+
+export type CreateProduct403ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type CreateProduct403Meta = {
+  requestId?: string;
+};
+
+export type CreateProduct403 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: CreateProduct403ErrorsItem[];
+  meta: CreateProduct403Meta;
+};
+
+export type CreateProduct404ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type CreateProduct404Meta = {
+  requestId?: string;
+};
+
+export type CreateProduct404 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: CreateProduct404ErrorsItem[];
+  meta: CreateProduct404Meta;
+};
+
+export type CreateProduct409ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type CreateProduct409Meta = {
+  requestId?: string;
+};
+
+export type CreateProduct409 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: CreateProduct409ErrorsItem[];
+  meta: CreateProduct409Meta;
+};
+
+export type CreateProduct500ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type CreateProduct500Meta = {
+  requestId?: string;
+};
+
+export type CreateProduct500 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: CreateProduct500ErrorsItem[];
+  meta: CreateProduct500Meta;
+};
+
+/**
+ * @nullable
+ */
+export type DetailProduct200DataSeo = { [key: string]: unknown } | null;
+
+export type DetailProduct200DataMediaItem = { [key: string]: unknown };
+
+export type DetailProduct200DataOptionGroupsItem = { [key: string]: unknown };
+
+export type DetailProduct200DataSpecGroupsItem = { [key: string]: unknown };
+
+export type DetailProduct200DataPriceTiersGuestItem = { [key: string]: unknown };
+
+export type DetailProduct200DataPriceTiersMemberItem = { [key: string]: unknown };
+
+export type DetailProduct200DataPriceTiers = {
+  guest?: DetailProduct200DataPriceTiersGuestItem[];
+  member?: DetailProduct200DataPriceTiersMemberItem[];
+};
+
+export type DetailProduct200DataShippingTiersItem = { [key: string]: unknown };
+
+export type DetailProduct200Data = {
+  id?: number;
+  storeId?: number;
+  /** @nullable */
+  categoryId?: number | null;
+  name?: string;
+  slug?: string;
+  status?: string;
+  isVisible?: boolean;
+  moq?: number;
+  moqInquiryOnly?: boolean;
+  baseSupplyCost?: number;
+  vatType?: string;
+  vatRate?: number;
+  isPrintable?: boolean;
+  /** @nullable */
+  printMethod?: string | null;
+  /** @nullable */
+  printArea?: string | null;
+  /** @nullable */
+  proofLeadTimeDays?: number | null;
+  /** @nullable */
+  thumbnailUrl?: string | null;
+  createdAt?: string;
+  updatedAt?: string;
+  descriptionHtml?: string;
+  /** @nullable */
+  seo?: DetailProduct200DataSeo;
+  media?: DetailProduct200DataMediaItem[];
+  tags?: string[];
+  searchAliases?: string[];
+  optionGroups?: DetailProduct200DataOptionGroupsItem[];
+  specGroups?: DetailProduct200DataSpecGroupsItem[];
+  priceTiers?: DetailProduct200DataPriceTiers;
+  shippingTiers?: DetailProduct200DataShippingTiersItem[];
+};
+
+export type DetailProduct200 = {
+  success: boolean;
+  code: string;
+  message: string;
+  data: DetailProduct200Data;
+};
+
+export type DetailProduct400ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type DetailProduct400Meta = {
+  requestId?: string;
+};
+
+export type DetailProduct400 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: DetailProduct400ErrorsItem[];
+  meta: DetailProduct400Meta;
+};
+
+export type DetailProduct401ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type DetailProduct401Meta = {
+  requestId?: string;
+};
+
+export type DetailProduct401 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: DetailProduct401ErrorsItem[];
+  meta: DetailProduct401Meta;
+};
+
+export type DetailProduct403ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type DetailProduct403Meta = {
+  requestId?: string;
+};
+
+export type DetailProduct403 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: DetailProduct403ErrorsItem[];
+  meta: DetailProduct403Meta;
+};
+
+export type DetailProduct404ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type DetailProduct404Meta = {
+  requestId?: string;
+};
+
+export type DetailProduct404 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: DetailProduct404ErrorsItem[];
+  meta: DetailProduct404Meta;
+};
+
+export type DetailProduct409ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type DetailProduct409Meta = {
+  requestId?: string;
+};
+
+export type DetailProduct409 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: DetailProduct409ErrorsItem[];
+  meta: DetailProduct409Meta;
+};
+
+export type DetailProduct500ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type DetailProduct500Meta = {
+  requestId?: string;
+};
+
+export type DetailProduct500 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: DetailProduct500ErrorsItem[];
+  meta: DetailProduct500Meta;
+};
+
+export type UpdateProduct200Data = {
+  id: number;
+  storeId: number;
+  /** @nullable */
+  categoryId: number | null;
+  name: string;
+  slug: string;
+  status: string;
+  isVisible: boolean;
+  moq: number;
+  moqInquiryOnly: boolean;
+  baseSupplyCost: number;
+  vatType: string;
+  vatRate: number;
+  isPrintable: boolean;
+  /** @nullable */
+  printMethod: string | null;
+  /** @nullable */
+  printArea: string | null;
+  /** @nullable */
+  proofLeadTimeDays: number | null;
+  /** @nullable */
+  thumbnailUrl: string | null;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type UpdateProduct200 = {
+  success: boolean;
+  code: string;
+  message: string;
+  data: UpdateProduct200Data;
+};
+
+export type UpdateProduct400ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type UpdateProduct400Meta = {
+  requestId?: string;
+};
+
+export type UpdateProduct400 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: UpdateProduct400ErrorsItem[];
+  meta: UpdateProduct400Meta;
+};
+
+export type UpdateProduct401ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type UpdateProduct401Meta = {
+  requestId?: string;
+};
+
+export type UpdateProduct401 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: UpdateProduct401ErrorsItem[];
+  meta: UpdateProduct401Meta;
+};
+
+export type UpdateProduct403ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type UpdateProduct403Meta = {
+  requestId?: string;
+};
+
+export type UpdateProduct403 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: UpdateProduct403ErrorsItem[];
+  meta: UpdateProduct403Meta;
+};
+
+export type UpdateProduct404ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type UpdateProduct404Meta = {
+  requestId?: string;
+};
+
+export type UpdateProduct404 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: UpdateProduct404ErrorsItem[];
+  meta: UpdateProduct404Meta;
+};
+
+export type UpdateProduct409ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type UpdateProduct409Meta = {
+  requestId?: string;
+};
+
+export type UpdateProduct409 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: UpdateProduct409ErrorsItem[];
+  meta: UpdateProduct409Meta;
+};
+
+export type UpdateProduct500ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type UpdateProduct500Meta = {
+  requestId?: string;
+};
+
+export type UpdateProduct500 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: UpdateProduct500ErrorsItem[];
+  meta: UpdateProduct500Meta;
+};
+
+export type UpdateProductStatus200Data = {
+  id: number;
+  storeId: number;
+  /** @nullable */
+  categoryId: number | null;
+  name: string;
+  slug: string;
+  status: string;
+  isVisible: boolean;
+  moq: number;
+  moqInquiryOnly: boolean;
+  baseSupplyCost: number;
+  vatType: string;
+  vatRate: number;
+  isPrintable: boolean;
+  /** @nullable */
+  printMethod: string | null;
+  /** @nullable */
+  printArea: string | null;
+  /** @nullable */
+  proofLeadTimeDays: number | null;
+  /** @nullable */
+  thumbnailUrl: string | null;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type UpdateProductStatus200 = {
+  success: boolean;
+  code: string;
+  message: string;
+  data: UpdateProductStatus200Data;
+};
+
+export type UpdateProductStatus400ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type UpdateProductStatus400Meta = {
+  requestId?: string;
+};
+
+export type UpdateProductStatus400 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: UpdateProductStatus400ErrorsItem[];
+  meta: UpdateProductStatus400Meta;
+};
+
+export type UpdateProductStatus401ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type UpdateProductStatus401Meta = {
+  requestId?: string;
+};
+
+export type UpdateProductStatus401 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: UpdateProductStatus401ErrorsItem[];
+  meta: UpdateProductStatus401Meta;
+};
+
+export type UpdateProductStatus403ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type UpdateProductStatus403Meta = {
+  requestId?: string;
+};
+
+export type UpdateProductStatus403 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: UpdateProductStatus403ErrorsItem[];
+  meta: UpdateProductStatus403Meta;
+};
+
+export type UpdateProductStatus404ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type UpdateProductStatus404Meta = {
+  requestId?: string;
+};
+
+export type UpdateProductStatus404 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: UpdateProductStatus404ErrorsItem[];
+  meta: UpdateProductStatus404Meta;
+};
+
+export type UpdateProductStatus409ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type UpdateProductStatus409Meta = {
+  requestId?: string;
+};
+
+export type UpdateProductStatus409 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: UpdateProductStatus409ErrorsItem[];
+  meta: UpdateProductStatus409Meta;
+};
+
+export type UpdateProductStatus500ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type UpdateProductStatus500Meta = {
+  requestId?: string;
+};
+
+export type UpdateProductStatus500 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: UpdateProductStatus500ErrorsItem[];
+  meta: UpdateProductStatus500Meta;
+};
+
+export type QuotePreviewProduct200DataAppliedTier = {
+  id?: number;
+  minQty?: number;
+  marginRate?: number;
+  unitPrice?: number;
+};
+
+export type QuotePreviewProduct200Data = {
+  target?: string;
+  productId?: number;
+  productName?: string;
+  customerSegment?: string;
+  quantity?: number;
+  moq?: number;
+  vatType?: string;
+  vatRate?: number;
+  appliedTier?: QuotePreviewProduct200DataAppliedTier;
+  selectedOptionItemIds?: number[];
+  optionAdjustmentUnitPrice?: number;
+  optionAdjustmentSupplyCost?: number;
+  unitPrice?: number;
+  supplyUnitCost?: number;
+  supplyTotal?: number;
+  subtotalExVat?: number;
+  vatAmount?: number;
+  shippingFee?: number;
+  totalAmount?: number;
+  estimatedMargin?: number;
+};
+
+export type QuotePreviewProduct200 = {
+  success: boolean;
+  code: string;
+  message: string;
+  data: QuotePreviewProduct200Data;
+};
+
+export type QuotePreviewProduct400ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type QuotePreviewProduct400Meta = {
+  requestId?: string;
+};
+
+export type QuotePreviewProduct400 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: QuotePreviewProduct400ErrorsItem[];
+  meta: QuotePreviewProduct400Meta;
+};
+
+export type QuotePreviewProduct401ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type QuotePreviewProduct401Meta = {
+  requestId?: string;
+};
+
+export type QuotePreviewProduct401 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: QuotePreviewProduct401ErrorsItem[];
+  meta: QuotePreviewProduct401Meta;
+};
+
+export type QuotePreviewProduct403ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type QuotePreviewProduct403Meta = {
+  requestId?: string;
+};
+
+export type QuotePreviewProduct403 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: QuotePreviewProduct403ErrorsItem[];
+  meta: QuotePreviewProduct403Meta;
+};
+
+export type QuotePreviewProduct404ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type QuotePreviewProduct404Meta = {
+  requestId?: string;
+};
+
+export type QuotePreviewProduct404 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: QuotePreviewProduct404ErrorsItem[];
+  meta: QuotePreviewProduct404Meta;
+};
+
+export type QuotePreviewProduct409ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type QuotePreviewProduct409Meta = {
+  requestId?: string;
+};
+
+export type QuotePreviewProduct409 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: QuotePreviewProduct409ErrorsItem[];
+  meta: QuotePreviewProduct409Meta;
+};
+
+export type QuotePreviewProduct500ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type QuotePreviewProduct500Meta = {
+  requestId?: string;
+};
+
+export type QuotePreviewProduct500 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: QuotePreviewProduct500ErrorsItem[];
+  meta: QuotePreviewProduct500Meta;
+};
+
+export type ReplaceProductOptions200DataItemItemsItem = {
+  id?: number;
+  label?: string;
+  extraSupplyCost?: number;
+  extraUnitPrice?: number;
+  sortOrder?: number;
+  isActive?: boolean;
+};
+
+export type ReplaceProductOptions200DataItem = {
+  id?: number;
+  productId?: number;
+  name?: string;
+  isRequired?: boolean;
+  selectionType?: string;
+  sortOrder?: number;
+  items?: ReplaceProductOptions200DataItemItemsItem[];
+};
+
+export type ReplaceProductOptions200 = {
+  success: boolean;
+  code: string;
+  message: string;
+  data: ReplaceProductOptions200DataItem[];
+};
+
+export type ReplaceProductOptions400ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type ReplaceProductOptions400Meta = {
+  requestId?: string;
+};
+
+export type ReplaceProductOptions400 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: ReplaceProductOptions400ErrorsItem[];
+  meta: ReplaceProductOptions400Meta;
+};
+
+export type ReplaceProductOptions401ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type ReplaceProductOptions401Meta = {
+  requestId?: string;
+};
+
+export type ReplaceProductOptions401 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: ReplaceProductOptions401ErrorsItem[];
+  meta: ReplaceProductOptions401Meta;
+};
+
+export type ReplaceProductOptions403ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type ReplaceProductOptions403Meta = {
+  requestId?: string;
+};
+
+export type ReplaceProductOptions403 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: ReplaceProductOptions403ErrorsItem[];
+  meta: ReplaceProductOptions403Meta;
+};
+
+export type ReplaceProductOptions404ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type ReplaceProductOptions404Meta = {
+  requestId?: string;
+};
+
+export type ReplaceProductOptions404 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: ReplaceProductOptions404ErrorsItem[];
+  meta: ReplaceProductOptions404Meta;
+};
+
+export type ReplaceProductOptions409ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type ReplaceProductOptions409Meta = {
+  requestId?: string;
+};
+
+export type ReplaceProductOptions409 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: ReplaceProductOptions409ErrorsItem[];
+  meta: ReplaceProductOptions409Meta;
+};
+
+export type ReplaceProductOptions500ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type ReplaceProductOptions500Meta = {
+  requestId?: string;
+};
+
+export type ReplaceProductOptions500 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: ReplaceProductOptions500ErrorsItem[];
+  meta: ReplaceProductOptions500Meta;
+};
+
+export type ReplaceProductPriceTiers200DataGuestItem = {
+  id?: number;
+  minQty?: number;
+  marginRate?: number;
+  /** @nullable */
+  unitPriceOverride?: number | null;
+  computedUnitPrice?: number;
+  isActive?: boolean;
+};
+
+export type ReplaceProductPriceTiers200DataMemberItem = {
+  id?: number;
+  minQty?: number;
+  marginRate?: number;
+  /** @nullable */
+  unitPriceOverride?: number | null;
+  computedUnitPrice?: number;
+  isActive?: boolean;
+};
+
+export type ReplaceProductPriceTiers200Data = {
+  guest?: ReplaceProductPriceTiers200DataGuestItem[];
+  member?: ReplaceProductPriceTiers200DataMemberItem[];
+};
+
+export type ReplaceProductPriceTiers200 = {
+  success: boolean;
+  code: string;
+  message: string;
+  data: ReplaceProductPriceTiers200Data;
+};
+
+export type ReplaceProductPriceTiers400ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type ReplaceProductPriceTiers400Meta = {
+  requestId?: string;
+};
+
+export type ReplaceProductPriceTiers400 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: ReplaceProductPriceTiers400ErrorsItem[];
+  meta: ReplaceProductPriceTiers400Meta;
+};
+
+export type ReplaceProductPriceTiers401ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type ReplaceProductPriceTiers401Meta = {
+  requestId?: string;
+};
+
+export type ReplaceProductPriceTiers401 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: ReplaceProductPriceTiers401ErrorsItem[];
+  meta: ReplaceProductPriceTiers401Meta;
+};
+
+export type ReplaceProductPriceTiers403ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type ReplaceProductPriceTiers403Meta = {
+  requestId?: string;
+};
+
+export type ReplaceProductPriceTiers403 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: ReplaceProductPriceTiers403ErrorsItem[];
+  meta: ReplaceProductPriceTiers403Meta;
+};
+
+export type ReplaceProductPriceTiers404ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type ReplaceProductPriceTiers404Meta = {
+  requestId?: string;
+};
+
+export type ReplaceProductPriceTiers404 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: ReplaceProductPriceTiers404ErrorsItem[];
+  meta: ReplaceProductPriceTiers404Meta;
+};
+
+export type ReplaceProductPriceTiers409ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type ReplaceProductPriceTiers409Meta = {
+  requestId?: string;
+};
+
+export type ReplaceProductPriceTiers409 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: ReplaceProductPriceTiers409ErrorsItem[];
+  meta: ReplaceProductPriceTiers409Meta;
+};
+
+export type ReplaceProductPriceTiers500ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type ReplaceProductPriceTiers500Meta = {
+  requestId?: string;
+};
+
+export type ReplaceProductPriceTiers500 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: ReplaceProductPriceTiers500ErrorsItem[];
+  meta: ReplaceProductPriceTiers500Meta;
+};
+
+export type ReplaceProductSpecs200DataItemSpecsItem = {
+  id?: number;
+  label?: string;
+  value?: string;
+  sortOrder?: number;
+};
+
+export type ReplaceProductSpecs200DataItem = {
+  id?: number;
+  productId?: number;
+  name?: string;
+  sortOrder?: number;
+  specs?: ReplaceProductSpecs200DataItemSpecsItem[];
+};
+
+export type ReplaceProductSpecs200 = {
+  success: boolean;
+  code: string;
+  message: string;
+  data: ReplaceProductSpecs200DataItem[];
+};
+
+export type ReplaceProductSpecs400ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type ReplaceProductSpecs400Meta = {
+  requestId?: string;
+};
+
+export type ReplaceProductSpecs400 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: ReplaceProductSpecs400ErrorsItem[];
+  meta: ReplaceProductSpecs400Meta;
+};
+
+export type ReplaceProductSpecs401ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type ReplaceProductSpecs401Meta = {
+  requestId?: string;
+};
+
+export type ReplaceProductSpecs401 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: ReplaceProductSpecs401ErrorsItem[];
+  meta: ReplaceProductSpecs401Meta;
+};
+
+export type ReplaceProductSpecs403ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type ReplaceProductSpecs403Meta = {
+  requestId?: string;
+};
+
+export type ReplaceProductSpecs403 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: ReplaceProductSpecs403ErrorsItem[];
+  meta: ReplaceProductSpecs403Meta;
+};
+
+export type ReplaceProductSpecs404ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type ReplaceProductSpecs404Meta = {
+  requestId?: string;
+};
+
+export type ReplaceProductSpecs404 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: ReplaceProductSpecs404ErrorsItem[];
+  meta: ReplaceProductSpecs404Meta;
+};
+
+export type ReplaceProductSpecs409ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type ReplaceProductSpecs409Meta = {
+  requestId?: string;
+};
+
+export type ReplaceProductSpecs409 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: ReplaceProductSpecs409ErrorsItem[];
+  meta: ReplaceProductSpecs409Meta;
+};
+
+export type ReplaceProductSpecs500ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type ReplaceProductSpecs500Meta = {
+  requestId?: string;
+};
+
+export type ReplaceProductSpecs500 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: ReplaceProductSpecs500ErrorsItem[];
+  meta: ReplaceProductSpecs500Meta;
+};
+
+export type ReplaceProductShippingTiers200DataItem = {
+  id?: number;
+  minQty?: number;
+  shippingFee?: number;
+  isActive?: boolean;
+};
+
+export type ReplaceProductShippingTiers200 = {
+  success: boolean;
+  code: string;
+  message: string;
+  data: ReplaceProductShippingTiers200DataItem[];
+};
+
+export type ReplaceProductShippingTiers400ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type ReplaceProductShippingTiers400Meta = {
+  requestId?: string;
+};
+
+export type ReplaceProductShippingTiers400 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: ReplaceProductShippingTiers400ErrorsItem[];
+  meta: ReplaceProductShippingTiers400Meta;
+};
+
+export type ReplaceProductShippingTiers401ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type ReplaceProductShippingTiers401Meta = {
+  requestId?: string;
+};
+
+export type ReplaceProductShippingTiers401 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: ReplaceProductShippingTiers401ErrorsItem[];
+  meta: ReplaceProductShippingTiers401Meta;
+};
+
+export type ReplaceProductShippingTiers403ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type ReplaceProductShippingTiers403Meta = {
+  requestId?: string;
+};
+
+export type ReplaceProductShippingTiers403 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: ReplaceProductShippingTiers403ErrorsItem[];
+  meta: ReplaceProductShippingTiers403Meta;
+};
+
+export type ReplaceProductShippingTiers404ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type ReplaceProductShippingTiers404Meta = {
+  requestId?: string;
+};
+
+export type ReplaceProductShippingTiers404 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: ReplaceProductShippingTiers404ErrorsItem[];
+  meta: ReplaceProductShippingTiers404Meta;
+};
+
+export type ReplaceProductShippingTiers409ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type ReplaceProductShippingTiers409Meta = {
+  requestId?: string;
+};
+
+export type ReplaceProductShippingTiers409 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: ReplaceProductShippingTiers409ErrorsItem[];
+  meta: ReplaceProductShippingTiers409Meta;
+};
+
+export type ReplaceProductShippingTiers500ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type ReplaceProductShippingTiers500Meta = {
+  requestId?: string;
+};
+
+export type ReplaceProductShippingTiers500 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: ReplaceProductShippingTiers500ErrorsItem[];
+  meta: ReplaceProductShippingTiers500Meta;
+};
+
+export type ReplaceProductMedia200DataItem = {
+  id?: number;
+  type?: string;
+  sourceType?: string;
+  url?: string;
+  /** @nullable */
+  altText?: string | null;
+  sortOrder?: number;
+};
+
+export type ReplaceProductMedia200 = {
+  success: boolean;
+  code: string;
+  message: string;
+  data: ReplaceProductMedia200DataItem[];
+};
+
+export type ReplaceProductMedia400ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type ReplaceProductMedia400Meta = {
+  requestId?: string;
+};
+
+export type ReplaceProductMedia400 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: ReplaceProductMedia400ErrorsItem[];
+  meta: ReplaceProductMedia400Meta;
+};
+
+export type ReplaceProductMedia401ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type ReplaceProductMedia401Meta = {
+  requestId?: string;
+};
+
+export type ReplaceProductMedia401 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: ReplaceProductMedia401ErrorsItem[];
+  meta: ReplaceProductMedia401Meta;
+};
+
+export type ReplaceProductMedia403ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type ReplaceProductMedia403Meta = {
+  requestId?: string;
+};
+
+export type ReplaceProductMedia403 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: ReplaceProductMedia403ErrorsItem[];
+  meta: ReplaceProductMedia403Meta;
+};
+
+export type ReplaceProductMedia404ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type ReplaceProductMedia404Meta = {
+  requestId?: string;
+};
+
+export type ReplaceProductMedia404 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: ReplaceProductMedia404ErrorsItem[];
+  meta: ReplaceProductMedia404Meta;
+};
+
+export type ReplaceProductMedia409ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type ReplaceProductMedia409Meta = {
+  requestId?: string;
+};
+
+export type ReplaceProductMedia409 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: ReplaceProductMedia409ErrorsItem[];
+  meta: ReplaceProductMedia409Meta;
+};
+
+export type ReplaceProductMedia500ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type ReplaceProductMedia500Meta = {
+  requestId?: string;
+};
+
+export type ReplaceProductMedia500 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: ReplaceProductMedia500ErrorsItem[];
+  meta: ReplaceProductMedia500Meta;
+};
+
+export type ReplaceProductTags200DataItem = {
+  id?: number;
+  tag?: string;
+  sortOrder?: number;
+};
+
+export type ReplaceProductTags200 = {
+  success: boolean;
+  code: string;
+  message: string;
+  data: ReplaceProductTags200DataItem[];
+};
+
+export type ReplaceProductTags400ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type ReplaceProductTags400Meta = {
+  requestId?: string;
+};
+
+export type ReplaceProductTags400 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: ReplaceProductTags400ErrorsItem[];
+  meta: ReplaceProductTags400Meta;
+};
+
+export type ReplaceProductTags401ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type ReplaceProductTags401Meta = {
+  requestId?: string;
+};
+
+export type ReplaceProductTags401 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: ReplaceProductTags401ErrorsItem[];
+  meta: ReplaceProductTags401Meta;
+};
+
+export type ReplaceProductTags403ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type ReplaceProductTags403Meta = {
+  requestId?: string;
+};
+
+export type ReplaceProductTags403 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: ReplaceProductTags403ErrorsItem[];
+  meta: ReplaceProductTags403Meta;
+};
+
+export type ReplaceProductTags404ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type ReplaceProductTags404Meta = {
+  requestId?: string;
+};
+
+export type ReplaceProductTags404 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: ReplaceProductTags404ErrorsItem[];
+  meta: ReplaceProductTags404Meta;
+};
+
+export type ReplaceProductTags409ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type ReplaceProductTags409Meta = {
+  requestId?: string;
+};
+
+export type ReplaceProductTags409 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: ReplaceProductTags409ErrorsItem[];
+  meta: ReplaceProductTags409Meta;
+};
+
+export type ReplaceProductTags500ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type ReplaceProductTags500Meta = {
+  requestId?: string;
+};
+
+export type ReplaceProductTags500 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: ReplaceProductTags500ErrorsItem[];
+  meta: ReplaceProductTags500Meta;
+};
+
+export type ReplaceProductSearchAliases200DataItem = {
+  id?: number;
+  aliasText?: string;
+  sortOrder?: number;
+};
+
+export type ReplaceProductSearchAliases200 = {
+  success: boolean;
+  code: string;
+  message: string;
+  data: ReplaceProductSearchAliases200DataItem[];
+};
+
+export type ReplaceProductSearchAliases400ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type ReplaceProductSearchAliases400Meta = {
+  requestId?: string;
+};
+
+export type ReplaceProductSearchAliases400 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: ReplaceProductSearchAliases400ErrorsItem[];
+  meta: ReplaceProductSearchAliases400Meta;
+};
+
+export type ReplaceProductSearchAliases401ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type ReplaceProductSearchAliases401Meta = {
+  requestId?: string;
+};
+
+export type ReplaceProductSearchAliases401 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: ReplaceProductSearchAliases401ErrorsItem[];
+  meta: ReplaceProductSearchAliases401Meta;
+};
+
+export type ReplaceProductSearchAliases403ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type ReplaceProductSearchAliases403Meta = {
+  requestId?: string;
+};
+
+export type ReplaceProductSearchAliases403 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: ReplaceProductSearchAliases403ErrorsItem[];
+  meta: ReplaceProductSearchAliases403Meta;
+};
+
+export type ReplaceProductSearchAliases404ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type ReplaceProductSearchAliases404Meta = {
+  requestId?: string;
+};
+
+export type ReplaceProductSearchAliases404 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: ReplaceProductSearchAliases404ErrorsItem[];
+  meta: ReplaceProductSearchAliases404Meta;
+};
+
+export type ReplaceProductSearchAliases409ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type ReplaceProductSearchAliases409Meta = {
+  requestId?: string;
+};
+
+export type ReplaceProductSearchAliases409 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: ReplaceProductSearchAliases409ErrorsItem[];
+  meta: ReplaceProductSearchAliases409Meta;
+};
+
+export type ReplaceProductSearchAliases500ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type ReplaceProductSearchAliases500Meta = {
+  requestId?: string;
+};
+
+export type ReplaceProductSearchAliases500 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: ReplaceProductSearchAliases500ErrorsItem[];
+  meta: ReplaceProductSearchAliases500Meta;
+};
+
+export type UpsertProductDescription200Data = {
+  productId?: number;
+  descriptionHtmlRaw?: string;
+  descriptionHtmlSanitized?: string;
+  /** @nullable */
+  updatedByAdminId?: number | null;
+  updatedAt?: string;
+};
+
+export type UpsertProductDescription200 = {
+  success: boolean;
+  code: string;
+  message: string;
+  data: UpsertProductDescription200Data;
+};
+
+export type UpsertProductDescription400ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type UpsertProductDescription400Meta = {
+  requestId?: string;
+};
+
+export type UpsertProductDescription400 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: UpsertProductDescription400ErrorsItem[];
+  meta: UpsertProductDescription400Meta;
+};
+
+export type UpsertProductDescription401ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type UpsertProductDescription401Meta = {
+  requestId?: string;
+};
+
+export type UpsertProductDescription401 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: UpsertProductDescription401ErrorsItem[];
+  meta: UpsertProductDescription401Meta;
+};
+
+export type UpsertProductDescription403ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type UpsertProductDescription403Meta = {
+  requestId?: string;
+};
+
+export type UpsertProductDescription403 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: UpsertProductDescription403ErrorsItem[];
+  meta: UpsertProductDescription403Meta;
+};
+
+export type UpsertProductDescription404ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type UpsertProductDescription404Meta = {
+  requestId?: string;
+};
+
+export type UpsertProductDescription404 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: UpsertProductDescription404ErrorsItem[];
+  meta: UpsertProductDescription404Meta;
+};
+
+export type UpsertProductDescription409ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type UpsertProductDescription409Meta = {
+  requestId?: string;
+};
+
+export type UpsertProductDescription409 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: UpsertProductDescription409ErrorsItem[];
+  meta: UpsertProductDescription409Meta;
+};
+
+export type UpsertProductDescription500ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type UpsertProductDescription500Meta = {
+  requestId?: string;
+};
+
+export type UpsertProductDescription500 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: UpsertProductDescription500ErrorsItem[];
+  meta: UpsertProductDescription500Meta;
+};
+
+export type UpsertProductSeo200Data = {
+  productId?: number;
+  /** @nullable */
+  metaTitle?: string | null;
+  /** @nullable */
+  metaDescription?: string | null;
+  /** @nullable */
+  metaKeywords?: string | null;
+  /** @nullable */
+  canonicalUrl?: string | null;
+  /** @nullable */
+  robots?: string | null;
+  /** @nullable */
+  ogTitle?: string | null;
+  /** @nullable */
+  ogDescription?: string | null;
+  /** @nullable */
+  ogImage?: string | null;
+  updatedAt?: string;
+};
+
+export type UpsertProductSeo200 = {
+  success: boolean;
+  code: string;
+  message: string;
+  data: UpsertProductSeo200Data;
+};
+
+export type UpsertProductSeo400ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type UpsertProductSeo400Meta = {
+  requestId?: string;
+};
+
+export type UpsertProductSeo400 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: UpsertProductSeo400ErrorsItem[];
+  meta: UpsertProductSeo400Meta;
+};
+
+export type UpsertProductSeo401ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type UpsertProductSeo401Meta = {
+  requestId?: string;
+};
+
+export type UpsertProductSeo401 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: UpsertProductSeo401ErrorsItem[];
+  meta: UpsertProductSeo401Meta;
+};
+
+export type UpsertProductSeo403ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type UpsertProductSeo403Meta = {
+  requestId?: string;
+};
+
+export type UpsertProductSeo403 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: UpsertProductSeo403ErrorsItem[];
+  meta: UpsertProductSeo403Meta;
+};
+
+export type UpsertProductSeo404ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type UpsertProductSeo404Meta = {
+  requestId?: string;
+};
+
+export type UpsertProductSeo404 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: UpsertProductSeo404ErrorsItem[];
+  meta: UpsertProductSeo404Meta;
+};
+
+export type UpsertProductSeo409ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type UpsertProductSeo409Meta = {
+  requestId?: string;
+};
+
+export type UpsertProductSeo409 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: UpsertProductSeo409ErrorsItem[];
+  meta: UpsertProductSeo409Meta;
+};
+
+export type UpsertProductSeo500ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type UpsertProductSeo500Meta = {
+  requestId?: string;
+};
+
+export type UpsertProductSeo500 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: UpsertProductSeo500ErrorsItem[];
+  meta: UpsertProductSeo500Meta;
+};
+
+export type UploadProductImageBody = {
+  file: Blob;
+};
+
+export type UploadProductImage200Data = {
+  path?: string;
+  url?: string;
+  filename?: string;
+  mimeType?: string;
+  size?: number;
+};
+
+export type UploadProductImage200 = {
+  success: boolean;
+  code: string;
+  message: string;
+  data: UploadProductImage200Data;
+};
+
+export type UploadProductImage400ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type UploadProductImage400Meta = {
+  requestId?: string;
+};
+
+export type UploadProductImage400 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: UploadProductImage400ErrorsItem[];
+  meta: UploadProductImage400Meta;
+};
+
+export type UploadProductImage401ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type UploadProductImage401Meta = {
+  requestId?: string;
+};
+
+export type UploadProductImage401 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: UploadProductImage401ErrorsItem[];
+  meta: UploadProductImage401Meta;
+};
+
+export type UploadProductImage403ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type UploadProductImage403Meta = {
+  requestId?: string;
+};
+
+export type UploadProductImage403 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: UploadProductImage403ErrorsItem[];
+  meta: UploadProductImage403Meta;
+};
+
+export type UploadProductImage404ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type UploadProductImage404Meta = {
+  requestId?: string;
+};
+
+export type UploadProductImage404 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: UploadProductImage404ErrorsItem[];
+  meta: UploadProductImage404Meta;
+};
+
+export type UploadProductImage409ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type UploadProductImage409Meta = {
+  requestId?: string;
+};
+
+export type UploadProductImage409 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: UploadProductImage409ErrorsItem[];
+  meta: UploadProductImage409Meta;
+};
+
+export type UploadProductImage500ErrorsItem = {
+  field?: string;
+  reason?: string;
+};
+
+export type UploadProductImage500Meta = {
+  requestId?: string;
+};
+
+export type UploadProductImage500 = {
+  success: boolean;
+  code: string;
+  message: string;
+  errors?: UploadProductImage500ErrorsItem[];
+  meta: UploadProductImage500Meta;
+};
+
 /**
  * @summary Back Office health check
  */
@@ -1770,5 +4133,1128 @@ export const setMainExposure = async (id: number,
     headers: { 'Content-Type': 'application/json', ...options?.headers },
     body: JSON.stringify(
       updateMainExposureDto,)
+  }
+);}
+  
+
+
+/**
+ * @summary BO 상품 목록 조회
+ */
+export type listProductsResponse200 = {
+  data: ListProducts200
+  status: 200
+}
+
+export type listProductsResponse400 = {
+  data: ListProducts400
+  status: 400
+}
+
+export type listProductsResponse401 = {
+  data: ListProducts401
+  status: 401
+}
+
+export type listProductsResponse403 = {
+  data: ListProducts403
+  status: 403
+}
+
+export type listProductsResponse404 = {
+  data: ListProducts404
+  status: 404
+}
+
+export type listProductsResponse409 = {
+  data: ListProducts409
+  status: 409
+}
+
+export type listProductsResponse500 = {
+  data: ListProducts500
+  status: 500
+}
+
+export type listProductsResponseSuccess = (listProductsResponse200) & {
+  headers: Headers;
+};
+export type listProductsResponseError = (listProductsResponse400 | listProductsResponse401 | listProductsResponse403 | listProductsResponse404 | listProductsResponse409 | listProductsResponse500) & {
+  headers: Headers;
+};
+
+export type listProductsResponse = (listProductsResponseSuccess | listProductsResponseError)
+
+export const getListProductsUrl = (params?: ListProductsParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : value.toString())
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/bo/products?${stringifiedParams}` : `/bo/products`
+}
+
+export const listProducts = async (params?: ListProductsParams, options?: RequestInit): Promise<listProductsResponse> => {
+  
+  return fetcher<listProductsResponse>(getListProductsUrl(params),
+  {      
+    ...options,
+    method: 'GET'
+    
+    
+  }
+);}
+  
+
+
+/**
+ * @summary BO 상품 생성
+ */
+export type createProductResponse200 = {
+  data: CreateProduct200
+  status: 200
+}
+
+export type createProductResponse400 = {
+  data: CreateProduct400
+  status: 400
+}
+
+export type createProductResponse401 = {
+  data: CreateProduct401
+  status: 401
+}
+
+export type createProductResponse403 = {
+  data: CreateProduct403
+  status: 403
+}
+
+export type createProductResponse404 = {
+  data: CreateProduct404
+  status: 404
+}
+
+export type createProductResponse409 = {
+  data: CreateProduct409
+  status: 409
+}
+
+export type createProductResponse500 = {
+  data: CreateProduct500
+  status: 500
+}
+
+export type createProductResponseSuccess = (createProductResponse200) & {
+  headers: Headers;
+};
+export type createProductResponseError = (createProductResponse400 | createProductResponse401 | createProductResponse403 | createProductResponse404 | createProductResponse409 | createProductResponse500) & {
+  headers: Headers;
+};
+
+export type createProductResponse = (createProductResponseSuccess | createProductResponseError)
+
+export const getCreateProductUrl = () => {
+
+
+  
+
+  return `/bo/products`
+}
+
+export const createProduct = async (createProductDto: CreateProductDto, options?: RequestInit): Promise<createProductResponse> => {
+  
+  return fetcher<createProductResponse>(getCreateProductUrl(),
+  {      
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      createProductDto,)
+  }
+);}
+  
+
+
+/**
+ * @summary BO 상품 상세 조회
+ */
+export type detailProductResponse200 = {
+  data: DetailProduct200
+  status: 200
+}
+
+export type detailProductResponse400 = {
+  data: DetailProduct400
+  status: 400
+}
+
+export type detailProductResponse401 = {
+  data: DetailProduct401
+  status: 401
+}
+
+export type detailProductResponse403 = {
+  data: DetailProduct403
+  status: 403
+}
+
+export type detailProductResponse404 = {
+  data: DetailProduct404
+  status: 404
+}
+
+export type detailProductResponse409 = {
+  data: DetailProduct409
+  status: 409
+}
+
+export type detailProductResponse500 = {
+  data: DetailProduct500
+  status: 500
+}
+
+export type detailProductResponseSuccess = (detailProductResponse200) & {
+  headers: Headers;
+};
+export type detailProductResponseError = (detailProductResponse400 | detailProductResponse401 | detailProductResponse403 | detailProductResponse404 | detailProductResponse409 | detailProductResponse500) & {
+  headers: Headers;
+};
+
+export type detailProductResponse = (detailProductResponseSuccess | detailProductResponseError)
+
+export const getDetailProductUrl = (id: number,) => {
+
+
+  
+
+  return `/bo/products/${id}`
+}
+
+export const detailProduct = async (id: number, options?: RequestInit): Promise<detailProductResponse> => {
+  
+  return fetcher<detailProductResponse>(getDetailProductUrl(id),
+  {      
+    ...options,
+    method: 'GET'
+    
+    
+  }
+);}
+  
+
+
+/**
+ * @summary BO 상품 기본정보 수정
+ */
+export type updateProductResponse200 = {
+  data: UpdateProduct200
+  status: 200
+}
+
+export type updateProductResponse400 = {
+  data: UpdateProduct400
+  status: 400
+}
+
+export type updateProductResponse401 = {
+  data: UpdateProduct401
+  status: 401
+}
+
+export type updateProductResponse403 = {
+  data: UpdateProduct403
+  status: 403
+}
+
+export type updateProductResponse404 = {
+  data: UpdateProduct404
+  status: 404
+}
+
+export type updateProductResponse409 = {
+  data: UpdateProduct409
+  status: 409
+}
+
+export type updateProductResponse500 = {
+  data: UpdateProduct500
+  status: 500
+}
+
+export type updateProductResponseSuccess = (updateProductResponse200) & {
+  headers: Headers;
+};
+export type updateProductResponseError = (updateProductResponse400 | updateProductResponse401 | updateProductResponse403 | updateProductResponse404 | updateProductResponse409 | updateProductResponse500) & {
+  headers: Headers;
+};
+
+export type updateProductResponse = (updateProductResponseSuccess | updateProductResponseError)
+
+export const getUpdateProductUrl = (id: number,) => {
+
+
+  
+
+  return `/bo/products/${id}`
+}
+
+export const updateProduct = async (id: number,
+    updateProductDto: UpdateProductDto, options?: RequestInit): Promise<updateProductResponse> => {
+  
+  return fetcher<updateProductResponse>(getUpdateProductUrl(id),
+  {      
+    ...options,
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      updateProductDto,)
+  }
+);}
+  
+
+
+/**
+ * @summary BO 상품 상태 수정
+ */
+export type updateProductStatusResponse200 = {
+  data: UpdateProductStatus200
+  status: 200
+}
+
+export type updateProductStatusResponse400 = {
+  data: UpdateProductStatus400
+  status: 400
+}
+
+export type updateProductStatusResponse401 = {
+  data: UpdateProductStatus401
+  status: 401
+}
+
+export type updateProductStatusResponse403 = {
+  data: UpdateProductStatus403
+  status: 403
+}
+
+export type updateProductStatusResponse404 = {
+  data: UpdateProductStatus404
+  status: 404
+}
+
+export type updateProductStatusResponse409 = {
+  data: UpdateProductStatus409
+  status: 409
+}
+
+export type updateProductStatusResponse500 = {
+  data: UpdateProductStatus500
+  status: 500
+}
+
+export type updateProductStatusResponseSuccess = (updateProductStatusResponse200) & {
+  headers: Headers;
+};
+export type updateProductStatusResponseError = (updateProductStatusResponse400 | updateProductStatusResponse401 | updateProductStatusResponse403 | updateProductStatusResponse404 | updateProductStatusResponse409 | updateProductStatusResponse500) & {
+  headers: Headers;
+};
+
+export type updateProductStatusResponse = (updateProductStatusResponseSuccess | updateProductStatusResponseError)
+
+export const getUpdateProductStatusUrl = (id: number,) => {
+
+
+  
+
+  return `/bo/products/${id}/status`
+}
+
+export const updateProductStatus = async (id: number,
+    updateProductStatusDto: UpdateProductStatusDto, options?: RequestInit): Promise<updateProductStatusResponse> => {
+  
+  return fetcher<updateProductStatusResponse>(getUpdateProductStatusUrl(id),
+  {      
+    ...options,
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      updateProductStatusDto,)
+  }
+);}
+  
+
+
+/**
+ * @summary BO 상품 견적 미리보기
+ */
+export type quotePreviewProductResponse200 = {
+  data: QuotePreviewProduct200
+  status: 200
+}
+
+export type quotePreviewProductResponse400 = {
+  data: QuotePreviewProduct400
+  status: 400
+}
+
+export type quotePreviewProductResponse401 = {
+  data: QuotePreviewProduct401
+  status: 401
+}
+
+export type quotePreviewProductResponse403 = {
+  data: QuotePreviewProduct403
+  status: 403
+}
+
+export type quotePreviewProductResponse404 = {
+  data: QuotePreviewProduct404
+  status: 404
+}
+
+export type quotePreviewProductResponse409 = {
+  data: QuotePreviewProduct409
+  status: 409
+}
+
+export type quotePreviewProductResponse500 = {
+  data: QuotePreviewProduct500
+  status: 500
+}
+
+export type quotePreviewProductResponseSuccess = (quotePreviewProductResponse200) & {
+  headers: Headers;
+};
+export type quotePreviewProductResponseError = (quotePreviewProductResponse400 | quotePreviewProductResponse401 | quotePreviewProductResponse403 | quotePreviewProductResponse404 | quotePreviewProductResponse409 | quotePreviewProductResponse500) & {
+  headers: Headers;
+};
+
+export type quotePreviewProductResponse = (quotePreviewProductResponseSuccess | quotePreviewProductResponseError)
+
+export const getQuotePreviewProductUrl = (id: number,) => {
+
+
+  
+
+  return `/bo/products/${id}/quote-preview`
+}
+
+export const quotePreviewProduct = async (id: number,
+    boQuotePreviewDto: BoQuotePreviewDto, options?: RequestInit): Promise<quotePreviewProductResponse> => {
+  
+  return fetcher<quotePreviewProductResponse>(getQuotePreviewProductUrl(id),
+  {      
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      boQuotePreviewDto,)
+  }
+);}
+  
+
+
+/**
+ * @summary BO 상품 옵션 전체 교체 저장
+ */
+export type replaceProductOptionsResponse200 = {
+  data: ReplaceProductOptions200
+  status: 200
+}
+
+export type replaceProductOptionsResponse400 = {
+  data: ReplaceProductOptions400
+  status: 400
+}
+
+export type replaceProductOptionsResponse401 = {
+  data: ReplaceProductOptions401
+  status: 401
+}
+
+export type replaceProductOptionsResponse403 = {
+  data: ReplaceProductOptions403
+  status: 403
+}
+
+export type replaceProductOptionsResponse404 = {
+  data: ReplaceProductOptions404
+  status: 404
+}
+
+export type replaceProductOptionsResponse409 = {
+  data: ReplaceProductOptions409
+  status: 409
+}
+
+export type replaceProductOptionsResponse500 = {
+  data: ReplaceProductOptions500
+  status: 500
+}
+
+export type replaceProductOptionsResponseSuccess = (replaceProductOptionsResponse200) & {
+  headers: Headers;
+};
+export type replaceProductOptionsResponseError = (replaceProductOptionsResponse400 | replaceProductOptionsResponse401 | replaceProductOptionsResponse403 | replaceProductOptionsResponse404 | replaceProductOptionsResponse409 | replaceProductOptionsResponse500) & {
+  headers: Headers;
+};
+
+export type replaceProductOptionsResponse = (replaceProductOptionsResponseSuccess | replaceProductOptionsResponseError)
+
+export const getReplaceProductOptionsUrl = (id: number,) => {
+
+
+  
+
+  return `/bo/products/${id}/options`
+}
+
+export const replaceProductOptions = async (id: number,
+    replaceProductOptionsDto: ReplaceProductOptionsDto, options?: RequestInit): Promise<replaceProductOptionsResponse> => {
+  
+  return fetcher<replaceProductOptionsResponse>(getReplaceProductOptionsUrl(id),
+  {      
+    ...options,
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      replaceProductOptionsDto,)
+  }
+);}
+  
+
+
+/**
+ * @summary BO 상품 수량별 가격 티어 전체 교체 저장
+ */
+export type replaceProductPriceTiersResponse200 = {
+  data: ReplaceProductPriceTiers200
+  status: 200
+}
+
+export type replaceProductPriceTiersResponse400 = {
+  data: ReplaceProductPriceTiers400
+  status: 400
+}
+
+export type replaceProductPriceTiersResponse401 = {
+  data: ReplaceProductPriceTiers401
+  status: 401
+}
+
+export type replaceProductPriceTiersResponse403 = {
+  data: ReplaceProductPriceTiers403
+  status: 403
+}
+
+export type replaceProductPriceTiersResponse404 = {
+  data: ReplaceProductPriceTiers404
+  status: 404
+}
+
+export type replaceProductPriceTiersResponse409 = {
+  data: ReplaceProductPriceTiers409
+  status: 409
+}
+
+export type replaceProductPriceTiersResponse500 = {
+  data: ReplaceProductPriceTiers500
+  status: 500
+}
+
+export type replaceProductPriceTiersResponseSuccess = (replaceProductPriceTiersResponse200) & {
+  headers: Headers;
+};
+export type replaceProductPriceTiersResponseError = (replaceProductPriceTiersResponse400 | replaceProductPriceTiersResponse401 | replaceProductPriceTiersResponse403 | replaceProductPriceTiersResponse404 | replaceProductPriceTiersResponse409 | replaceProductPriceTiersResponse500) & {
+  headers: Headers;
+};
+
+export type replaceProductPriceTiersResponse = (replaceProductPriceTiersResponseSuccess | replaceProductPriceTiersResponseError)
+
+export const getReplaceProductPriceTiersUrl = (id: number,) => {
+
+
+  
+
+  return `/bo/products/${id}/price-tiers`
+}
+
+export const replaceProductPriceTiers = async (id: number,
+    replaceProductPriceTiersDto: ReplaceProductPriceTiersDto, options?: RequestInit): Promise<replaceProductPriceTiersResponse> => {
+  
+  return fetcher<replaceProductPriceTiersResponse>(getReplaceProductPriceTiersUrl(id),
+  {      
+    ...options,
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      replaceProductPriceTiersDto,)
+  }
+);}
+  
+
+
+/**
+ * @summary BO 상품 스펙 전체 교체 저장
+ */
+export type replaceProductSpecsResponse200 = {
+  data: ReplaceProductSpecs200
+  status: 200
+}
+
+export type replaceProductSpecsResponse400 = {
+  data: ReplaceProductSpecs400
+  status: 400
+}
+
+export type replaceProductSpecsResponse401 = {
+  data: ReplaceProductSpecs401
+  status: 401
+}
+
+export type replaceProductSpecsResponse403 = {
+  data: ReplaceProductSpecs403
+  status: 403
+}
+
+export type replaceProductSpecsResponse404 = {
+  data: ReplaceProductSpecs404
+  status: 404
+}
+
+export type replaceProductSpecsResponse409 = {
+  data: ReplaceProductSpecs409
+  status: 409
+}
+
+export type replaceProductSpecsResponse500 = {
+  data: ReplaceProductSpecs500
+  status: 500
+}
+
+export type replaceProductSpecsResponseSuccess = (replaceProductSpecsResponse200) & {
+  headers: Headers;
+};
+export type replaceProductSpecsResponseError = (replaceProductSpecsResponse400 | replaceProductSpecsResponse401 | replaceProductSpecsResponse403 | replaceProductSpecsResponse404 | replaceProductSpecsResponse409 | replaceProductSpecsResponse500) & {
+  headers: Headers;
+};
+
+export type replaceProductSpecsResponse = (replaceProductSpecsResponseSuccess | replaceProductSpecsResponseError)
+
+export const getReplaceProductSpecsUrl = (id: number,) => {
+
+
+  
+
+  return `/bo/products/${id}/specs`
+}
+
+export const replaceProductSpecs = async (id: number,
+    replaceProductSpecsDto: ReplaceProductSpecsDto, options?: RequestInit): Promise<replaceProductSpecsResponse> => {
+  
+  return fetcher<replaceProductSpecsResponse>(getReplaceProductSpecsUrl(id),
+  {      
+    ...options,
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      replaceProductSpecsDto,)
+  }
+);}
+  
+
+
+/**
+ * @summary BO 상품 배송비 티어 전체 교체 저장
+ */
+export type replaceProductShippingTiersResponse200 = {
+  data: ReplaceProductShippingTiers200
+  status: 200
+}
+
+export type replaceProductShippingTiersResponse400 = {
+  data: ReplaceProductShippingTiers400
+  status: 400
+}
+
+export type replaceProductShippingTiersResponse401 = {
+  data: ReplaceProductShippingTiers401
+  status: 401
+}
+
+export type replaceProductShippingTiersResponse403 = {
+  data: ReplaceProductShippingTiers403
+  status: 403
+}
+
+export type replaceProductShippingTiersResponse404 = {
+  data: ReplaceProductShippingTiers404
+  status: 404
+}
+
+export type replaceProductShippingTiersResponse409 = {
+  data: ReplaceProductShippingTiers409
+  status: 409
+}
+
+export type replaceProductShippingTiersResponse500 = {
+  data: ReplaceProductShippingTiers500
+  status: 500
+}
+
+export type replaceProductShippingTiersResponseSuccess = (replaceProductShippingTiersResponse200) & {
+  headers: Headers;
+};
+export type replaceProductShippingTiersResponseError = (replaceProductShippingTiersResponse400 | replaceProductShippingTiersResponse401 | replaceProductShippingTiersResponse403 | replaceProductShippingTiersResponse404 | replaceProductShippingTiersResponse409 | replaceProductShippingTiersResponse500) & {
+  headers: Headers;
+};
+
+export type replaceProductShippingTiersResponse = (replaceProductShippingTiersResponseSuccess | replaceProductShippingTiersResponseError)
+
+export const getReplaceProductShippingTiersUrl = (id: number,) => {
+
+
+  
+
+  return `/bo/products/${id}/shipping-tiers`
+}
+
+export const replaceProductShippingTiers = async (id: number,
+    replaceProductShippingTiersDto: ReplaceProductShippingTiersDto, options?: RequestInit): Promise<replaceProductShippingTiersResponse> => {
+  
+  return fetcher<replaceProductShippingTiersResponse>(getReplaceProductShippingTiersUrl(id),
+  {      
+    ...options,
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      replaceProductShippingTiersDto,)
+  }
+);}
+  
+
+
+/**
+ * @summary BO 상품 미디어 전체 교체 저장
+ */
+export type replaceProductMediaResponse200 = {
+  data: ReplaceProductMedia200
+  status: 200
+}
+
+export type replaceProductMediaResponse400 = {
+  data: ReplaceProductMedia400
+  status: 400
+}
+
+export type replaceProductMediaResponse401 = {
+  data: ReplaceProductMedia401
+  status: 401
+}
+
+export type replaceProductMediaResponse403 = {
+  data: ReplaceProductMedia403
+  status: 403
+}
+
+export type replaceProductMediaResponse404 = {
+  data: ReplaceProductMedia404
+  status: 404
+}
+
+export type replaceProductMediaResponse409 = {
+  data: ReplaceProductMedia409
+  status: 409
+}
+
+export type replaceProductMediaResponse500 = {
+  data: ReplaceProductMedia500
+  status: 500
+}
+
+export type replaceProductMediaResponseSuccess = (replaceProductMediaResponse200) & {
+  headers: Headers;
+};
+export type replaceProductMediaResponseError = (replaceProductMediaResponse400 | replaceProductMediaResponse401 | replaceProductMediaResponse403 | replaceProductMediaResponse404 | replaceProductMediaResponse409 | replaceProductMediaResponse500) & {
+  headers: Headers;
+};
+
+export type replaceProductMediaResponse = (replaceProductMediaResponseSuccess | replaceProductMediaResponseError)
+
+export const getReplaceProductMediaUrl = (id: number,) => {
+
+
+  
+
+  return `/bo/products/${id}/media`
+}
+
+export const replaceProductMedia = async (id: number,
+    replaceProductMediaDto: ReplaceProductMediaDto, options?: RequestInit): Promise<replaceProductMediaResponse> => {
+  
+  return fetcher<replaceProductMediaResponse>(getReplaceProductMediaUrl(id),
+  {      
+    ...options,
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      replaceProductMediaDto,)
+  }
+);}
+  
+
+
+/**
+ * @summary BO 상품 태그 전체 교체 저장
+ */
+export type replaceProductTagsResponse200 = {
+  data: ReplaceProductTags200
+  status: 200
+}
+
+export type replaceProductTagsResponse400 = {
+  data: ReplaceProductTags400
+  status: 400
+}
+
+export type replaceProductTagsResponse401 = {
+  data: ReplaceProductTags401
+  status: 401
+}
+
+export type replaceProductTagsResponse403 = {
+  data: ReplaceProductTags403
+  status: 403
+}
+
+export type replaceProductTagsResponse404 = {
+  data: ReplaceProductTags404
+  status: 404
+}
+
+export type replaceProductTagsResponse409 = {
+  data: ReplaceProductTags409
+  status: 409
+}
+
+export type replaceProductTagsResponse500 = {
+  data: ReplaceProductTags500
+  status: 500
+}
+
+export type replaceProductTagsResponseSuccess = (replaceProductTagsResponse200) & {
+  headers: Headers;
+};
+export type replaceProductTagsResponseError = (replaceProductTagsResponse400 | replaceProductTagsResponse401 | replaceProductTagsResponse403 | replaceProductTagsResponse404 | replaceProductTagsResponse409 | replaceProductTagsResponse500) & {
+  headers: Headers;
+};
+
+export type replaceProductTagsResponse = (replaceProductTagsResponseSuccess | replaceProductTagsResponseError)
+
+export const getReplaceProductTagsUrl = (id: number,) => {
+
+
+  
+
+  return `/bo/products/${id}/tags`
+}
+
+export const replaceProductTags = async (id: number,
+    replaceProductTagsDto: ReplaceProductTagsDto, options?: RequestInit): Promise<replaceProductTagsResponse> => {
+  
+  return fetcher<replaceProductTagsResponse>(getReplaceProductTagsUrl(id),
+  {      
+    ...options,
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      replaceProductTagsDto,)
+  }
+);}
+  
+
+
+/**
+ * @summary BO 상품 검색 별칭 전체 교체 저장
+ */
+export type replaceProductSearchAliasesResponse200 = {
+  data: ReplaceProductSearchAliases200
+  status: 200
+}
+
+export type replaceProductSearchAliasesResponse400 = {
+  data: ReplaceProductSearchAliases400
+  status: 400
+}
+
+export type replaceProductSearchAliasesResponse401 = {
+  data: ReplaceProductSearchAliases401
+  status: 401
+}
+
+export type replaceProductSearchAliasesResponse403 = {
+  data: ReplaceProductSearchAliases403
+  status: 403
+}
+
+export type replaceProductSearchAliasesResponse404 = {
+  data: ReplaceProductSearchAliases404
+  status: 404
+}
+
+export type replaceProductSearchAliasesResponse409 = {
+  data: ReplaceProductSearchAliases409
+  status: 409
+}
+
+export type replaceProductSearchAliasesResponse500 = {
+  data: ReplaceProductSearchAliases500
+  status: 500
+}
+
+export type replaceProductSearchAliasesResponseSuccess = (replaceProductSearchAliasesResponse200) & {
+  headers: Headers;
+};
+export type replaceProductSearchAliasesResponseError = (replaceProductSearchAliasesResponse400 | replaceProductSearchAliasesResponse401 | replaceProductSearchAliasesResponse403 | replaceProductSearchAliasesResponse404 | replaceProductSearchAliasesResponse409 | replaceProductSearchAliasesResponse500) & {
+  headers: Headers;
+};
+
+export type replaceProductSearchAliasesResponse = (replaceProductSearchAliasesResponseSuccess | replaceProductSearchAliasesResponseError)
+
+export const getReplaceProductSearchAliasesUrl = (id: number,) => {
+
+
+  
+
+  return `/bo/products/${id}/search-aliases`
+}
+
+export const replaceProductSearchAliases = async (id: number,
+    replaceProductSearchAliasesDto: ReplaceProductSearchAliasesDto, options?: RequestInit): Promise<replaceProductSearchAliasesResponse> => {
+  
+  return fetcher<replaceProductSearchAliasesResponse>(getReplaceProductSearchAliasesUrl(id),
+  {      
+    ...options,
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      replaceProductSearchAliasesDto,)
+  }
+);}
+  
+
+
+/**
+ * @summary BO 상품 상세 HTML 저장
+ */
+export type upsertProductDescriptionResponse200 = {
+  data: UpsertProductDescription200
+  status: 200
+}
+
+export type upsertProductDescriptionResponse400 = {
+  data: UpsertProductDescription400
+  status: 400
+}
+
+export type upsertProductDescriptionResponse401 = {
+  data: UpsertProductDescription401
+  status: 401
+}
+
+export type upsertProductDescriptionResponse403 = {
+  data: UpsertProductDescription403
+  status: 403
+}
+
+export type upsertProductDescriptionResponse404 = {
+  data: UpsertProductDescription404
+  status: 404
+}
+
+export type upsertProductDescriptionResponse409 = {
+  data: UpsertProductDescription409
+  status: 409
+}
+
+export type upsertProductDescriptionResponse500 = {
+  data: UpsertProductDescription500
+  status: 500
+}
+
+export type upsertProductDescriptionResponseSuccess = (upsertProductDescriptionResponse200) & {
+  headers: Headers;
+};
+export type upsertProductDescriptionResponseError = (upsertProductDescriptionResponse400 | upsertProductDescriptionResponse401 | upsertProductDescriptionResponse403 | upsertProductDescriptionResponse404 | upsertProductDescriptionResponse409 | upsertProductDescriptionResponse500) & {
+  headers: Headers;
+};
+
+export type upsertProductDescriptionResponse = (upsertProductDescriptionResponseSuccess | upsertProductDescriptionResponseError)
+
+export const getUpsertProductDescriptionUrl = (id: number,) => {
+
+
+  
+
+  return `/bo/products/${id}/description`
+}
+
+export const upsertProductDescription = async (id: number,
+    upsertProductDescriptionDto: UpsertProductDescriptionDto, options?: RequestInit): Promise<upsertProductDescriptionResponse> => {
+  
+  return fetcher<upsertProductDescriptionResponse>(getUpsertProductDescriptionUrl(id),
+  {      
+    ...options,
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      upsertProductDescriptionDto,)
+  }
+);}
+  
+
+
+/**
+ * @summary BO 상품 SEO 저장
+ */
+export type upsertProductSeoResponse200 = {
+  data: UpsertProductSeo200
+  status: 200
+}
+
+export type upsertProductSeoResponse400 = {
+  data: UpsertProductSeo400
+  status: 400
+}
+
+export type upsertProductSeoResponse401 = {
+  data: UpsertProductSeo401
+  status: 401
+}
+
+export type upsertProductSeoResponse403 = {
+  data: UpsertProductSeo403
+  status: 403
+}
+
+export type upsertProductSeoResponse404 = {
+  data: UpsertProductSeo404
+  status: 404
+}
+
+export type upsertProductSeoResponse409 = {
+  data: UpsertProductSeo409
+  status: 409
+}
+
+export type upsertProductSeoResponse500 = {
+  data: UpsertProductSeo500
+  status: 500
+}
+
+export type upsertProductSeoResponseSuccess = (upsertProductSeoResponse200) & {
+  headers: Headers;
+};
+export type upsertProductSeoResponseError = (upsertProductSeoResponse400 | upsertProductSeoResponse401 | upsertProductSeoResponse403 | upsertProductSeoResponse404 | upsertProductSeoResponse409 | upsertProductSeoResponse500) & {
+  headers: Headers;
+};
+
+export type upsertProductSeoResponse = (upsertProductSeoResponseSuccess | upsertProductSeoResponseError)
+
+export const getUpsertProductSeoUrl = (id: number,) => {
+
+
+  
+
+  return `/bo/products/${id}/seo`
+}
+
+export const upsertProductSeo = async (id: number,
+    upsertProductSeoDto: UpsertProductSeoDto, options?: RequestInit): Promise<upsertProductSeoResponse> => {
+  
+  return fetcher<upsertProductSeoResponse>(getUpsertProductSeoUrl(id),
+  {      
+    ...options,
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      upsertProductSeoDto,)
+  }
+);}
+  
+
+
+/**
+ * @summary BO 상품 이미지 업로드
+ */
+export type uploadProductImageResponse200 = {
+  data: UploadProductImage200
+  status: 200
+}
+
+export type uploadProductImageResponse400 = {
+  data: UploadProductImage400
+  status: 400
+}
+
+export type uploadProductImageResponse401 = {
+  data: UploadProductImage401
+  status: 401
+}
+
+export type uploadProductImageResponse403 = {
+  data: UploadProductImage403
+  status: 403
+}
+
+export type uploadProductImageResponse404 = {
+  data: UploadProductImage404
+  status: 404
+}
+
+export type uploadProductImageResponse409 = {
+  data: UploadProductImage409
+  status: 409
+}
+
+export type uploadProductImageResponse500 = {
+  data: UploadProductImage500
+  status: 500
+}
+
+export type uploadProductImageResponseSuccess = (uploadProductImageResponse200) & {
+  headers: Headers;
+};
+export type uploadProductImageResponseError = (uploadProductImageResponse400 | uploadProductImageResponse401 | uploadProductImageResponse403 | uploadProductImageResponse404 | uploadProductImageResponse409 | uploadProductImageResponse500) & {
+  headers: Headers;
+};
+
+export type uploadProductImageResponse = (uploadProductImageResponseSuccess | uploadProductImageResponseError)
+
+export const getUploadProductImageUrl = () => {
+
+
+  
+
+  return `/bo/products/images`
+}
+
+export const uploadProductImage = async (uploadProductImageBody: UploadProductImageBody, options?: RequestInit): Promise<uploadProductImageResponse> => {
+    const formData = new FormData();
+formData.append(`file`, uploadProductImageBody.file);
+
+  return fetcher<uploadProductImageResponse>(getUploadProductImageUrl(),
+  {      
+    ...options,
+    method: 'POST'
+    ,
+    body: 
+      formData,
   }
 );}

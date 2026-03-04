@@ -29,8 +29,12 @@ type AdminShellProps = {
 
 const mainMenuItems = [
   { href: '/dashboard', label: '대시보드', icon: LayoutDashboard },
-  { href: '/products', label: '상품 관리', icon: Layers },
   { href: '/settings', label: '설정', icon: Settings },
+];
+
+const productSubMenus = [
+  { href: '/products', label: '상품 목록', icon: ListTree },
+  { href: '/products/new', label: '상품 추가', icon: PlusCircle },
 ];
 
 const categorySubMenus = [
@@ -48,12 +52,17 @@ export function AdminShell({ children, username }: AdminShellProps) {
 
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [logoutPending, setLogoutPending] = useState(false);
+  const [productMenuOpen, setProductMenuOpen] = useState(true);
   const [categoryMenuOpen, setCategoryMenuOpen] = useState(true);
 
+  const isProductRoute = pathname.startsWith('/products');
   const isCategoryRoute = pathname.startsWith('/categories');
+  const matchedProductSubMenu = productSubMenus.find((menu) => pathname === menu.href);
   const matchedCategorySubMenu = categorySubMenus.find((menu) => pathname === menu.href);
 
   const currentMenuLabel =
+    matchedProductSubMenu?.label ??
+    (isProductRoute ? '상품 관리' : undefined) ??
     matchedCategorySubMenu?.label ??
     mainMenuItems.find((menu) => pathname.startsWith(menu.href))?.label ??
     '관리자';
@@ -145,6 +154,22 @@ export function AdminShell({ children, username }: AdminShellProps) {
           })}
 
           {sidebarCollapsed ? (
+            <>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Link
+                  href="/products"
+                  className={`flex w-full items-center justify-center rounded-lg px-3 py-2 text-sm font-medium transition ${
+                    isProductRoute ? activeMenuClass : inactiveMenuClass
+                  }`}
+                >
+                  <Layers className="size-4 shrink-0" />
+                </Link>
+              </TooltipTrigger>
+              <TooltipContent side="right" sideOffset={3}>
+                상품
+              </TooltipContent>
+            </Tooltip>
             <Tooltip>
               <TooltipTrigger asChild>
                 <Link
@@ -160,7 +185,47 @@ export function AdminShell({ children, username }: AdminShellProps) {
                 카테고리
               </TooltipContent>
             </Tooltip>
+            </>
           ) : (
+            <>
+            <div className="pt-2">
+              <button
+                type="button"
+                onClick={() => setProductMenuOpen((prev) => !prev)}
+                className={`flex w-full items-center justify-between rounded-lg px-3 py-2 text-sm font-medium transition ${
+                  isProductRoute ? activeMenuClass : inactiveMenuClass
+                }`}
+              >
+                <span className="flex items-center gap-2">
+                  <Layers className="size-4 shrink-0" />
+                  상품
+                </span>
+                {productMenuOpen ? <ChevronDown className="size-4" /> : <ChevronRight className="size-4" />}
+              </button>
+
+              {productMenuOpen ? (
+                <div className="mt-1 space-y-1 pl-4">
+                  {productSubMenus.map((menu) => {
+                    const Icon = menu.icon;
+                    const isActive = pathname === menu.href;
+
+                    return (
+                      <Link
+                        key={menu.href}
+                        href={menu.href}
+                        className={`flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition ${
+                          isActive ? activeMenuClass : inactiveMenuClass
+                        }`}
+                      >
+                        <Icon className="size-4 shrink-0" />
+                        <span>{menu.label}</span>
+                      </Link>
+                    );
+                  })}
+                </div>
+              ) : null}
+            </div>
+
             <div className="pt-2">
               <button
                 type="button"
@@ -198,6 +263,7 @@ export function AdminShell({ children, username }: AdminShellProps) {
                 </div>
               ) : null}
             </div>
+            </>
           )}
         </nav>
 

@@ -124,3 +124,16 @@
     @apply bg-background text-foreground;
   }
 }
+
+.toastui-editor-defaultUI {
+  border: 0 !important;
+}
+
+.toastui-editor-toolbar {
+  border-bottom: 1px solid #e2e8f0 !important;
+}
+
+.toastui-editor-contents {
+  font-size: 14px;
+  line-height: 1.65;
+}
