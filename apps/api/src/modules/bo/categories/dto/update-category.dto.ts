@@ -2,6 +2,7 @@ import { ApiPropertyOptional } from '@nestjs/swagger';
 
 export class UpdateCategoryDto {
   @ApiPropertyOptional({
+    type: Number,
     example: 1,
     nullable: true,
     description: '상위 카테고리 ID (null이면 depth=1 루트)',

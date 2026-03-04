@@ -34,6 +34,7 @@ export function setupSwagger(app: INestApplication): void {
       { type: 'apiKey', in: 'cookie' },
       'bo_refresh_token',
     )
+    .addServer('http://localhost:40003', 'local')
     .build();
 
   const document = SwaggerModule.createDocument(app, config, {

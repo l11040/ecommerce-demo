@@ -80,6 +80,26 @@ FO/BO 분리 생성 시에는 각 JSON URL을 사용하면 됩니다.
   - `PATCH /bo/categories/:id` (수정)
   - `PATCH /bo/categories/:id/main-exposure` (메인 노출 토글)
 
+제품 정책(1차):
+- 스토어 입점형(`store_id` 필수)
+- `draft/published/soldout/stopped` 상태
+- 옵션: 필수/선택 + 단일/다중 선택
+- 수량별 tier 단가 + 회원/비회원(`guest/member`) 분리
+- MOQ 적용 (`moq_inquiry_only` 지원)
+- VAT: 상품별 정책
+
+제품 API(1차):
+- FO
+  - `GET /fo/products/:slug` (공개 상품 상세)
+  - `POST /fo/products/:id/quote` (수량/옵션 견적 계산)
+- BO
+  - `GET /bo/products` (상품 목록 조회)
+  - `GET /bo/products/:id` (상품 상세 조회)
+  - `POST /bo/products` (상품 생성)
+  - `PUT /bo/products/:id/options` (옵션 전체 저장)
+  - `PUT /bo/products/:id/price-tiers` (회원/비회원 가격 티어 저장)
+  - `POST /bo/products/:id/quote-preview` (견적 미리보기)
+
 응답 포맷(전역):
 - 성공:
   - `{"success": true, "code": "COMMON_OK", "message": "OK", "data": ...}`
@@ -99,3 +119,5 @@ FO/BO 분리 생성 시에는 각 JSON URL을 사용하면 됩니다.
 - `src/modules/**/auth/*.swagger.ts`: 컨트롤러 외부 Swagger 문서 정의
 - `src/modules/**/auth/repositories/*`: Repository 패턴 (쿼리 계층)
 - `docs/api-documentation-strategy.md`: Swagger/응답 문서화 운영 전략
+- `docs/product-domain-implementation-plan.md`: 제품 도메인 구현 계획
+- `../../packages/product-domain`: FO/BO/Admin/Web에서 재사용할 제품 계산 비즈니스 로직 패키지
