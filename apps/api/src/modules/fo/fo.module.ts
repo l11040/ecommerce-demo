@@ -9,10 +9,23 @@ import { FO_AUTH_REPOSITORY } from './auth/repositories/fo-auth.repository';
 import { TypeOrmFoAuthRepository } from './auth/repositories/typeorm-fo-auth.repository';
 import { CategoryModule } from '../category/category.module';
 import { FoCategoriesController } from './categories/fo-categories.controller';
+import { ProductModule } from '../product/product.module';
+import { FoProductsController } from './products/fo-products.controller';
+import { FoStoreProductsController } from './products/fo-store-products.controller';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([FoUserEntity]), CategoryModule],
-  controllers: [FoController, FoAuthController, FoCategoriesController],
+  imports: [
+    TypeOrmModule.forFeature([FoUserEntity]),
+    CategoryModule,
+    ProductModule,
+  ],
+  controllers: [
+    FoController,
+    FoAuthController,
+    FoCategoriesController,
+    FoProductsController,
+    FoStoreProductsController,
+  ],
   providers: [
     FoAuthService,
     AuthTokenService,

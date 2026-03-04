@@ -9,10 +9,21 @@ import { BO_AUTH_REPOSITORY } from './auth/repositories/bo-auth.repository';
 import { TypeOrmBoAuthRepository } from './auth/repositories/typeorm-bo-auth.repository';
 import { CategoryModule } from '../category/category.module';
 import { BoCategoriesController } from './categories/bo-categories.controller';
+import { ProductModule } from '../product/product.module';
+import { BoProductsController } from './products/bo-products.controller';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([BoAdminEntity]), CategoryModule],
-  controllers: [BoController, BoAuthController, BoCategoriesController],
+  imports: [
+    TypeOrmModule.forFeature([BoAdminEntity]),
+    CategoryModule,
+    ProductModule,
+  ],
+  controllers: [
+    BoController,
+    BoAuthController,
+    BoCategoriesController,
+    BoProductsController,
+  ],
   providers: [
     BoAuthService,
     AuthTokenService,
