@@ -2,7 +2,7 @@
 
 import { FormEvent, useCallback, useEffect, useState } from 'react';
 import Link from 'next/link';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, ImageIcon, Package, Truck } from 'lucide-react';
 import {
   BoQuotePreviewDtoCustomerSegment,
   detailProduct,
@@ -68,10 +68,54 @@ type ShippingTierFormRow = {
   isActive: boolean;
 };
 
+type OptionItemFormRow = {
+  label: string;
+  extraSupplyCost: string;
+  extraUnitPrice: string;
+  sortOrder: string;
+  isActive: boolean;
+};
+
+type OptionGroupFormRow = {
+  name: string;
+  isRequired: boolean;
+  selectionType: 'single' | 'multi';
+  sortOrder: string;
+  items: OptionItemFormRow[];
+};
+
+type SectionType =
+  | 'description'
+  | 'seo'
+  | 'media'
+  | 'tags'
+  | 'aliases'
+  | 'options'
+  | 'priceTiers'
+  | 'specs'
+  | 'shippingTiers'
+  | 'quote'
+  | 'raw';
+
+const sections: { id: SectionType; label: string }[] = [
+  { id: 'description', label: '상세 HTML' },
+  { id: 'seo', label: 'SEO 메타데이터' },
+  { id: 'media', label: '상품 미디어' },
+  { id: 'tags', label: '상품 태그' },
+  { id: 'aliases', label: '검색 별칭' },
+  { id: 'options', label: '상품 옵션' },
+  { id: 'priceTiers', label: '가격 티어' },
+  { id: 'specs', label: '상품 스펙' },
+  { id: 'shippingTiers', label: '배송 티어' },
+  { id: 'quote', label: '견적 미리보기' },
+  { id: 'raw', label: '원본 데이터' },
+];
+
 export function ProductDetailPage({ productId, embedded = false }: ProductDetailPageProps) {
   const [loading, setLoading] = useState(true);
   const [rawJson, setRawJson] = useState('');
   const [productName, setProductName] = useState('');
+  const [activeSection, setActiveSection] = useState<SectionType>('description');
 
   // Description
   const [descriptionHtml, setDescriptionHtml] = useState('');
@@ -92,7 +136,7 @@ export function ProductDetailPage({ productId, embedded = false }: ProductDetail
   const [aliasesPending, setAliasesPending] = useState(false);
 
   // Option / tier / spec / shipping
-  const [optionsJson, setOptionsJson] = useState('[]');
+  const [optionGroupRows, setOptionGroupRows] = useState<OptionGroupFormRow[]>([]);
   const [priceTierRows, setPriceTierRows] = useState<{
     guest: PriceTierFormRow[];
     member: PriceTierFormRow[];
@@ -131,7 +175,32 @@ export function ProductDetailPage({ productId, embedded = false }: ProductDetail
     setProductName(typeof detail.name === 'string' ? detail.name : `상품 #${productId}`);
     setRawJson(JSON.stringify(detail, null, 2));
     setDescriptionHtml(typeof detail.descriptionHtml === 'string' ? detail.descriptionHtml : '');
-    setOptionsJson(JSON.stringify(Array.isArray(detail.optionGroups) ? detail.optionGroups : [], null, 2));
+
+    // 옵션 데이터를 폼 상태로 변환
+    const optionGroups = Array.isArray(detail.optionGroups) ? detail.optionGroups : [];
+    setOptionGroupRows(
+      optionGroups.map((group, groupIndex) => {
+        const groupSource = (group ?? {}) as Record<string, unknown>;
+        const items = Array.isArray(groupSource.items) ? groupSource.items : [];
+
+        return {
+          name: typeof groupSource.name === 'string' ? groupSource.name : '',
+          isRequired: typeof groupSource.isRequired === 'boolean' ? groupSource.isRequired : false,
+          selectionType: groupSource.selectionType === 'multi' ? 'multi' : 'single',
+          sortOrder: String(typeof groupSource.sortOrder === 'number' ? groupSource.sortOrder : groupIndex),
+          items: items.map((item, itemIndex) => {
+            const itemSource = (item ?? {}) as Record<string, unknown>;
+            return {
+              label: typeof itemSource.label === 'string' ? itemSource.label : '',
+              extraSupplyCost: String(typeof itemSource.extraSupplyCost === 'number' ? itemSource.extraSupplyCost : 0),
+              extraUnitPrice: String(typeof itemSource.extraUnitPrice === 'number' ? itemSource.extraUnitPrice : 0),
+              sortOrder: String(typeof itemSource.sortOrder === 'number' ? itemSource.sortOrder : itemIndex),
+              isActive: typeof itemSource.isActive === 'boolean' ? itemSource.isActive : true,
+            };
+          }),
+        };
+      }),
+    );
     const tierSource =
       detail.priceTiers && typeof detail.priceTiers === 'object'
         ? (detail.priceTiers as Record<string, unknown>)
@@ -304,6 +373,85 @@ export function ProductDetailPage({ productId, embedded = false }: ProductDetail
       .filter((value) => value.length > 0);
   }
 
+  // 옵션 그룹 CRUD
+  function addOptionGroup() {
+    setOptionGroupRows((prev) => [
+      ...prev,
+      {
+        name: '',
+        isRequired: false,
+        selectionType: 'single',
+        sortOrder: String(prev.length),
+        items: [],
+      },
+    ]);
+  }
+
+  function removeOptionGroup(groupIndex: number) {
+    setOptionGroupRows((prev) => prev.filter((_, index) => index !== groupIndex));
+  }
+
+  function updateOptionGroup(groupIndex: number, patch: Partial<OptionGroupFormRow>) {
+    setOptionGroupRows((prev) =>
+      prev.map((group, index) => (index === groupIndex ? { ...group, ...patch } : group)),
+    );
+  }
+
+  // 옵션 아이템 CRUD
+  function addOptionItem(groupIndex: number) {
+    setOptionGroupRows((prev) =>
+      prev.map((group, index) =>
+        index === groupIndex
+          ? {
+              ...group,
+              items: [
+                ...group.items,
+                {
+                  label: '',
+                  extraSupplyCost: '0',
+                  extraUnitPrice: '0',
+                  sortOrder: String(group.items.length),
+                  isActive: true,
+                },
+              ],
+            }
+          : group,
+      ),
+    );
+  }
+
+  function removeOptionItem(groupIndex: number, itemIndex: number) {
+    setOptionGroupRows((prev) =>
+      prev.map((group, gIndex) =>
+        gIndex === groupIndex
+          ? {
+              ...group,
+              items: group.items.filter((_, iIndex) => iIndex !== itemIndex),
+            }
+          : group,
+      ),
+    );
+  }
+
+  function updateOptionItem(
+    groupIndex: number,
+    itemIndex: number,
+    patch: Partial<OptionItemFormRow>,
+  ) {
+    setOptionGroupRows((prev) =>
+      prev.map((group, gIndex) =>
+        gIndex === groupIndex
+          ? {
+              ...group,
+              items: group.items.map((item, iIndex) =>
+                iIndex === itemIndex ? { ...item, ...patch } : item,
+              ),
+            }
+          : group,
+      ),
+    );
+  }
+
   function addPriceTierRow(segment: 'guest' | 'member') {
     setPriceTierRows((prev) => ({
       ...prev,
@@ -462,44 +610,39 @@ export function ProductDetailPage({ productId, embedded = false }: ProductDetail
   }
 
   async function handleSaveOptions() {
-    let parsed: unknown;
-    try {
-      parsed = JSON.parse(optionsJson);
-    } catch {
+    // 폼 데이터를 DTO로 변환
+    const optionGroups: ReplaceProductOptionsDto['optionGroups'] = optionGroupRows.map((group) => ({
+      name: group.name.trim(),
+      isRequired: group.isRequired,
+      selectionType: group.selectionType,
+      sortOrder: Number(group.sortOrder || 0),
+      items: group.items.map((item) => ({
+        label: item.label.trim(),
+        extraSupplyCost: Number(item.extraSupplyCost || 0),
+        extraUnitPrice: Number(item.extraUnitPrice || 0),
+        sortOrder: Number(item.sortOrder || 0),
+        isActive: item.isActive,
+      })),
+    }));
+
+    // 유효성 검사
+    const hasEmptyGroupName = optionGroups.some((group) => group.name.length === 0);
+    if (hasEmptyGroupName) {
       toast.error('옵션 저장 실패', {
-        description: '옵션 JSON 형식이 올바르지 않습니다.',
+        description: '옵션 그룹명이 비어있는 항목이 있습니다.',
       });
       return;
     }
 
-    if (!Array.isArray(parsed)) {
+    const hasEmptyItemLabel = optionGroups.some((group) =>
+      group.items.some((item) => item.label.length === 0),
+    );
+    if (hasEmptyItemLabel) {
       toast.error('옵션 저장 실패', {
-        description: '옵션 JSON은 배열이어야 합니다.',
+        description: '옵션 아이템 라벨이 비어있는 항목이 있습니다.',
       });
       return;
     }
-
-    const optionGroups: ReplaceProductOptionsDto['optionGroups'] = parsed.map((group, groupIndex) => {
-      const source = (group ?? {}) as Record<string, unknown>;
-      const items = Array.isArray(source.items) ? source.items : [];
-
-      return {
-        name: String(source.name ?? '').trim(),
-        isRequired: Boolean(source.isRequired),
-        selectionType: source.selectionType === 'multi' ? 'multi' : 'single',
-        sortOrder: Number(source.sortOrder ?? groupIndex),
-        items: items.map((item, itemIndex) => {
-          const itemSource = (item ?? {}) as Record<string, unknown>;
-          return {
-            label: String(itemSource.label ?? '').trim(),
-            extraSupplyCost: Number(itemSource.extraSupplyCost ?? 0),
-            extraUnitPrice: Number(itemSource.extraUnitPrice ?? 0),
-            sortOrder: Number(itemSource.sortOrder ?? itemIndex),
-            isActive: itemSource.isActive === undefined ? true : Boolean(itemSource.isActive),
-          };
-        }),
-      };
-    });
 
     setOptionsPending(true);
     const response = await replaceProductOptions(productId, {
@@ -711,176 +854,447 @@ export function ProductDetailPage({ productId, embedded = false }: ProductDetail
           <p className="text-sm text-slate-500">상품 상세를 불러오는 중입니다...</p>
         </div>
       ) : (
-        <div className="grid gap-4 md:grid-cols-2">
-          {/* 상세 HTML */}
-          <div className="space-y-2 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm md:col-span-2">
-            <h3 className="text-sm font-semibold">상세 HTML</h3>
-            <HtmlEditor
-              value={descriptionHtml}
-              onChange={setDescriptionHtml}
-              onUploadImage={handleUploadDescriptionImage}
-              placeholder="상품 상세 내용을 작성하세요."
-              height="360px"
-            />
-            <Button type="button" size="sm" onClick={() => void handleSaveDescription()} disabled={descriptionPending}>
-              {descriptionPending ? '저장 중...' : '상세 HTML 저장'}
-            </Button>
-          </div>
-
-          {/* SEO */}
-          <div className="space-y-2 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm md:col-span-2">
-            <h3 className="text-sm font-semibold">SEO 메타데이터</h3>
-            <SeoFormFields
-              formState={seoForm}
-              onChange={setSeoForm}
-              onUploadOgImage={handleUploadOgImage}
-              isUploadingOgImage={ogImageUploading}
-            />
-            <Button type="button" size="sm" onClick={() => void handleSaveSeo()} disabled={seoPending}>
-              {seoPending ? '저장 중...' : 'SEO 저장'}
-            </Button>
-          </div>
-
-          {/* 미디어 */}
-          <div className="space-y-3 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm md:col-span-2">
-            <div className="flex flex-wrap items-center justify-between gap-2">
-              <h3 className="text-sm font-semibold">상품 미디어</h3>
-              <label className="inline-flex cursor-pointer items-center justify-center rounded-md border border-slate-300 px-3 py-2 text-xs font-medium hover:bg-slate-50">
-                {mediaUploading ? '업로드 중...' : '이미지 업로드'}
-                <input
-                  type="file"
-                  accept="image/*"
-                  className="hidden"
-                  disabled={mediaUploading}
-                  onChange={(event) => {
-                    const file = event.target.files?.[0];
-                    if (file) {
-                      void handleUploadMedia(file);
-                    }
-                    event.currentTarget.value = '';
-                  }}
-                />
-              </label>
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
+          {/* 좌측 메뉴 */}
+          <nav className="lg:col-span-3">
+            <div className="sticky top-4 space-y-1 rounded-xl border border-slate-200 bg-white p-2 shadow-sm">
+              {sections.map((section) => (
+                <button
+                  key={section.id}
+                  type="button"
+                  className={`w-full rounded-lg px-3 py-2 text-left text-sm font-medium transition-colors ${
+                    activeSection === section.id
+                      ? 'bg-slate-900 text-white'
+                      : 'text-slate-700 hover:bg-slate-100'
+                  }`}
+                  onClick={() => setActiveSection(section.id)}
+                >
+                  {section.label}
+                </button>
+              ))}
             </div>
+          </nav>
 
-            <div className="space-y-2">
-              {mediaItems.length === 0 ? (
-                <p className="rounded-md border border-dashed border-slate-300 p-3 text-xs text-slate-500">
-                  업로드된 상품 이미지가 없습니다.
-                </p>
+          {/* 우측 컨텐츠 */}
+          <div className="lg:col-span-9">
+            {/* 상세 HTML */}
+            {activeSection === 'description' && (
+              <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+                <div className="space-y-6">
+                  <div>
+                    <h3 className="text-lg font-semibold text-slate-900">상세 HTML</h3>
+                    <p className="text-sm text-slate-500">상품 상세 페이지 컨텐츠를 작성합니다</p>
+                  </div>
+              <HtmlEditor
+                value={descriptionHtml}
+                onChange={setDescriptionHtml}
+                onUploadImage={handleUploadDescriptionImage}
+                placeholder="상품 상세 내용을 작성하세요."
+                height="360px"
+              />
+                  <Button type="button" size="sm" onClick={() => void handleSaveDescription()} disabled={descriptionPending}>
+                    {descriptionPending ? '저장 중...' : '상세 HTML 저장'}
+                  </Button>
+                </div>
+              </div>
+            )}
+
+            {/* SEO */}
+            {activeSection === 'seo' && (
+              <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+                <div className="space-y-6">
+                  <div>
+                    <h3 className="text-lg font-semibold text-slate-900">SEO 메타데이터</h3>
+                    <p className="text-sm text-slate-500">검색 엔진 최적화를 위한 메타 정보를 설정합니다</p>
+                  </div>
+              <SeoFormFields
+                formState={seoForm}
+                onChange={setSeoForm}
+                onUploadOgImage={handleUploadOgImage}
+                isUploadingOgImage={ogImageUploading}
+              />
+                  <Button type="button" size="sm" onClick={() => void handleSaveSeo()} disabled={seoPending}>
+                    {seoPending ? '저장 중...' : 'SEO 저장'}
+                  </Button>
+                </div>
+              </div>
+            )}
+
+            {/* 미디어 */}
+            {activeSection === 'media' && (
+              <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+                <div className="space-y-6">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h3 className="text-lg font-semibold text-slate-900">상품 미디어</h3>
+                      <p className="text-sm text-slate-500">상품 이미지, 동영상 등을 관리합니다</p>
+                    </div>
+                <label className="inline-flex cursor-pointer items-center justify-center rounded-md border border-slate-300 px-3 py-2 text-xs font-medium hover:bg-slate-50">
+                  {mediaUploading ? '업로드 중...' : '이미지 업로드'}
+                  <input
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    disabled={mediaUploading}
+                    onChange={(event) => {
+                      const file = event.target.files?.[0];
+                      if (file) {
+                        void handleUploadMedia(file);
+                      }
+                      event.currentTarget.value = '';
+                    }}
+                  />
+                </label>
+              </div>
+
+              <div className="space-y-3">
+                {mediaItems.length === 0 ? (
+                  <div className="flex flex-col items-center justify-center rounded-lg border-2 border-dashed border-slate-200 bg-slate-50/50 py-12">
+                    <ImageIcon className="mb-3 size-10 text-slate-300" />
+                    <p className="text-sm font-medium text-slate-500">업로드된 이미지가 없습니다</p>
+                    <p className="text-xs text-slate-400">이미지 업로드 버튼을 클릭하여 추가하세요</p>
+                  </div>
+                ) : (
+                  mediaItems.map((item, index) => (
+                    <div key={`${item.url}-${index}`} className="grid gap-3 rounded-md border border-slate-200 bg-white p-3 md:grid-cols-12">
+                      <input
+                        className="h-9 rounded-md border border-slate-300 px-3 text-sm text-slate-600 md:col-span-6"
+                        value={item.url}
+                        readOnly
+                      />
+                      <input
+                        className="h-9 rounded-md border border-slate-300 px-3 text-sm outline-none ring-cyan-400 focus:ring-2 md:col-span-3"
+                        placeholder="대체 텍스트"
+                        value={item.altText}
+                        onChange={(event) =>
+                          setMediaItems((prev) =>
+                            prev.map((row, rowIndex) =>
+                              rowIndex === index ? { ...row, altText: event.target.value } : row,
+                            ),
+                          )
+                        }
+                      />
+                      <input
+                        type="number"
+                        className="h-9 rounded-md border border-slate-300 px-3 text-sm outline-none ring-cyan-400 focus:ring-2 md:col-span-2"
+                        value={item.sortOrder}
+                        onChange={(event) =>
+                          setMediaItems((prev) =>
+                            prev.map((row, rowIndex) =>
+                              rowIndex === index ? { ...row, sortOrder: event.target.value } : row,
+                            ),
+                          )
+                        }
+                      />
+                      <Button
+                        type="button"
+                        size="sm"
+                        variant="outline"
+                        className="md:col-span-1"
+                        onClick={() =>
+                          setMediaItems((prev) => prev.filter((_, rowIndex) => rowIndex !== index))
+                        }
+                      >
+                        삭제
+                      </Button>
+                    </div>
+                  ))
+                )}
+              </div>
+
+                  <Button type="button" size="sm" onClick={() => void handleSaveMedia()} disabled={mediaPending}>
+                    {mediaPending ? '저장 중...' : '미디어 저장'}
+                  </Button>
+                </div>
+              </div>
+            )}
+
+            {/* 태그 */}
+            {activeSection === 'tags' && (
+              <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+                <div className="space-y-6">
+                  <div>
+                    <h3 className="text-lg font-semibold text-slate-900">상품 태그</h3>
+                    <p className="text-sm text-slate-500">상품 분류를 위한 태그를 관리합니다</p>
+                  </div>
+              <textarea
+                className="min-h-[120px] w-full rounded-md border border-slate-300 p-3 text-sm outline-none ring-cyan-400 focus:ring-2"
+                placeholder="쉼표 또는 줄바꿈으로 구분해 입력"
+                value={tagsText}
+                onChange={(event) => setTagsText(event.target.value)}
+              />
+                  <Button type="button" size="sm" onClick={() => void handleSaveTags()} disabled={tagsPending}>
+                    {tagsPending ? '저장 중...' : '태그 저장'}
+                  </Button>
+                </div>
+              </div>
+            )}
+
+            {/* 검색별칭 */}
+            {activeSection === 'aliases' && (
+              <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+                <div className="space-y-6">
+                  <div>
+                    <h3 className="text-lg font-semibold text-slate-900">검색 별칭</h3>
+                    <p className="text-sm text-slate-500">검색에 사용될 대체 키워드를 설정합니다</p>
+                  </div>
+              <textarea
+                className="min-h-[120px] w-full rounded-md border border-slate-300 p-3 text-sm outline-none ring-cyan-400 focus:ring-2"
+                placeholder="쉼표 또는 줄바꿈으로 구분해 입력"
+                value={aliasesText}
+                onChange={(event) => setAliasesText(event.target.value)}
+              />
+                  <Button type="button" size="sm" onClick={() => void handleSaveAliases()} disabled={aliasesPending}>
+                    {aliasesPending ? '저장 중...' : '검색 별칭 저장'}
+                  </Button>
+                </div>
+              </div>
+            )}
+
+            {/* 옵션 */}
+            {activeSection === 'options' && (
+              <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+                <div className="space-y-6">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h3 className="text-lg font-semibold text-slate-900">상품 옵션</h3>
+                      <p className="text-sm text-slate-500">옵션 그룹과 아이템을 관리합니다</p>
+                    </div>
+                <Button type="button" size="sm" variant="outline" onClick={addOptionGroup}>
+                  옵션 그룹 추가
+                </Button>
+              </div>
+
+            <div className="space-y-4">
+              {optionGroupRows.length === 0 ? (
+                <div className="flex flex-col items-center justify-center rounded-lg border-2 border-dashed border-slate-200 bg-slate-50/50 py-12">
+                  <Package className="mb-3 size-10 text-slate-300" />
+                  <p className="text-sm font-medium text-slate-500">등록된 옵션 그룹이 없습니다</p>
+                  <p className="text-xs text-slate-400">옵션 그룹 추가 버튼을 클릭하여 시작하세요</p>
+                </div>
               ) : (
-                mediaItems.map((item, index) => (
-                  <div key={`${item.url}-${index}`} className="grid gap-2 rounded-md border border-slate-200 p-3 md:grid-cols-12">
-                    <input
-                      className="h-9 rounded-md border border-slate-300 px-3 text-xs text-slate-600 md:col-span-6"
-                      value={item.url}
-                      readOnly
-                    />
-                    <input
-                      className="h-9 rounded-md border border-slate-300 px-3 text-xs outline-none ring-cyan-400 focus:ring-2 md:col-span-3"
-                      placeholder="대체 텍스트"
-                      value={item.altText}
-                      onChange={(event) =>
-                        setMediaItems((prev) =>
-                          prev.map((row, rowIndex) =>
-                            rowIndex === index ? { ...row, altText: event.target.value } : row,
-                          ),
-                        )
-                      }
-                    />
-                    <input
-                      type="number"
-                      className="h-9 rounded-md border border-slate-300 px-3 text-xs outline-none ring-cyan-400 focus:ring-2 md:col-span-2"
-                      value={item.sortOrder}
-                      onChange={(event) =>
-                        setMediaItems((prev) =>
-                          prev.map((row, rowIndex) =>
-                            rowIndex === index ? { ...row, sortOrder: event.target.value } : row,
-                          ),
-                        )
-                      }
-                    />
-                    <Button
-                      type="button"
-                      size="sm"
-                      variant="outline"
-                      className="md:col-span-1"
-                      onClick={() =>
-                        setMediaItems((prev) => prev.filter((_, rowIndex) => rowIndex !== index))
-                      }
-                    >
-                      삭제
-                    </Button>
+                optionGroupRows.map((group, groupIndex) => (
+                  <div
+                    key={`group-${groupIndex}`}
+                    className="space-y-4 rounded-lg border border-slate-200 bg-white p-6"
+                  >
+                    {/* 그룹 헤더 */}
+                    <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+                      <div className="flex items-center gap-2">
+                        <div className="flex size-7 items-center justify-center rounded-md bg-slate-100 text-slate-700">
+                          <span className="text-xs font-semibold">{groupIndex + 1}</span>
+                        </div>
+                        <h4 className="text-sm font-semibold text-slate-900">
+                          옵션 그룹 #{groupIndex + 1}
+                        </h4>
+                      </div>
+                      <Button
+                        type="button"
+                        size="sm"
+                        variant="outline"
+                        onClick={() => removeOptionGroup(groupIndex)}
+                      >
+                        그룹 삭제
+                      </Button>
+                    </div>
+
+                    {/* 그룹 정보 */}
+                    <div className="grid gap-3 md:grid-cols-12">
+                      <div className="space-y-1 md:col-span-4">
+                        <span className="text-xs font-semibold text-slate-600">그룹명</span>
+                        <input
+                          className="h-9 w-full rounded-md border border-slate-300 px-2 text-xs outline-none ring-cyan-400 focus:ring-2"
+                          placeholder="예: 색상"
+                          value={group.name}
+                          onChange={(event) =>
+                            updateOptionGroup(groupIndex, { name: event.target.value })
+                          }
+                        />
+                      </div>
+                      <div className="space-y-1 md:col-span-3">
+                        <span className="text-xs font-semibold text-slate-600">선택 방식</span>
+                        <Select
+                          value={group.selectionType}
+                          onValueChange={(value) =>
+                            updateOptionGroup(groupIndex, {
+                              selectionType: value as 'single' | 'multi',
+                            })
+                          }
+                        >
+                          <SelectTrigger className="h-9 text-xs">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="single">단일 선택</SelectItem>
+                            <SelectItem value="multi">다중 선택</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <div className="space-y-1 md:col-span-2">
+                        <span className="text-xs font-semibold text-slate-600">정렬순서</span>
+                        <input
+                          type="number"
+                          min={0}
+                          className="h-9 w-full rounded-md border border-slate-300 px-2 text-xs outline-none ring-cyan-400 focus:ring-2"
+                          value={group.sortOrder}
+                          onChange={(event) =>
+                            updateOptionGroup(groupIndex, { sortOrder: event.target.value })
+                          }
+                        />
+                      </div>
+                      <div className="flex items-end md:col-span-3">
+                        <label className="inline-flex items-center gap-2 text-xs text-slate-700">
+                          <Checkbox
+                            checked={group.isRequired}
+                            onCheckedChange={(checked) =>
+                              updateOptionGroup(groupIndex, { isRequired: checked === true })
+                            }
+                          />
+                          필수 선택
+                        </label>
+                      </div>
+                    </div>
+
+                    {/* 아이템 관리 */}
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs font-semibold text-slate-600">
+                          옵션 아이템 ({group.items.length}개)
+                        </span>
+                        <Button
+                          type="button"
+                          size="sm"
+                          variant="outline"
+                          onClick={() => addOptionItem(groupIndex)}
+                        >
+                          아이템 추가
+                        </Button>
+                      </div>
+
+                      {group.items.length > 0 ? (
+                        <div className="hidden rounded-md bg-slate-50 px-3 py-2 text-xs font-semibold text-slate-600 md:grid md:grid-cols-12">
+                          <span className="md:col-span-3">라벨</span>
+                          <span className="md:col-span-3">추가 공급가</span>
+                          <span className="md:col-span-3">추가 단가</span>
+                          <span className="md:col-span-1">정렬</span>
+                          <span className="md:col-span-1">활성</span>
+                          <span className="text-right md:col-span-1">삭제</span>
+                        </div>
+                      ) : null}
+
+                      <div className="space-y-3">
+                        {group.items.length === 0 ? (
+                          <div className="rounded-lg border-2 border-dashed border-slate-200 bg-slate-50/50 py-8 text-center">
+                            <p className="text-sm font-medium text-slate-500">옵션 아이템이 없습니다</p>
+                            <p className="text-xs text-slate-400">아이템 추가 버튼을 클릭하세요</p>
+                          </div>
+                        ) : (
+                          group.items.map((item, itemIndex) => (
+                            <div
+                              key={`item-${groupIndex}-${itemIndex}`}
+                              className="grid gap-3 rounded-md border border-slate-200 p-3 md:grid-cols-12"
+                            >
+                              <input
+                                className="h-9 rounded-md border border-slate-300 px-2 text-xs outline-none ring-cyan-400 focus:ring-2 md:col-span-3"
+                                placeholder="예: 빨강"
+                                value={item.label}
+                                onChange={(event) =>
+                                  updateOptionItem(groupIndex, itemIndex, {
+                                    label: event.target.value,
+                                  })
+                                }
+                              />
+                              <input
+                                type="number"
+                                min={0}
+                                className="h-9 rounded-md border border-slate-300 px-2 text-xs outline-none ring-cyan-400 focus:ring-2 md:col-span-3"
+                                placeholder="0"
+                                value={item.extraSupplyCost}
+                                onChange={(event) =>
+                                  updateOptionItem(groupIndex, itemIndex, {
+                                    extraSupplyCost: event.target.value,
+                                  })
+                                }
+                              />
+                              <input
+                                type="number"
+                                min={0}
+                                className="h-9 rounded-md border border-slate-300 px-2 text-xs outline-none ring-cyan-400 focus:ring-2 md:col-span-3"
+                                placeholder="0"
+                                value={item.extraUnitPrice}
+                                onChange={(event) =>
+                                  updateOptionItem(groupIndex, itemIndex, {
+                                    extraUnitPrice: event.target.value,
+                                  })
+                                }
+                              />
+                              <input
+                                type="number"
+                                min={0}
+                                className="h-9 rounded-md border border-slate-300 px-2 text-xs outline-none ring-cyan-400 focus:ring-2 md:col-span-1"
+                                value={item.sortOrder}
+                                onChange={(event) =>
+                                  updateOptionItem(groupIndex, itemIndex, {
+                                    sortOrder: event.target.value,
+                                  })
+                                }
+                              />
+                              <label className="inline-flex items-center gap-1 text-xs text-slate-700 md:col-span-1">
+                                <Checkbox
+                                  checked={item.isActive}
+                                  onCheckedChange={(checked) =>
+                                    updateOptionItem(groupIndex, itemIndex, {
+                                      isActive: checked === true,
+                                    })
+                                  }
+                                />
+                                ON
+                              </label>
+                              <Button
+                                type="button"
+                                size="sm"
+                                variant="outline"
+                                className="md:col-span-1"
+                                onClick={() => removeOptionItem(groupIndex, itemIndex)}
+                              >
+                                삭제
+                              </Button>
+                            </div>
+                          ))
+                        )}
+                      </div>
+                    </div>
                   </div>
                 ))
               )}
-            </div>
+              </div>
 
-            <Button type="button" size="sm" onClick={() => void handleSaveMedia()} disabled={mediaPending}>
-              {mediaPending ? '저장 중...' : '미디어 저장'}
-            </Button>
-          </div>
+                  <Button type="button" size="sm" onClick={() => void handleSaveOptions()} disabled={optionsPending}>
+                    {optionsPending ? '저장 중...' : '옵션 저장'}
+                  </Button>
+                </div>
+              </div>
+            )}
 
-          {/* 태그 */}
-          <div className="space-y-2 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-            <h3 className="text-sm font-semibold">상품 태그</h3>
-            <textarea
-              className="min-h-[120px] w-full rounded-md border border-slate-300 p-3 text-xs outline-none ring-cyan-400 focus:ring-2"
-              placeholder="쉼표 또는 줄바꿈으로 구분해 입력"
-              value={tagsText}
-              onChange={(event) => setTagsText(event.target.value)}
-            />
-            <Button type="button" size="sm" onClick={() => void handleSaveTags()} disabled={tagsPending}>
-              {tagsPending ? '저장 중...' : '태그 저장'}
-            </Button>
-          </div>
+            {/* 가격티어 */}
+            {activeSection === 'priceTiers' && (
+              <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+                <div className="space-y-6">
+                  <div>
+                    <h3 className="text-lg font-semibold text-slate-900">수량별 가격 티어</h3>
+                    <p className="text-sm text-slate-500">비회원/회원 세그먼트별 가격 정책을 설정합니다</p>
+                  </div>
 
-          {/* 검색별칭 */}
-          <div className="space-y-2 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-            <h3 className="text-sm font-semibold">검색 별칭</h3>
-            <textarea
-              className="min-h-[120px] w-full rounded-md border border-slate-300 p-3 text-xs outline-none ring-cyan-400 focus:ring-2"
-              placeholder="쉼표 또는 줄바꿈으로 구분해 입력"
-              value={aliasesText}
-              onChange={(event) => setAliasesText(event.target.value)}
-            />
-            <Button type="button" size="sm" onClick={() => void handleSaveAliases()} disabled={aliasesPending}>
-              {aliasesPending ? '저장 중...' : '검색 별칭 저장'}
-            </Button>
-          </div>
-
-          {/* 옵션 */}
-          <div className="space-y-2 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm md:col-span-2">
-            <h3 className="text-sm font-semibold">옵션 전체 저장 (PUT /options)</h3>
-            <textarea
-              className="min-h-[180px] w-full rounded-md border border-slate-300 p-3 font-mono text-xs outline-none ring-cyan-400 focus:ring-2"
-              value={optionsJson}
-              onChange={(event) => setOptionsJson(event.target.value)}
-            />
-            <Button type="button" size="sm" onClick={() => void handleSaveOptions()} disabled={optionsPending}>
-              {optionsPending ? '저장 중...' : '옵션 저장'}
-            </Button>
-          </div>
-
-          {/* 가격티어 */}
-          <div className="space-y-3 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm md:col-span-2">
-            <div>
-              <h3 className="text-sm font-semibold">수량별 가격 티어</h3>
-              <p className="mt-1 text-xs text-slate-500">
-                비회원/회원 세그먼트를 같은 규격으로 관리합니다. `minQty` 기준으로 적용 티어가 선택됩니다.
-              </p>
-            </div>
-
-            <div className="overflow-hidden rounded-lg border border-slate-200">
+            <div className="overflow-hidden rounded-lg border border-slate-200 bg-white">
               {(['guest', 'member'] as const).map((segment, segmentIndex) => (
                 <div
                   key={segment}
-                  className={`space-y-2 p-3 ${
-                    segmentIndex > 0 ? 'border-t border-slate-200' : ''
+                  className={`space-y-3 p-6 ${
+                    segmentIndex > 0 ? 'border-t border-slate-100' : ''
                   }`}
                 >
                   <div className="flex items-center justify-between">
-                    <p className="text-xs font-semibold text-slate-700">
+                    <p className="text-sm font-semibold text-slate-900">
                       {segment === 'guest' ? '비회원 (guest)' : '회원 (member)'}
                     </p>
                     <Button
@@ -894,7 +1308,7 @@ export function ProductDetailPage({ productId, embedded = false }: ProductDetail
                   </div>
 
                   {priceTierRows[segment].length > 0 ? (
-                    <div className="hidden rounded-md border border-slate-200 bg-slate-50 px-2 py-1.5 text-[11px] font-semibold text-slate-600 md:grid md:grid-cols-12">
+                    <div className="hidden rounded-md bg-slate-50 px-3 py-2 text-xs font-semibold text-slate-600 md:grid md:grid-cols-12">
                       <span className="md:col-span-3">최소 수량</span>
                       <span className="md:col-span-3">마진율(%)</span>
                       <span className="md:col-span-4">단가 Override</span>
@@ -903,14 +1317,15 @@ export function ProductDetailPage({ productId, embedded = false }: ProductDetail
                     </div>
                   ) : null}
 
-                  <div className="space-y-2">
+                  <div className="space-y-3">
                     {priceTierRows[segment].length === 0 ? (
-                      <p className="rounded-md border border-dashed border-slate-300 p-3 text-xs text-slate-500">
-                        등록된 티어가 없습니다.
-                      </p>
+                      <div className="rounded-lg border-2 border-dashed border-slate-200 bg-slate-50/50 py-8 text-center">
+                        <p className="text-sm font-medium text-slate-500">등록된 티어가 없습니다</p>
+                        <p className="text-xs text-slate-400">티어 추가 버튼을 클릭하세요</p>
+                      </div>
                     ) : (
                       priceTierRows[segment].map((row, rowIndex) => (
-                        <div key={`${segment}-${rowIndex}`} className="grid gap-2 rounded-md border border-slate-200 p-2 md:grid-cols-12">
+                        <div key={`${segment}-${rowIndex}`} className="grid gap-3 rounded-md border border-slate-200 p-3 md:grid-cols-12">
                           <input
                             type="number"
                             min={1}
@@ -970,55 +1385,56 @@ export function ProductDetailPage({ productId, embedded = false }: ProductDetail
                   </div>
                 </div>
               ))}
-            </div>
-
-            <Button
-              type="button"
-              size="sm"
-              onClick={() => void handleSavePriceTiers()}
-              disabled={priceTiersPending}
-            >
-              {priceTiersPending ? '저장 중...' : '가격 티어 저장'}
-            </Button>
-          </div>
-
-          {/* 스펙 */}
-          <div className="space-y-2 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm md:col-span-2">
-            <h3 className="text-sm font-semibold">스펙 전체 저장 (PUT /specs)</h3>
-            <textarea
-              className="min-h-[180px] w-full rounded-md border border-slate-300 p-3 font-mono text-xs outline-none ring-cyan-400 focus:ring-2"
-              value={specsJson}
-              onChange={(event) => setSpecsJson(event.target.value)}
-            />
-            <Button type="button" size="sm" onClick={() => void handleSaveSpecs()} disabled={specsPending}>
-              {specsPending ? '저장 중...' : '스펙 저장'}
-            </Button>
-          </div>
-
-          {/* 배송티어 */}
-          <div className="space-y-3 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm md:col-span-2">
-            <div className="flex items-center justify-between">
-              <div>
-                <h3 className="text-sm font-semibold">배송비 티어</h3>
-                <p className="mt-1 text-xs text-slate-500">
-                  주문 수량 기준으로 배송비를 계산합니다. <span className="font-medium text-slate-700">minQty 이하가 아닌(이상)</span> 티어 중
-                  가장 큰 minQty가 적용됩니다.
-                </p>
-                <p className="text-xs text-slate-500">
-                  예시: <span className="font-medium text-slate-700">1개 이상 3,000원</span>,{' '}
-                  <span className="font-medium text-slate-700">100개 이상 0원</span>이면 120개 주문 시 배송비는 0원입니다.
-                </p>
-                <p className="text-xs text-slate-500">
-                  유효성: minQty 중복 불가, 배송비는 0원 이상, 비활성(OFF) 티어는 견적 계산에서 제외됩니다.
-                </p>
               </div>
-              <Button type="button" size="sm" variant="outline" onClick={addShippingTierRow}>
-                티어 추가
-              </Button>
-            </div>
-            <div className="space-y-2">
+
+                  <Button
+                    type="button"
+                    size="sm"
+                    onClick={() => void handleSavePriceTiers()}
+                    disabled={priceTiersPending}
+                  >
+                    {priceTiersPending ? '저장 중...' : '가격 티어 저장'}
+                  </Button>
+                </div>
+              </div>
+            )}
+
+            {/* 스펙 */}
+            {activeSection === 'specs' && (
+              <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+                <div className="space-y-6">
+                  <div>
+                    <h3 className="text-lg font-semibold text-slate-900">상품 스펙</h3>
+                    <p className="text-sm text-slate-500">상품의 세부 사양 정보를 관리합니다</p>
+                  </div>
+              <textarea
+                className="min-h-[180px] w-full rounded-md border border-slate-300 p-3 font-mono text-xs outline-none ring-cyan-400 focus:ring-2"
+                value={specsJson}
+                onChange={(event) => setSpecsJson(event.target.value)}
+              />
+                  <Button type="button" size="sm" onClick={() => void handleSaveSpecs()} disabled={specsPending}>
+                    {specsPending ? '저장 중...' : '스펙 저장'}
+                  </Button>
+                </div>
+              </div>
+            )}
+
+            {/* 배송티어 */}
+            {activeSection === 'shippingTiers' && (
+              <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+                <div className="space-y-6">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h3 className="text-lg font-semibold text-slate-900">배송비 티어</h3>
+                      <p className="text-sm text-slate-500">주문 수량에 따른 배송비 정책을 설정합니다</p>
+                    </div>
+                <Button type="button" size="sm" variant="outline" onClick={addShippingTierRow}>
+                  티어 추가
+                </Button>
+              </div>
+            <div className="space-y-3">
               {shippingTierRows.length > 0 ? (
-                <div className="hidden rounded-md border border-slate-200 bg-slate-50 px-2 py-1.5 text-[11px] font-semibold text-slate-600 md:grid md:grid-cols-12">
+                <div className="hidden rounded-md bg-slate-50 px-3 py-2 text-xs font-semibold text-slate-600 md:grid md:grid-cols-12">
                   <span className="md:col-span-4">최소 수량 (minQty)</span>
                   <span className="md:col-span-5">배송비 (원)</span>
                   <span className="md:col-span-2">활성</span>
@@ -1026,12 +1442,14 @@ export function ProductDetailPage({ productId, embedded = false }: ProductDetail
                 </div>
               ) : null}
               {shippingTierRows.length === 0 ? (
-                <p className="rounded-md border border-dashed border-slate-300 p-3 text-xs text-slate-500">
-                  등록된 배송 티어가 없습니다. 티어가 없으면 배송비는 0원으로 계산됩니다.
-                </p>
+                <div className="flex flex-col items-center justify-center rounded-lg border-2 border-dashed border-slate-200 bg-slate-50/50 py-12">
+                  <Truck className="mb-3 size-10 text-slate-300" />
+                  <p className="text-sm font-medium text-slate-500">등록된 배송 티어가 없습니다</p>
+                  <p className="text-xs text-slate-400">티어가 없으면 배송비는 0원으로 계산됩니다</p>
+                </div>
               ) : (
                 shippingTierRows.map((row, rowIndex) => (
-                  <div key={`shipping-${rowIndex}`} className="grid gap-2 rounded-md border border-slate-200 p-2 md:grid-cols-12">
+                  <div key={`shipping-${rowIndex}`} className="grid gap-3 rounded-md border border-slate-200 p-3 md:grid-cols-12">
                     <input
                       type="number"
                       min={1}
@@ -1073,20 +1491,27 @@ export function ProductDetailPage({ productId, embedded = false }: ProductDetail
                   </div>
                 ))
               )}
-            </div>
-            <Button
-              type="button"
-              size="sm"
-              onClick={() => void handleSaveShippingTiers()}
-              disabled={shippingPending}
-            >
-              {shippingPending ? '저장 중...' : '배송 티어 저장'}
-            </Button>
-          </div>
+              </div>
+                  <Button
+                    type="button"
+                    size="sm"
+                    onClick={() => void handleSaveShippingTiers()}
+                    disabled={shippingPending}
+                  >
+                    {shippingPending ? '저장 중...' : '배송 티어 저장'}
+                  </Button>
+                </div>
+              </div>
+            )}
 
-          {/* 견적 미리보기 */}
-          <div className="space-y-3 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm md:col-span-2">
-            <h3 className="text-sm font-semibold">견적 미리보기</h3>
+            {/* 견적 미리보기 */}
+            {activeSection === 'quote' && (
+              <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+                <div className="space-y-6">
+                  <div>
+                    <h3 className="text-lg font-semibold text-slate-900">견적 미리보기</h3>
+                    <p className="text-sm text-slate-500">설정한 가격 정책으로 견적을 미리 계산합니다</p>
+                  </div>
             <form className="grid gap-3 md:grid-cols-3" onSubmit={handlePreviewQuote}>
               <label className="space-y-1">
                 <span className="text-xs font-semibold text-slate-500">수량</span>
@@ -1155,19 +1580,27 @@ export function ProductDetailPage({ productId, embedded = false }: ProductDetail
                 <p className="font-semibold text-slate-900">
                   총 결제금액: {formatNumber(quoteResult.totalAmount)}원
                 </p>
+                  </div>
+                ) : null}
               </div>
-            ) : null}
-          </div>
+            </div>
+          )}
 
           {/* 원본 데이터 */}
-          <details className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm md:col-span-2">
-            <summary className="cursor-pointer text-sm font-semibold text-slate-700">
-              원본 상세 데이터 (디버깅)
-            </summary>
-            <pre className="mt-3 max-h-[260px] overflow-auto rounded-md bg-slate-950 p-3 text-xs text-slate-100">
-              {rawJson || '{}'}
-            </pre>
-          </details>
+          {activeSection === 'raw' && (
+            <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+              <div className="space-y-6">
+                <div>
+                  <h3 className="text-lg font-semibold text-slate-900">원본 데이터</h3>
+                  <p className="text-sm text-slate-500">디버깅을 위한 원본 JSON 데이터입니다</p>
+                </div>
+                <pre className="max-h-[500px] overflow-auto rounded-lg border border-slate-200 bg-slate-950 p-4 text-xs text-slate-100">
+                  {rawJson || '{}'}
+                </pre>
+              </div>
+            </div>
+          )}
+          </div>
         </div>
       )}
     </section>

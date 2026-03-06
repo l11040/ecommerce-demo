@@ -441,9 +441,9 @@ export function SeoFormFields({
   isUploadingOgImage?: boolean;
 }) {
   return (
-    <div className="grid gap-2">
+    <div className="grid gap-3">
       <label className="space-y-1">
-        <span className="text-xs text-slate-500">Meta Title</span>
+        <span className="text-xs font-semibold text-slate-600">Meta Title</span>
         <input
           className="h-9 w-full rounded-md border border-slate-300 px-3 text-sm outline-none ring-cyan-400 focus:ring-2"
           value={formState.metaTitle}
@@ -451,7 +451,7 @@ export function SeoFormFields({
         />
       </label>
       <label className="space-y-1">
-        <span className="text-xs text-slate-500">Meta Description</span>
+        <span className="text-xs font-semibold text-slate-600">Meta Description</span>
         <textarea
           className="min-h-[76px] w-full rounded-md border border-slate-300 p-3 text-sm outline-none ring-cyan-400 focus:ring-2"
           value={formState.metaDescription}
@@ -459,7 +459,7 @@ export function SeoFormFields({
         />
       </label>
       <label className="space-y-1">
-        <span className="text-xs text-slate-500">Meta Keywords</span>
+        <span className="text-xs font-semibold text-slate-600">Meta Keywords</span>
         <input
           className="h-9 w-full rounded-md border border-slate-300 px-3 text-sm outline-none ring-cyan-400 focus:ring-2"
           value={formState.metaKeywords}
@@ -467,7 +467,7 @@ export function SeoFormFields({
         />
       </label>
       <label className="space-y-1">
-        <span className="text-xs text-slate-500">Canonical URL</span>
+        <span className="text-xs font-semibold text-slate-600">Canonical URL</span>
         <input
           className="h-9 w-full rounded-md border border-slate-300 px-3 text-sm outline-none ring-cyan-400 focus:ring-2"
           value={formState.canonicalUrl}
@@ -475,7 +475,7 @@ export function SeoFormFields({
         />
       </label>
       <label className="space-y-1">
-        <span className="text-xs text-slate-500">Robots</span>
+        <span className="text-xs font-semibold text-slate-600">Robots</span>
         <input
           className="h-9 w-full rounded-md border border-slate-300 px-3 text-sm outline-none ring-cyan-400 focus:ring-2"
           value={formState.robots}
@@ -483,7 +483,7 @@ export function SeoFormFields({
         />
       </label>
       <label className="space-y-1">
-        <span className="text-xs text-slate-500">OG Title</span>
+        <span className="text-xs font-semibold text-slate-600">OG Title</span>
         <input
           className="h-9 w-full rounded-md border border-slate-300 px-3 text-sm outline-none ring-cyan-400 focus:ring-2"
           value={formState.ogTitle}
@@ -491,7 +491,7 @@ export function SeoFormFields({
         />
       </label>
       <label className="space-y-1">
-        <span className="text-xs text-slate-500">OG Description</span>
+        <span className="text-xs font-semibold text-slate-600">OG Description</span>
         <textarea
           className="min-h-[76px] w-full rounded-md border border-slate-300 p-3 text-sm outline-none ring-cyan-400 focus:ring-2"
           value={formState.ogDescription}
@@ -499,7 +499,7 @@ export function SeoFormFields({
         />
       </label>
       <label className="space-y-1">
-        <span className="text-xs text-slate-500">OG Image</span>
+        <span className="text-xs font-semibold text-slate-600">OG Image</span>
         <div className="flex flex-wrap items-center gap-2">
           <input
             className="h-9 min-w-[220px] flex-1 rounded-md border border-slate-300 px-3 text-sm text-slate-600"
