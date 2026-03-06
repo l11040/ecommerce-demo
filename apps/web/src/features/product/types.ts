@@ -37,6 +37,27 @@ export interface ProductMedia {
   sortOrder: number;
 }
 
+export interface ProductSpec {
+  id: number;
+  label: string;
+  value: string;
+  sortOrder: number;
+}
+
+export interface ProductSpecGroup {
+  id: number;
+  name: string;
+  sortOrder: number;
+  specs: ProductSpec[];
+}
+
+export interface ProductShippingTier {
+  id: number;
+  minQty: number;
+  shippingFee: number;
+  isActive: boolean;
+}
+
 export interface ProductDetail {
   id: number;
   storeId: number;
@@ -60,6 +81,8 @@ export interface ProductDetail {
   tags: string[];
   searchAliases: string[];
   optionGroups: OptionGroup[];
+  specGroups?: ProductSpecGroup[];
+  shippingTiers?: ProductShippingTier[];
   priceTiers: PriceTiers;
   createdAt: string;
   updatedAt: string;

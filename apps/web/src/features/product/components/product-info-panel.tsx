@@ -24,6 +24,13 @@ function formatPrice(price: number) {
   return price.toLocaleString('ko-KR');
 }
 
+function formatShippingTier(tier: { minQty: number; shippingFee: number }) {
+  if (tier.shippingFee === 0) {
+    return `${tier.minQty.toLocaleString('ko-KR')}개 이상 무료배송`;
+  }
+  return `${tier.minQty.toLocaleString('ko-KR')}개 이상 ${formatPrice(tier.shippingFee)}원`;
+}
+
 function QuoteSummary({
   quote,
   isLoading,
@@ -104,6 +111,30 @@ export function ProductInfoPanel({
   onQuantityChange,
   onOptionChange,
 }: ProductInfoPanelProps) {
+  const leadTimeText =
+    product.proofLeadTimeDays === null
+      ? '별도 안내'
+      : `시안 확정 후 ${product.proofLeadTimeDays}일`;
+
+  const printMethod = product.printMethod?.trim() || '상세 협의';
+  const printArea = product.printArea?.trim() || '영역 협의';
+  const printSummary = product.isPrintable
+    ? `가능 (${printMethod} / ${printArea})`
+    : '인쇄 불가';
+
+  const shippingTiers = [...(product.shippingTiers ?? [])]
+    .filter((tier) => tier.isActive)
+    .sort((a, b) => a.minQty - b.minQty);
+
+  let shippingSummary = '배송비 정보 없음';
+  if (shippingTiers.length === 1) {
+    shippingSummary = formatShippingTier(shippingTiers[0]);
+  } else if (shippingTiers.length > 1) {
+    const first = shippingTiers[0];
+    const last = shippingTiers[shippingTiers.length - 1];
+    shippingSummary = `${formatShippingTier(first)} · ${formatShippingTier(last)}`;
+  }
+
   return (
     <div className="flex flex-col gap-5 px-4 md:px-0">
       {/* 상품명 */}
@@ -124,11 +155,25 @@ export function ProductInfoPanel({
         </div>
       </div>
 
+      <div className="space-y-2 rounded-lg border bg-muted/30 p-3 text-sm">
+        <div className="flex items-start justify-between gap-3">
+          <span className="text-muted-foreground">예상 납기</span>
+          <span className="text-right font-medium">{leadTimeText}</span>
+        </div>
+        <div className="flex items-start justify-between gap-3">
+          <span className="text-muted-foreground">인쇄 정보</span>
+          <span className="text-right font-medium">{printSummary}</span>
+        </div>
+        <div className="flex items-start justify-between gap-3">
+          <span className="text-muted-foreground">배송 정책</span>
+          <span className="text-right font-medium">{shippingSummary}</span>
+        </div>
+      </div>
+
       <Separator />
 
       {/* 수량별 단가 테이블 */}
       <PriceTierTable
-        key={`price-tier-${quantity}`}
         priceTiers={product.priceTiers}
         quantity={quantity}
       />

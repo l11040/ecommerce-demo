@@ -4,8 +4,10 @@ import { useMemo } from 'react';
 import { ProductImageCarousel } from './product-image-carousel';
 import { ProductInfoPanel } from './product-info-panel';
 import { ProductOrderDrawer } from './product-order-drawer';
+import { ProductDetailContent } from './product-detail-content';
 import { useProductQuote } from '../hooks/use-product-quote';
 import type { ProductDetail } from '../types';
+import { Separator } from '@/components/ui/separator';
 
 interface ProductDetailTopProps {
   product: ProductDetail;
@@ -28,7 +30,7 @@ export function ProductDetailTop({ product }: ProductDetailTopProps) {
 
   return (
     <>
-      <section className="mx-auto grid w-full max-w-7xl grid-cols-1 gap-6 pb-8 md:grid-cols-2 md:gap-8 md:px-6 md:py-8">
+      <section className="mx-auto grid w-full max-w-5xl grid-cols-1 gap-6 pb-8 md:grid-cols-2 md:gap-8 md:px-6 md:py-8">
         {/* 좌측: 이미지 캐러셀 */}
         <ProductImageCarousel
           media={product.media}
@@ -48,6 +50,12 @@ export function ProductDetailTop({ product }: ProductDetailTopProps) {
           onOptionChange={handleOptionChange}
         />
       </section>
+
+      <div className="mx-auto w-full max-w-5xl px-0 md:px-6">
+        <Separator />
+      </div>
+
+      <ProductDetailContent product={product} />
 
       {/* 모바일 하단 고정 바 + Drawer */}
       <ProductOrderDrawer
