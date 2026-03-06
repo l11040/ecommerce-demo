@@ -203,12 +203,14 @@ export function ProductFormFields({
   categories,
   onUploadThumbnail,
   isUploadingThumbnail = false,
+  disableStoreId = false,
 }: {
   formState: ProductFormState;
   onChange: React.Dispatch<React.SetStateAction<ProductFormState>>;
   categories: List200DataItem[];
   onUploadThumbnail?: (file: File) => void | Promise<void>;
   isUploadingThumbnail?: boolean;
+  disableStoreId?: boolean;
 }) {
   return (
     <>
@@ -220,8 +222,12 @@ export function ProductFormFields({
           className="h-10 w-full rounded-md border border-slate-300 px-3 text-sm outline-none ring-cyan-400 focus:ring-2"
           value={formState.storeId}
           onChange={(event) => onChange((prev) => ({ ...prev, storeId: event.target.value }))}
+          disabled={disableStoreId}
           required
         />
+        {disableStoreId ? (
+          <p className="text-[11px] text-slate-500">수정 모드에서는 스토어 ID를 변경할 수 없습니다.</p>
+        ) : null}
       </label>
 
       <label className="space-y-1">

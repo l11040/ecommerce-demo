@@ -12,7 +12,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { getApiErrorMessage } from '@/lib/api-response';
-import { RefreshCcw, Search } from 'lucide-react';
+import { Pencil, Plus, RefreshCcw, Search } from 'lucide-react';
 import { toast } from 'sonner';
 import { formatNumber, statusBadgeClass, statusLabel } from './product-form-fields';
 
@@ -71,26 +71,28 @@ export function ProductsPage() {
 
   const loadProducts = useCallback(async (source: ProductFilterState) => {
     setLoading(true);
-    const response = await listProducts({
-      ...(source.storeId ? { storeId: source.storeId } : {}),
-      ...(source.categoryId ? { categoryId: source.categoryId } : {}),
-      ...(source.status !== 'all' ? { status: source.status } : {}),
-      ...(source.isVisible !== 'all' ? { isVisible: source.isVisible } : {}),
-      ...(source.keyword.trim() ? { keyword: source.keyword.trim() } : {}),
-      ...(source.minMoq.trim() ? { minMoq: source.minMoq.trim() } : {}),
-      ...(source.maxMoq.trim() ? { maxMoq: source.maxMoq.trim() } : {}),
-    });
-
-    if (response.status !== 200 || !response.data.success) {
-      toast.error('상품 목록 조회 실패', {
-        description: getApiErrorMessage(response, '상품 목록을 불러오지 못했습니다.'),
+    try {
+      const response = await listProducts({
+        ...(source.storeId ? { storeId: source.storeId } : {}),
+        ...(source.categoryId ? { categoryId: source.categoryId } : {}),
+        ...(source.status !== 'all' ? { status: source.status } : {}),
+        ...(source.isVisible !== 'all' ? { isVisible: source.isVisible } : {}),
+        ...(source.keyword.trim() ? { keyword: source.keyword.trim() } : {}),
+        ...(source.minMoq.trim() ? { minMoq: source.minMoq.trim() } : {}),
+        ...(source.maxMoq.trim() ? { maxMoq: source.maxMoq.trim() } : {}),
       });
-      setLoading(false);
-      return;
-    }
 
-    setProducts(response.data.data);
-    setLoading(false);
+      if (response.status !== 200 || !response.data.success) {
+        toast.error('상품 목록 조회 실패', {
+          description: getApiErrorMessage(response, '상품 목록을 불러오지 못했습니다.'),
+        });
+        return;
+      }
+
+      setProducts(response.data.data);
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
   useEffect(() => {
@@ -117,24 +119,32 @@ export function ProductsPage() {
     <section className="space-y-4 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <h2 className="text-lg font-bold">상품 관리</h2>
+          <h2 className="text-lg font-bold">상품 목록</h2>
           <p className="mt-1 text-sm text-slate-500">
-            상품 목록 조회, 생성, 기본정보 수정, 상세 관리를 제공합니다.
+            전체 {products.length}개 상품의 상태를 조회하고 수정 페이지로 이동할 수 있습니다.
           </p>
         </div>
 
         <div className="flex items-center gap-2">
+          <Button asChild type="button">
+            <Link href="/products/new">
+              <Plus className="size-4" />
+              상품 추가
+            </Link>
+          </Button>
+          <Button asChild type="button" variant="outline">
+            <Link href="/products/edit">
+              <Pencil className="size-4" />
+              상품 수정
+            </Link>
+          </Button>
           <Button type="button" variant="outline" onClick={() => void loadProducts(filters)} disabled={loading}>
             <RefreshCcw className="size-4" />
             {loading ? '갱신 중...' : '새로고침'}
           </Button>
-          <Button asChild>
-            <Link href="/products/new">상품 생성</Link>
-          </Button>
         </div>
       </div>
 
-      {/* 필터 */}
       <div className="grid gap-2 rounded-xl border border-slate-200 p-3 md:grid-cols-4 xl:grid-cols-8">
         <label className="relative md:col-span-2 xl:col-span-2">
           <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-slate-400" />
@@ -241,7 +251,6 @@ export function ProductsPage() {
         </div>
       </div>
 
-      {/* 테이블 */}
       <div className="overflow-x-auto rounded-xl border border-slate-200">
         <table className="min-w-full border-collapse text-sm">
           <thead>
@@ -283,14 +292,9 @@ export function ProductsPage() {
                 <td className="px-3 py-3 text-xs text-slate-600">{formatNumber(product.baseSupplyCost)}원</td>
                 <td className="px-3 py-3 text-xs text-slate-600">{new Date(product.updatedAt).toLocaleString('ko-KR')}</td>
                 <td className="px-3 py-3">
-                  <div className="flex flex-wrap items-center gap-1">
-                    <Button type="button" size="xs" variant="outline" asChild>
-                      <Link href={`/products/${product.id}`}>상세</Link>
-                    </Button>
-                    <Button type="button" size="xs" variant="outline" asChild>
-                      <Link href={`/products/edit?id=${product.id}`}>수정</Link>
-                    </Button>
-                  </div>
+                  <Button type="button" size="xs" variant="outline" asChild>
+                    <Link href={`/products/edit?id=${product.id}`}>수정</Link>
+                  </Button>
                 </td>
               </tr>
             ))}

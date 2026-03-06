@@ -9,6 +9,16 @@ type UploadSuccessEnvelope = {
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:40003';
 
+function toAbsoluteUrl(urlOrPath: string): string {
+  if (urlOrPath.startsWith('http://') || urlOrPath.startsWith('https://')) {
+    return urlOrPath;
+  }
+
+  const base = API_URL.replace(/\/$/, '');
+  const path = urlOrPath.startsWith('/') ? urlOrPath : `/${urlOrPath}`;
+  return `${base}${path}`;
+}
+
 export async function uploadProductImageFile(
   file: File,
 ): Promise<{ path: string; url: string }> {
@@ -29,12 +39,29 @@ export async function uploadProductImageFile(
     throw new Error(payload?.message ?? '이미지 업로드에 실패했습니다.');
   }
 
-  const path = payload.data?.path;
-  const url = payload.data?.url;
+  const rawPath = payload.data?.path;
+  const rawUrl = payload.data?.url;
 
-  if (!path || !url) {
+  if (!rawPath && !rawUrl) {
     throw new Error('업로드 응답 경로가 비어 있습니다.');
   }
+
+  const sourceForPath = rawPath ?? rawUrl ?? '';
+  let path = sourceForPath;
+
+  if (sourceForPath.startsWith('http://') || sourceForPath.startsWith('https://')) {
+    try {
+      path = new URL(sourceForPath).pathname;
+    } catch {
+      path = sourceForPath;
+    }
+  }
+
+  if (!path.startsWith('/')) {
+    path = `/${path}`;
+  }
+
+  const url = toAbsoluteUrl(rawUrl ?? path);
 
   return { path, url };
 }

@@ -35,6 +35,7 @@ const mainMenuItems = [
 const productSubMenus = [
   { href: '/products', label: '상품 목록', icon: ListTree },
   { href: '/products/new', label: '상품 추가', icon: PlusCircle },
+  { href: '/products/edit', label: '상품 수정', icon: Pencil },
 ];
 
 const categorySubMenus = [
@@ -45,6 +46,7 @@ const categorySubMenus = [
 
 const activeMenuClass = 'bg-slate-100 text-slate-900 ring-1 ring-inset ring-slate-200';
 const inactiveMenuClass = 'text-slate-700 hover:bg-slate-100 hover:text-slate-900';
+const routePath = (href: string) => href.split('?')[0]?.split('#')[0] ?? href;
 
 export function AdminShell({ children, username }: AdminShellProps) {
   const pathname = usePathname();
@@ -57,8 +59,8 @@ export function AdminShell({ children, username }: AdminShellProps) {
 
   const isProductRoute = pathname.startsWith('/products');
   const isCategoryRoute = pathname.startsWith('/categories');
-  const matchedProductSubMenu = productSubMenus.find((menu) => pathname === menu.href);
-  const matchedCategorySubMenu = categorySubMenus.find((menu) => pathname === menu.href);
+  const matchedProductSubMenu = productSubMenus.find((menu) => pathname === routePath(menu.href));
+  const matchedCategorySubMenu = categorySubMenus.find((menu) => pathname === routePath(menu.href));
 
   const currentMenuLabel =
     matchedProductSubMenu?.label ??
@@ -207,7 +209,7 @@ export function AdminShell({ children, username }: AdminShellProps) {
                 <div className="mt-1 space-y-1 pl-4">
                   {productSubMenus.map((menu) => {
                     const Icon = menu.icon;
-                    const isActive = pathname === menu.href;
+                    const isActive = pathname === routePath(menu.href);
 
                     return (
                       <Link
@@ -245,7 +247,7 @@ export function AdminShell({ children, username }: AdminShellProps) {
                 <div className="mt-1 space-y-1 pl-4">
                   {categorySubMenus.map((menu) => {
                     const Icon = menu.icon;
-                    const isActive = pathname === menu.href;
+                    const isActive = pathname === routePath(menu.href);
 
                     return (
                       <Link

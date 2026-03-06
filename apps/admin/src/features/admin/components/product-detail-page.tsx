@@ -44,6 +44,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 
 interface ProductDetailPageProps {
   productId: number;
+  embedded?: boolean;
 }
 
 type ProductMediaState = {
@@ -67,7 +68,7 @@ type ShippingTierFormRow = {
   isActive: boolean;
 };
 
-export function ProductDetailPage({ productId }: ProductDetailPageProps) {
+export function ProductDetailPage({ productId, embedded = false }: ProductDetailPageProps) {
   const [loading, setLoading] = useState(true);
   const [rawJson, setRawJson] = useState('');
   const [productName, setProductName] = useState('');
@@ -246,6 +247,12 @@ export function ProductDetailPage({ productId }: ProductDetailPageProps) {
 
     toast.success('상세 HTML 저장 완료');
     setDescriptionPending(false);
+  }
+
+  async function handleUploadDescriptionImage(file: File) {
+    const uploaded = await uploadProductImageFile(file);
+    toast.success('상세 HTML 이미지 업로드 완료');
+    return uploaded;
   }
 
   async function handleSaveSeo() {
@@ -678,24 +685,26 @@ export function ProductDetailPage({ productId }: ProductDetailPageProps) {
 
   return (
     <section className="space-y-4">
-      <div className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-        <Button type="button" variant="ghost" size="icon" asChild>
-          <Link href="/products">
-            <ArrowLeft className="size-4" />
-          </Link>
-        </Button>
-        <div>
-          <h2 className="text-lg font-bold">상품 상세 관리</h2>
-          <p className="mt-1 text-sm text-slate-500">
-            상품 #{productId} {productName}
-          </p>
-        </div>
-        <div className="ml-auto">
-          <Button type="button" variant="outline" size="sm" asChild>
-            <Link href={`/products/edit?id=${productId}`}>기본정보 수정</Link>
+      {embedded ? null : (
+        <div className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+          <Button type="button" variant="ghost" size="icon" asChild>
+            <Link href="/products">
+              <ArrowLeft className="size-4" />
+            </Link>
           </Button>
+          <div>
+            <h2 className="text-lg font-bold">상품 상세 관리</h2>
+            <p className="mt-1 text-sm text-slate-500">
+              상품 #{productId} {productName}
+            </p>
+          </div>
+          <div className="ml-auto">
+            <Button type="button" variant="outline" size="sm" asChild>
+              <Link href={`/products/edit?id=${productId}`}>기본정보 수정</Link>
+            </Button>
+          </div>
         </div>
-      </div>
+      )}
 
       {loading ? (
         <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
@@ -704,11 +713,12 @@ export function ProductDetailPage({ productId }: ProductDetailPageProps) {
       ) : (
         <div className="grid gap-4 md:grid-cols-2">
           {/* 상세 HTML */}
-          <div className="space-y-2 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+          <div className="space-y-2 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm md:col-span-2">
             <h3 className="text-sm font-semibold">상세 HTML</h3>
             <HtmlEditor
               value={descriptionHtml}
               onChange={setDescriptionHtml}
+              onUploadImage={handleUploadDescriptionImage}
               placeholder="상품 상세 내용을 작성하세요."
               height="360px"
             />
@@ -718,7 +728,7 @@ export function ProductDetailPage({ productId }: ProductDetailPageProps) {
           </div>
 
           {/* SEO */}
-          <div className="space-y-2 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+          <div className="space-y-2 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm md:col-span-2">
             <h3 className="text-sm font-semibold">SEO 메타데이터</h3>
             <SeoFormFields
               formState={seoForm}
@@ -854,13 +864,24 @@ export function ProductDetailPage({ productId }: ProductDetailPageProps) {
 
           {/* 가격티어 */}
           <div className="space-y-3 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm md:col-span-2">
-            <h3 className="text-sm font-semibold">수량별 가격 티어</h3>
-            <div className="grid gap-3 md:grid-cols-2">
-              {(['guest', 'member'] as const).map((segment) => (
-                <div key={segment} className="space-y-2 rounded-lg border border-slate-200 p-3">
+            <div>
+              <h3 className="text-sm font-semibold">수량별 가격 티어</h3>
+              <p className="mt-1 text-xs text-slate-500">
+                비회원/회원 세그먼트를 같은 규격으로 관리합니다. `minQty` 기준으로 적용 티어가 선택됩니다.
+              </p>
+            </div>
+
+            <div className="overflow-hidden rounded-lg border border-slate-200">
+              {(['guest', 'member'] as const).map((segment, segmentIndex) => (
+                <div
+                  key={segment}
+                  className={`space-y-2 p-3 ${
+                    segmentIndex > 0 ? 'border-t border-slate-200' : ''
+                  }`}
+                >
                   <div className="flex items-center justify-between">
                     <p className="text-xs font-semibold text-slate-700">
-                      {segment === 'guest' ? '비회원(guest)' : '회원(member)'}
+                      {segment === 'guest' ? '비회원 (guest)' : '회원 (member)'}
                     </p>
                     <Button
                       type="button"
@@ -871,6 +892,16 @@ export function ProductDetailPage({ productId }: ProductDetailPageProps) {
                       티어 추가
                     </Button>
                   </div>
+
+                  {priceTierRows[segment].length > 0 ? (
+                    <div className="hidden rounded-md border border-slate-200 bg-slate-50 px-2 py-1.5 text-[11px] font-semibold text-slate-600 md:grid md:grid-cols-12">
+                      <span className="md:col-span-3">최소 수량</span>
+                      <span className="md:col-span-3">마진율(%)</span>
+                      <span className="md:col-span-4">단가 Override</span>
+                      <span className="md:col-span-1">활성</span>
+                      <span className="text-right md:col-span-1">삭제</span>
+                    </div>
+                  ) : null}
 
                   <div className="space-y-2">
                     {priceTierRows[segment].length === 0 ? (
@@ -884,7 +915,7 @@ export function ProductDetailPage({ productId }: ProductDetailPageProps) {
                             type="number"
                             min={1}
                             className="h-9 rounded-md border border-slate-300 px-2 text-xs outline-none ring-cyan-400 focus:ring-2 md:col-span-3"
-                            placeholder="최소수량"
+                            placeholder="예: 100"
                             value={row.minQty}
                             onChange={(event) =>
                               updatePriceTierRow(segment, rowIndex, { minQty: event.target.value })
@@ -895,7 +926,7 @@ export function ProductDetailPage({ productId }: ProductDetailPageProps) {
                             min={0}
                             max={100}
                             className="h-9 rounded-md border border-slate-300 px-2 text-xs outline-none ring-cyan-400 focus:ring-2 md:col-span-3"
-                            placeholder="마진율(%)"
+                            placeholder="예: 25"
                             value={row.marginRate}
                             onChange={(event) =>
                               updatePriceTierRow(segment, rowIndex, { marginRate: event.target.value })
@@ -905,7 +936,7 @@ export function ProductDetailPage({ productId }: ProductDetailPageProps) {
                             type="number"
                             min={0}
                             className="h-9 rounded-md border border-slate-300 px-2 text-xs outline-none ring-cyan-400 focus:ring-2 md:col-span-4"
-                            placeholder="단가 Override(선택)"
+                            placeholder="비우면 자동 계산"
                             value={row.unitPriceOverride}
                             onChange={(event) =>
                               updatePriceTierRow(segment, rowIndex, {
@@ -967,15 +998,36 @@ export function ProductDetailPage({ productId }: ProductDetailPageProps) {
           {/* 배송티어 */}
           <div className="space-y-3 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm md:col-span-2">
             <div className="flex items-center justify-between">
-              <h3 className="text-sm font-semibold">배송비 티어</h3>
+              <div>
+                <h3 className="text-sm font-semibold">배송비 티어</h3>
+                <p className="mt-1 text-xs text-slate-500">
+                  주문 수량 기준으로 배송비를 계산합니다. <span className="font-medium text-slate-700">minQty 이하가 아닌(이상)</span> 티어 중
+                  가장 큰 minQty가 적용됩니다.
+                </p>
+                <p className="text-xs text-slate-500">
+                  예시: <span className="font-medium text-slate-700">1개 이상 3,000원</span>,{' '}
+                  <span className="font-medium text-slate-700">100개 이상 0원</span>이면 120개 주문 시 배송비는 0원입니다.
+                </p>
+                <p className="text-xs text-slate-500">
+                  유효성: minQty 중복 불가, 배송비는 0원 이상, 비활성(OFF) 티어는 견적 계산에서 제외됩니다.
+                </p>
+              </div>
               <Button type="button" size="sm" variant="outline" onClick={addShippingTierRow}>
                 티어 추가
               </Button>
             </div>
             <div className="space-y-2">
+              {shippingTierRows.length > 0 ? (
+                <div className="hidden rounded-md border border-slate-200 bg-slate-50 px-2 py-1.5 text-[11px] font-semibold text-slate-600 md:grid md:grid-cols-12">
+                  <span className="md:col-span-4">최소 수량 (minQty)</span>
+                  <span className="md:col-span-5">배송비 (원)</span>
+                  <span className="md:col-span-2">활성</span>
+                  <span className="text-right md:col-span-1">삭제</span>
+                </div>
+              ) : null}
               {shippingTierRows.length === 0 ? (
                 <p className="rounded-md border border-dashed border-slate-300 p-3 text-xs text-slate-500">
-                  등록된 배송 티어가 없습니다.
+                  등록된 배송 티어가 없습니다. 티어가 없으면 배송비는 0원으로 계산됩니다.
                 </p>
               ) : (
                 shippingTierRows.map((row, rowIndex) => (
@@ -984,7 +1036,7 @@ export function ProductDetailPage({ productId }: ProductDetailPageProps) {
                       type="number"
                       min={1}
                       className="h-9 rounded-md border border-slate-300 px-2 text-xs outline-none ring-cyan-400 focus:ring-2 md:col-span-4"
-                      placeholder="최소수량"
+                      placeholder="예: 100"
                       value={row.minQty}
                       onChange={(event) =>
                         updateShippingTierRow(rowIndex, { minQty: event.target.value })
@@ -994,7 +1046,7 @@ export function ProductDetailPage({ productId }: ProductDetailPageProps) {
                       type="number"
                       min={0}
                       className="h-9 rounded-md border border-slate-300 px-2 text-xs outline-none ring-cyan-400 focus:ring-2 md:col-span-5"
-                      placeholder="배송비"
+                      placeholder="예: 3000"
                       value={row.shippingFee}
                       onChange={(event) =>
                         updateShippingTierRow(rowIndex, { shippingFee: event.target.value })
